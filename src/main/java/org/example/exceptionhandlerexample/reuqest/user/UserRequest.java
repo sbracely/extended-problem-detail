@@ -15,6 +15,7 @@ import org.hibernate.validator.constraints.Range;
 @ConfirmPassword(message = "密码与确认密码不一致")
 public class UserRequest {
     @NotBlank(message = "姓名不可为空")
+    @NotNull(message = "姓名不能为null")
     @Length(min = 6, max = 10, message = "姓名长度范围 6-10")
     private String name;
 
