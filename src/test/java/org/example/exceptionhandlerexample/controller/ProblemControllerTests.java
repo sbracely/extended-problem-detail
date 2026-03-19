@@ -1,15 +1,22 @@
 package org.example.exceptionhandlerexample.controller;
 
+import org.example.exceptionhandlerexample.response.ProblemDetails;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.net.URI;
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -21,24 +28,25 @@ class ProblemControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-//    @Autowired
-//    private MockMvcTester mockMvcTester;
+    @Autowired
+    private MockMvcTester mockMvcTester;
 
     @Test
-    void httpRequestMethodNotSupportedExceptionTest() throws Exception {
+    void httpRequestMethodNotSupportedExceptionTest() {
         String url = "/problem/param";
-        mockMvc.perform(MockMvcRequestBuilders.post(url))
-                .andExpect(status().isMethodNotAllowed())
-                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(header().string("Allow", containsString(HttpMethod.GET.name())))
-                .andExpect(jsonPath("$.detail").value(allOf(
-                        containsString(HttpMethod.POST.name()),
-                        containsString("not supported")
-                )))
-                .andExpect(jsonPath("$.errorCode").value("A00405"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(METHOD_NOT_ALLOWED.value()))
-                .andExpect(jsonPath("$.title").value(METHOD_NOT_ALLOWED.getReasonPhrase()));
+        assertThat(mockMvcTester.post().uri(url).exchange())
+                .satisfies(result -> assertThat(result)
+                        .hasStatus(HttpStatus.METHOD_NOT_ALLOWED)
+                        .hasContentType(MediaType.APPLICATION_PROBLEM_JSON)
+                        .headers().extracting("Allow").asString().contains(HttpMethod.GET.name()))
+                .bodyJson().convertTo(ProblemDetails.class)
+                .satisfies(problemDetails -> {
+                    assertThat(problemDetails.getDetail()).contains(Arrays.asList(HttpMethod.POST.name(), "not supported"));
+                    assertThat(problemDetails.getErrorCode()).isEqualTo("A00405");
+                    assertThat(problemDetails.getInstance()).isEqualTo(URI.create(url));
+                    assertThat(problemDetails.getStatus()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED.value());
+                    assertThat(problemDetails.getTitle()).isEqualTo(HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
+                });
     }
 
     @Test
