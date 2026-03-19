@@ -3,6 +3,7 @@ package org.example.exceptionhandlerexample.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.reuqest.problem.ProblemRequest;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,12 +54,13 @@ public class ProblemController {
         log.info("header = {}", header);
     }
 
-    @GetMapping(path = "/unsatisfied", params = {
-            "type=1",
-            "exist",
-            "!debug"
-    })
+    @GetMapping(path = "/unsatisfied", params = {"type=1", "exist", "!debug"})
     public void unsatisfied() {
         log.info("unsatisfied");
+    }
+
+    @PostMapping("/create")
+    public void create(@RequestBody @Validated ProblemRequest problemRequest) {
+        log.info("problemRequest = {}", problemRequest);
     }
 }

@@ -136,7 +136,7 @@ class ProblemControllerTests {
     }
 
     @Test
-    void servletRequestBindingExceptionMissingRequestCookieException() throws Exception {
+    void servletRequestBindingExceptionMissingRequestCookieExceptionTest() throws Exception {
         String url = "/problem/cookie";
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(status().isBadRequest())
@@ -152,7 +152,7 @@ class ProblemControllerTests {
     }
 
     @Test
-    void servletRequestBindingExceptionMissingRequestHeaderException() throws Exception {
+    void servletRequestBindingExceptionMissingRequestHeaderExceptionTest() throws Exception {
         String url = "/problem/header";
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(status().isBadRequest())
@@ -168,7 +168,7 @@ class ProblemControllerTests {
     }
 
     @Test
-    void servletRequestBindingExceptionUnsatisfiedServletRequestParameterException() throws Exception {
+    void servletRequestBindingExceptionUnsatisfiedServletRequestParameterExceptionTest() throws Exception {
         String url = "/problem/unsatisfied";
         mockMvc.perform(MockMvcRequestBuilders.get(url)
                         .param("type", "1"))
@@ -176,6 +176,26 @@ class ProblemControllerTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("$.detail").value(Matchers.is("Invalid request parameters.")))
                 .andExpect(jsonPath("$.errorCode").value("A00400"))
+                .andExpect(jsonPath("$.instance").value(url))
+                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
+                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+    }
+
+    @Test
+    void methodArgumentNotValidExceptionTest() throws Exception {
+        String url = "/problem/create";
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                        .contentType(MediaType.APPLICATION_JSON).content("""
+                                {
+                                    "name": "abc",
+                                    "password": "123"
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.detail").value(Matchers.is("Invalid request content.")))
+                .andExpect(jsonPath("$.errorCode").value("A00400"))
+                .andExpect(jsonPath("$.errors").value(Matchers.hasSize(3)))
                 .andExpect(jsonPath("$.instance").value(url))
                 .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
                 .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
