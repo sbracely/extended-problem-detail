@@ -1,7 +1,7 @@
 package org.example.exceptionhandlerexample.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.exceptionhandlerexample.reuqest.problem.ProblemRequest;
+import org.example.exceptionhandlerexample.reuqest.problem.ProblemDetailRequest;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +11,8 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/problem")
-public class ProblemController {
+@RequestMapping("/problem-detail")
+public class ProblemDetailController {
 
     @GetMapping("/param")
     public void get(@RequestParam Integer id) {
@@ -20,13 +20,13 @@ public class ProblemController {
     }
 
     @PutMapping(path = "/consume-json", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void putConsumeJson(ProblemRequest problemRequest) {
-        log.info("problemRequest = {}", problemRequest);
+    public void putConsumeJson(ProblemDetailRequest problemDetailRequest) {
+        log.info("problemRequest = {}", problemDetailRequest);
     }
 
     @PutMapping(path = "/produce-json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void putProduceJson(ProblemRequest problemRequest) {
-        log.info("problemRequest = {}", problemRequest);
+    public void putProduceJson(ProblemDetailRequest problemDetailRequest) {
+        log.info("problemRequest = {}", problemDetailRequest);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -60,7 +60,7 @@ public class ProblemController {
     }
 
     @PostMapping("/create")
-    public void create(@RequestBody @Validated ProblemRequest problemRequest) {
-        log.info("problemRequest = {}", problemRequest);
+    public void create(@RequestBody @Validated ProblemDetailRequest problemDetailRequest) {
+        log.info("problemRequest = {}", problemDetailRequest);
     }
 }

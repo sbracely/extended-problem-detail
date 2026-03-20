@@ -21,15 +21,15 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.*;
 
 @Slf4j
-@WebMvcTest(ProblemController.class)
-class ProblemControllerTests {
+@WebMvcTest(ProblemDetailController.class)
+class ProblemDetailControllerTests {
 
     @Autowired
     private MockMvcTester mockMvcTester;
 
     @Test
     void httpRequestMethodNotSupportedExceptionTest() {
-        String url = "/problem/param";
+        String url = "/problem-detail/param";
         MvcTestResult result = mockMvcTester.post().uri(url).exchange();
         assertThat(result)
                 .hasStatus(METHOD_NOT_ALLOWED)
@@ -46,7 +46,7 @@ class ProblemControllerTests {
 
     @Test
     void httpMediaTypeNotSupportedExceptionTest() {
-        String url = "/problem/consume-json";
+        String url = "/problem-detail/consume-json";
         MvcTestResult result = mockMvcTester.put().uri(url).exchange();
         assertThat(result)
                 .hasStatus(UNSUPPORTED_MEDIA_TYPE)
@@ -63,7 +63,7 @@ class ProblemControllerTests {
 
     @Test
     void httpMediaTypeNotAcceptableExceptionTest() {
-        String url = "/problem/produce-json";
+        String url = "/problem-detail/produce-json";
         MvcTestResult result = mockMvcTester.put().uri(url)
                 .header(ACCEPT, APPLICATION_XML_VALUE).exchange();
         assertThat(result)
@@ -81,7 +81,7 @@ class ProblemControllerTests {
 
     @Test
     void missingPathVariableExceptionTest() {
-        String url = "/problem/delete/1";
+        String url = "/problem-detail/delete/1";
         MvcTestResult result = mockMvcTester.delete().uri(url).exchange();
         assertThat(result)
                 .hasStatus(INTERNAL_SERVER_ERROR)
@@ -97,7 +97,7 @@ class ProblemControllerTests {
 
     @Test
     void missingServletRequestParameterExceptionTest() {
-        String url = "/problem/param";
+        String url = "/problem-detail/param";
         MvcTestResult result = mockMvcTester.get().uri(url).exchange();
         assertThat(result)
                 .hasStatus(BAD_REQUEST)
@@ -113,7 +113,7 @@ class ProblemControllerTests {
 
     @Test
     void missingServletRequestPartExceptionTest() throws Exception {
-        String url = "/problem/file";
+        String url = "/problem-detail/file";
         MvcTestResult result = mockMvcTester.put().multipart().contentType(MULTIPART_FORM_DATA).uri(url).exchange();
         assertThat(result)
                 .hasStatus(BAD_REQUEST)
@@ -129,7 +129,7 @@ class ProblemControllerTests {
 
     @Test
     void servletRequestBindingExceptionMissingMatrixVariableExceptionTest() {
-        String url = "/problem/matrix/abc;list1=a,b,c";
+        String url = "/problem-detail/matrix/abc;list1=a,b,c";
         MvcTestResult result = mockMvcTester.get().uri(url).exchange();
         assertThat(result)
                 .hasStatus(BAD_REQUEST)
@@ -145,7 +145,7 @@ class ProblemControllerTests {
 
     @Test
     void servletRequestBindingExceptionMissingRequestCookieExceptionTest() {
-        String url = "/problem/cookie";
+        String url = "/problem-detail/cookie";
         MvcTestResult result = mockMvcTester.get().uri(url).exchange();
         assertThat(result)
                 .hasStatus(BAD_REQUEST)
@@ -161,7 +161,7 @@ class ProblemControllerTests {
 
     @Test
     void servletRequestBindingExceptionMissingRequestHeaderExceptionTest() {
-        String url = "/problem/header";
+        String url = "/problem-detail/header";
         MvcTestResult result = mockMvcTester.get().uri(url).exchange();
         assertThat(result)
                 .hasStatus(BAD_REQUEST)
@@ -177,7 +177,7 @@ class ProblemControllerTests {
 
     @Test
     void servletRequestBindingExceptionUnsatisfiedServletRequestParameterExceptionTest() {
-        String url = "/problem/unsatisfied";
+        String url = "/problem-detail/unsatisfied";
         MvcTestResult result = mockMvcTester.get().uri(url).param("type", "1").exchange();
         assertThat(result)
                 .hasStatus(BAD_REQUEST)
@@ -192,8 +192,8 @@ class ProblemControllerTests {
     }
 
     @Test
-    void methodArgumentNotValidExceptionTest() throws Exception {
-        String url = "/problem/create";
+    void methodArgumentNotValidExceptionTest() {
+        String url = "/problem-detail/create";
         MvcTestResult result = mockMvcTester.post().uri(url).contentType(APPLICATION_JSON).content("""
                                 {
                                     "name": "abc",
@@ -210,9 +210,10 @@ class ProblemControllerTests {
         assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
         assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        assertThat(nestedProblemDetail.getErrors()).hasSize(3)
+        assertThat(nestedProblemDetail.getErrors()).hasSize(4)
                 .contains(new ParamError("name", "姓名长度范围 6-10", ParamErrorType.PARAMETER))
                 .contains(new ParamError("age", "年龄不可为空", ParamErrorType.PARAMETER))
-                .contains(new ParamError(null, "密码与确认密码不一致", ParamErrorType.PARAMETER));
+                .contains(new ParamError("password", "密码与确认密码不一致", ParamErrorType.PARAMETER))
+                .contains(new ParamError("confirmPassword", "密码与确认密码不一致", ParamErrorType.PARAMETER));
     }
 }

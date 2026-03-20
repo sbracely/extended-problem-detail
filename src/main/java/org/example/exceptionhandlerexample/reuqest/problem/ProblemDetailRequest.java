@@ -13,8 +13,8 @@ import org.hibernate.validator.constraints.Range;
 @Getter
 @Setter
 @ToString
-@ConfirmPassword(message = "密码与确认密码不一致")
-public class ProblemRequest {
+@ConfirmPassword(message = "密码与确认密码不一致", fields = {"password", "confirmPassword"})
+public class ProblemDetailRequest {
 
     @NotBlank(message = "姓名不可为空")
     @NotNull(message = "姓名不能为null")
@@ -29,5 +29,5 @@ public class ProblemRequest {
     private String confirmPassword;
 
     @Valid
-    private ProblemRequest problemRequest;
+    private ProblemDetailRequest problemDetailRequest;
 }
