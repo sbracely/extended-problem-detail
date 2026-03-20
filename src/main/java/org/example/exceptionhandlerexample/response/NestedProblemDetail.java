@@ -10,13 +10,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProblemDetails extends ProblemDetail {
+public class NestedProblemDetail extends ProblemDetail {
 
     private String errorCode;
 
     private List<ParamError> errors;
 
-    public ProblemDetails(ProblemDetail problemDetail) {
+    public NestedProblemDetail(ProblemDetail problemDetail) {
         super(problemDetail);
         this.errorCode = ErrorCode.httpStatusValue(problemDetail.getStatus());
     }

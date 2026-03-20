@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.response.ErrorCode;
 import org.example.exceptionhandlerexample.response.ParamError;
 import org.example.exceptionhandlerexample.response.ParamErrorType;
-import org.example.exceptionhandlerexample.response.ProblemDetails;
+import org.example.exceptionhandlerexample.response.NestedProblemDetail;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -29,9 +29,9 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         List<ParamError> paramErrorList = ex.getBindingResult().getAllErrors().stream().map(ParamError::new).toList();
-        ProblemDetails problemDetails = new ProblemDetails(ex.getBody());
-        problemDetails.setErrors(paramErrorList);
-        return handleExceptionInternal(ex, problemDetails, headers, status, request);
+        NestedProblemDetail nestedProblemDetail = new NestedProblemDetail(ex.getBody());
+        nestedProblemDetail.setErrors(paramErrorList);
+        return handleExceptionInternal(ex, nestedProblemDetail, headers, status, request);
     }
 
     @Override
@@ -99,25 +99,25 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
                 HandlerMethodValidationException.Visitor.super.requestBodyValidationResult(requestBody, result);
             }
         });
-        ProblemDetails problemDetails = new ProblemDetails(ex.getBody());
-        problemDetails.setErrors(paramErrorList);
-        return handleExceptionInternal(ex, problemDetails, headers, status, request);
+        NestedProblemDetail nestedProblemDetail = new NestedProblemDetail(ex.getBody());
+        nestedProblemDetail.setErrors(paramErrorList);
+        return handleExceptionInternal(ex, nestedProblemDetail, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> createResponseEntity(@Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
         switch (body) {
             case null -> {
-                ProblemDetails problemDetails = new ProblemDetails();
-                problemDetails.setErrorCode(ErrorCode.httpStatusCode(statusCode));
-                body = problemDetails;
+                NestedProblemDetail nestedProblemDetail = new NestedProblemDetail();
+                nestedProblemDetail.setErrorCode(ErrorCode.httpStatusCode(statusCode));
+                body = nestedProblemDetail;
             }
-            case ProblemDetails problemDetails -> {
-                if (null == problemDetails.getErrorCode()) {
-                    problemDetails.setErrorCode(ErrorCode.httpStatusCode(statusCode));
+            case NestedProblemDetail nestedProblemDetail -> {
+                if (null == nestedProblemDetail.getErrorCode()) {
+                    nestedProblemDetail.setErrorCode(ErrorCode.httpStatusCode(statusCode));
                 }
             }
-            case ProblemDetail problemDetail -> body = new ProblemDetails(problemDetail);
+            case ProblemDetail problemDetail -> body = new NestedProblemDetail(problemDetail);
             default -> {
             }
         }
@@ -128,6 +128,6 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ProblemDetail createProblemDetail(Exception ex, HttpStatusCode status, String defaultDetail, @Nullable String detailMessageCode, Object @Nullable [] detailMessageArguments, WebRequest request) {
         ProblemDetail problemDetail = super.createProblemDetail(ex, status, defaultDetail, detailMessageCode, detailMessageArguments, request);
-        return new ProblemDetails(problemDetail);
+        return new NestedProblemDetail(problemDetail);
     }
 }

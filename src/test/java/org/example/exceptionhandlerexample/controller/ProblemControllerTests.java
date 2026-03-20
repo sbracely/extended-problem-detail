@@ -1,33 +1,28 @@
 package org.example.exceptionhandlerexample.controller;
 
-import org.assertj.core.api.AbstractObjectAssert;
-import org.example.exceptionhandlerexample.response.ProblemDetails;
-import org.hamcrest.Matchers;
+import lombok.extern.slf4j.Slf4j;
+import org.example.exceptionhandlerexample.response.NestedProblemDetail;
+import org.example.exceptionhandlerexample.response.ParamError;
+import org.example.exceptionhandlerexample.response.ParamErrorType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpMethod;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.net.URI;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.ALLOW;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Slf4j
 @WebMvcTest(ProblemController.class)
 class ProblemControllerTests {
-
-    @Autowired
-    private MockMvc mockMvc;
 
     @Autowired
     private MockMvcTester mockMvcTester;
@@ -40,13 +35,13 @@ class ProblemControllerTests {
                 .hasStatus(METHOD_NOT_ALLOWED)
                 .hasContentType(APPLICATION_PROBLEM_JSON)
                 .hasHeader(ALLOW, HttpMethod.GET.name());
-        ProblemDetails problemDetails = assertThat(result).bodyJson()
-                .convertTo(ProblemDetails.class).isNotNull().actual();
-        assertThat(problemDetails.getDetail()).contains(Arrays.asList(HttpMethod.POST.name(), "not supported"));
-        assertThat(problemDetails.getErrorCode()).isEqualTo("A00405");
-        assertThat(problemDetails.getInstance()).isEqualTo(URI.create(url));
-        assertThat(problemDetails.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
-        assertThat(problemDetails.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList(HttpMethod.POST.name(), "not supported"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00405");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
     }
 
     @Test
@@ -57,13 +52,13 @@ class ProblemControllerTests {
                 .hasStatus(UNSUPPORTED_MEDIA_TYPE)
                 .hasContentType(APPLICATION_PROBLEM_JSON)
                 .hasHeader(ACCEPT, APPLICATION_JSON_VALUE);
-        ProblemDetails problemDetails = assertThat(result).bodyJson()
-                .convertTo(ProblemDetails.class).isNotNull().actual();
-        assertThat(problemDetails.getDetail()).contains(Arrays.asList("null", "not supported"));
-        assertThat(problemDetails.getErrorCode()).isEqualTo("A00415");
-        assertThat(problemDetails.getInstance()).isEqualTo(URI.create(url));
-        assertThat(problemDetails.getStatus()).isEqualTo(UNSUPPORTED_MEDIA_TYPE.value());
-        assertThat(problemDetails.getTitle()).isEqualTo(UNSUPPORTED_MEDIA_TYPE.getReasonPhrase());
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList("null", "not supported"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00415");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(UNSUPPORTED_MEDIA_TYPE.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(UNSUPPORTED_MEDIA_TYPE.getReasonPhrase());
     }
 
     @Test
@@ -75,152 +70,149 @@ class ProblemControllerTests {
                 .hasStatus(NOT_ACCEPTABLE)
                 .hasContentType(APPLICATION_PROBLEM_JSON)
                 .hasHeader(ACCEPT, APPLICATION_JSON_VALUE);
-        ProblemDetails problemDetails = assertThat(result).bodyJson()
-                .convertTo(ProblemDetails.class).isNotNull().actual();
-        assertThat(problemDetails.getDetail()).contains(Arrays.asList(APPLICATION_JSON_VALUE, "Acceptable"));
-        assertThat(problemDetails.getErrorCode()).isEqualTo("A00406");
-        assertThat(problemDetails.getInstance()).isEqualTo(URI.create(url));
-        assertThat(problemDetails.getStatus()).isEqualTo(NOT_ACCEPTABLE.value());
-        assertThat(problemDetails.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList(APPLICATION_JSON_VALUE, "Acceptable"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00406");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(NOT_ACCEPTABLE.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
     }
 
     @Test
-    void missingPathVariableExceptionTest() throws Exception {
+    void missingPathVariableExceptionTest() {
         String url = "/problem/delete/1";
-        mockMvc.perform(MockMvcRequestBuilders.delete(url))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.containsString("path variable")))
-                .andExpect(jsonPath("$.errorCode").value("A00500"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(INTERNAL_SERVER_ERROR.value()))
-                .andExpect(jsonPath("$.title").value(INTERNAL_SERVER_ERROR.getReasonPhrase()));
+        MvcTestResult result = mockMvcTester.delete().uri(url).exchange();
+        assertThat(result)
+                .hasStatus(INTERNAL_SERVER_ERROR)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains("Required path variable");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00500");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
 
     @Test
-    void missingServletRequestParameterExceptionTest() throws Exception {
+    void missingServletRequestParameterExceptionTest() {
         String url = "/problem/param";
-        mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.allOf(
-                        Matchers.containsString("id"),
-                        Matchers.containsString("is not present")
-                )))
-                .andExpect(jsonPath("$.errorCode").value("A00400"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+        MvcTestResult result = mockMvcTester.get().uri(url).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList("id", "is not present"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
     }
 
     @Test
     void missingServletRequestPartExceptionTest() throws Exception {
         String url = "/problem/file";
-        mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, url)
-                        .contentType(MULTIPART_FORM_DATA_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.allOf(
-                        Matchers.containsString("file"),
-                        Matchers.containsString("not present")
-                )))
-                .andExpect(jsonPath("$.errorCode").value("A00400"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+        MvcTestResult result = mockMvcTester.put().multipart().contentType(MULTIPART_FORM_DATA).uri(url).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList("file", "is not present"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
     }
 
     @Test
-    void servletRequestBindingExceptionMissingMatrixVariableExceptionTest() throws Exception {
+    void servletRequestBindingExceptionMissingMatrixVariableExceptionTest() {
         String url = "/problem/matrix/abc;list1=a,b,c";
-        mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.allOf(
-                        Matchers.containsString("list"),
-                        Matchers.containsString("is not present")
-                )))
-                .andExpect(jsonPath("$.errorCode").value("A00400"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+        MvcTestResult result = mockMvcTester.get().uri(url).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList("list", "is not present"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
     }
 
     @Test
-    void servletRequestBindingExceptionMissingRequestCookieExceptionTest() throws Exception {
+    void servletRequestBindingExceptionMissingRequestCookieExceptionTest() {
         String url = "/problem/cookie";
-        mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.allOf(
-                        Matchers.containsString("cookieValue"),
-                        Matchers.containsString("is not present")
-                )))
-                .andExpect(jsonPath("$.errorCode").value("A00400"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+        MvcTestResult result = mockMvcTester.get().uri(url).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList("cookieValue", "is not present"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
     }
 
     @Test
-    void servletRequestBindingExceptionMissingRequestHeaderExceptionTest() throws Exception {
+    void servletRequestBindingExceptionMissingRequestHeaderExceptionTest() {
         String url = "/problem/header";
-        mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.allOf(
-                        Matchers.containsString("header"),
-                        Matchers.containsString("is not present")
-                )))
-                .andExpect(jsonPath("$.errorCode").value("A00400"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+        MvcTestResult result = mockMvcTester.get().uri(url).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains(Arrays.asList("header", "is not present"));
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
     }
 
     @Test
-    void servletRequestBindingExceptionUnsatisfiedServletRequestParameterExceptionTest() throws Exception {
+    void servletRequestBindingExceptionUnsatisfiedServletRequestParameterExceptionTest() {
         String url = "/problem/unsatisfied";
-        mockMvc.perform(MockMvcRequestBuilders.get(url)
-                        .param("type", "1"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.is("Invalid request parameters.")))
-                .andExpect(jsonPath("$.errorCode").value("A00400"))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+        MvcTestResult result = mockMvcTester.get().uri(url).param("type", "1").exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("Invalid request parameters.");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
     }
 
     @Test
     void methodArgumentNotValidExceptionTest() throws Exception {
         String url = "/problem/create";
-        mockMvc.perform(MockMvcRequestBuilders.post(url)
-                        .contentType(APPLICATION_JSON).content("""
+        MvcTestResult result = mockMvcTester.post().uri(url).contentType(APPLICATION_JSON).content("""
                                 {
                                     "name": "abc",
                                     "password": "123"
                                 }
-                                """))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("$.detail").value(Matchers.is("Invalid request content.")))
-                .andExpect(jsonPath("$.errorCode").value("A00400"))
-                .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors").value(Matchers.hasSize(3)))
-                .andExpect(jsonPath("$.errors[?(@.field == 'name')].message")
-                        .value(hasItem("姓名长度范围 6-10")))
-                .andExpect(jsonPath("$.errors[?(@.field == 'name')].type")
-                        .value(hasItem("parameter")))
-                .andExpect(jsonPath("$.errors[?(@.field == 'age')].message")
-                        .value(hasItem("年龄不可为空")))
-                .andExpect(jsonPath("$.errors[?(@.field == 'age')].type")
-                        .value(hasItem("parameter")))
-                .andExpect(jsonPath("$.errors[?(@.message == '密码与确认密码不一致')]").value(hasSize(1)))
-                .andExpect(jsonPath("$.errors[?(@.message == '密码与确认密码不一致')].type").value("parameter"))
-                .andExpect(jsonPath("$.errors[?(@.message == '密码与确认密码不一致')].field").value(hasItem(nullValue())))
-                .andExpect(jsonPath("$.instance").value(url))
-                .andExpect(jsonPath("$.status").value(BAD_REQUEST.value()))
-                .andExpect(jsonPath("$.title").value(BAD_REQUEST.getReasonPhrase()));
+                """).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("Invalid request content.");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).hasSize(3)
+                .contains(new ParamError("name", "姓名长度范围 6-10", ParamErrorType.PARAMETER))
+                .contains(new ParamError("age", "年龄不可为空", ParamErrorType.PARAMETER))
+                .contains(new ParamError(null, "密码与确认密码不一致", ParamErrorType.PARAMETER));
     }
 }

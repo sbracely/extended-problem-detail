@@ -1,6 +1,8 @@
 package org.example.exceptionhandlerexample.response;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.FieldError;
@@ -9,6 +11,8 @@ import org.springframework.validation.ObjectError;
 @Slf4j
 @Getter
 @Setter
+@EqualsAndHashCode
+@NoArgsConstructor
 public class ParamError {
     private String type;
     private String field;
