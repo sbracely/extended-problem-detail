@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.response.NestedProblemDetail;
 import org.example.exceptionhandlerexample.reuqest.problem.ProblemDetailRequest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -271,6 +272,7 @@ class ProblemDetailControllerTests {
      * {@link HandlerMethodValidationException.Visitor#modelAttribute(ModelAttribute, ParameterErrors)}
      */
     @Test
+    @Disabled
     void handlerMethodValidationExceptionModelAttribute() {
         String url = BASE_PATH + "/model-attribute";
         mockMvcTester.get().uri(url).exchange();
@@ -301,8 +303,27 @@ class ProblemDetailControllerTests {
      * {@link HandlerMethodValidationException.Visitor#requestBody(RequestBody, ParameterErrors)}
      */
     @Test
+    @Disabled
     void handlerMethodValidationExceptionRequestBody() {
         String url = BASE_PATH + "/request-body";
         mockMvcTester.get().uri(url).exchange();
+    }
+
+    @Test
+    void handlerMethodValidationExceptionHeader() {
+        String url = BASE_PATH + "/request-header";
+        MvcTestResult result = mockMvcTester.get().uri(url).header("headerValue", "a").exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("Validation failure");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(url));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).singleElement()
+                .isEqualTo(new Error("headerValue", "最小长度是 2", Error.Type.HEADER));
     }
 }

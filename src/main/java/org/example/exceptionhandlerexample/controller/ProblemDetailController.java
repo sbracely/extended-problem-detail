@@ -94,4 +94,9 @@ public class ProblemDetailController {
     public void requestBody(@RequestBody @Validated ProblemDetailRequest problemDetailRequest) {
         log.info("problemDetailRequest: {}", problemDetailRequest);
     }
+
+    @GetMapping("/request-header")
+    public void requestHeader(@RequestHeader @Length(min = 2, message = "最小长度是 2") String headerValue) {
+        log.info("headerValue: {}", headerValue);
+    }
 }
