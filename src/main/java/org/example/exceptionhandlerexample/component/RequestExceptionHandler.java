@@ -40,12 +40,12 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
 
             @Override
             public void cookieValue(CookieValue cookieValue, ParameterValidationResult result) {
-                processParameterValidationResult(result, Error.Type.COOKIE);
+                processParameterValidationResult(result, getParameterName(result), Error.Type.COOKIE);
             }
 
             @Override
             public void matrixVariable(MatrixVariable matrixVariable, ParameterValidationResult result) {
-                processParameterValidationResult(result, Error.Type.PARAMETER);
+                processParameterValidationResult(result, getParameterName(result), Error.Type.PARAMETER);
             }
 
             @Override
@@ -55,7 +55,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
 
             @Override
             public void pathVariable(PathVariable pathVariable, ParameterValidationResult result) {
-                processParameterValidationResult(result, Error.Type.PARAMETER);
+                processParameterValidationResult(result, getParameterName(result), Error.Type.PARAMETER);
             }
 
             @Override
@@ -65,12 +65,12 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
 
             @Override
             public void requestHeader(RequestHeader requestHeader, ParameterValidationResult result) {
-                processParameterValidationResult(result, Error.Type.HEADER);
+                processParameterValidationResult(result, getParameterName(result), Error.Type.HEADER);
             }
 
             @Override
             public void requestParam(@Nullable RequestParam requestParam, ParameterValidationResult result) {
-                processParameterValidationResult(result, Error.Type.PARAMETER);
+                processParameterValidationResult(result, getParameterName(result), Error.Type.PARAMETER);
             }
 
             @Override
@@ -80,18 +80,21 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
 
             @Override
             public void other(ParameterValidationResult result) {
-                processParameterValidationResult(result, Error.Type.PARAMETER);
+                processParameterValidationResult(result, getParameterName(result), Error.Type.PARAMETER);
             }
 
             @Override
             public void requestBodyValidationResult(RequestBody requestBody, ParameterValidationResult result) {
-                result.getResolvableErrors().stream().map(MessageSourceResolvable::getDefaultMessage)
-                        .map(defaultMessage -> new Error(null, defaultMessage, Error.Type.PARAMETER))
-                        .forEach(errorList::add);
+                processParameterValidationResult(result, null, Error.Type.PARAMETER);
             }
 
-            private void processParameterValidationResult(ParameterValidationResult result, Error.Type errorType) {
-                String parameterName = result.getMethodParameter().getParameterName();
+            private String getParameterName(ParameterValidationResult result) {
+                return result.getMethodParameter().getParameterName();
+            }
+
+            private void processParameterValidationResult(ParameterValidationResult result,
+                                                          String parameterName,
+                                                          Error.Type errorType) {
                 result.getResolvableErrors().stream().map(MessageSourceResolvable::getDefaultMessage)
                         .map(defaultMessage -> new Error(parameterName, defaultMessage, errorType))
                         .forEach(errorList::add);
