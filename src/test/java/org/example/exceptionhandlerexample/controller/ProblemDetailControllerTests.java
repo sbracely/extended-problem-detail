@@ -349,8 +349,11 @@ class ProblemDetailControllerTests {
         assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        assertThat(nestedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error("param", "参数不能为空", Error.Type.PARAMETER));
+        assertThat(nestedProblemDetail.getErrors()).containsExactlyInAnyOrder(
+                new Error("param", "参数不能为空", Error.Type.PARAMETER),
+                new Error("param2", "参数2不能为空", Error.Type.PARAMETER),
+                new Error("param2", "参数2不能为null", Error.Type.PARAMETER)
+        );
     }
 
     @Test
@@ -376,12 +379,24 @@ class ProblemDetailControllerTests {
      * TODO
      * {@link RequestExceptionHandler#handleHandlerMethodValidationException(HandlerMethodValidationException, HttpHeaders, HttpStatusCode, WebRequest)}
      * {@link HandlerMethodValidationException.Visitor#other(ParameterValidationResult)}
-     * {@link ProblemDetailController#requestOther()}
+     * {@link ProblemDetailController#requestOther(String)} }
      */
     @Test
-    @Disabled
     void handlerMethodValidationExceptionOther() {
-
+        String uri = BASE_PATH + "/request-other";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("Validation failure");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).singleElement()
+                .isEqualTo(new Error("sessionAttribute", "sessionAttribute 不能为空", Error.Type.PARAMETER));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.example.exceptionhandlerexample.controller;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.reuqest.problem.ProblemDetailRequest;
@@ -102,23 +103,21 @@ public class ProblemDetailController {
     }
 
     @GetMapping("/request-param")
-    public void requestParam(@NotBlank(message = "参数不能为空") String param) {
-        log.info("param: {}", param);
+    public void requestParam(@NotBlank(message = "参数不能为空") String param,
+                             @NotNull(message = "参数2不能为空") @NotNull(message = "参数2不能为null") String param2) {
+        log.info("param: {}, param2: {}", param, param2);
     }
 
     @GetMapping("/request-part")
-    public void requestPart(@RequestPart(required = false)
-                            @CheckMultipartFile(
-                                    extensionIncludeMessage = "文件类型不支持",
-                                    extensionInclude = "txt",
-                                    requiredMessage = "文件不能为空"
-                            ) MultipartFile file) {
+    public void requestPart(@RequestPart(required = false) @CheckMultipartFile(extensionIncludeMessage = "文件类型不支持",
+            extensionInclude = "txt", requiredMessage = "文件不能为空") MultipartFile file) {
         log.info("file: {}", file);
     }
 
     @GetMapping("/request-other")
-    public void requestOther() {
-
+    public void requestOther(@SessionAttribute(required = false) @NotBlank(message = "sessionAttribute 不能为空")
+                             String sessionAttribute) {
+        log.info("sessionAttribute: {}", sessionAttribute);
     }
 
     @PostMapping("/request-body-validation-result")
