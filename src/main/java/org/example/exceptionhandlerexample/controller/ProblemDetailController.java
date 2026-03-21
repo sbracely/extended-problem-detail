@@ -89,4 +89,10 @@ public class ProblemDetailController {
     public void pathVariable(@PathVariable @Length(min = 2, message = "id 最小长度是 2") String id) {
         log.info("id: {}", id);
     }
+
+    @PostMapping("/request-body")
+    public void requestBody(@RequestBody @Validated ProblemDetailRequest problemDetailRequest) {
+
+
+    }
 }
