@@ -16,8 +16,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -133,7 +131,13 @@ public class ProblemDetailController {
     }
 
     @GetMapping("/async-request-timeout")
-    public DeferredResult<String> asyncRequestTimeoutException() {
+    public DeferredResult<Void> asyncRequestTimeoutException() {
         return new DeferredResult<>(1L);
     }
+
+
+//    @GetMapping(path = "/api-version")
+//    public void apiVersion() {
+//
+//    }
 }

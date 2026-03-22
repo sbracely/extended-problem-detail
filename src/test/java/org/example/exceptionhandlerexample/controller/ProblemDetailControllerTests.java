@@ -6,15 +6,14 @@ import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.response.NestedProblemDetail;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockAsyncContext;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -415,22 +414,25 @@ class ProblemDetailControllerTests {
 
     }
 
-    @Test
-    @EnabledIfEnvironmentVariable(named = "spring.web.resources.add-mappings", matches = "false")
-    void noHandlerFoundException() {
-        String uri = BASE_PATH + "/no-handler-found";
-        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
-        assertThat(result)
-                .hasStatus(NOT_FOUND)
-                .hasContentType(APPLICATION_PROBLEM_JSON);
-        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(NestedProblemDetail.class).isNotNull().actual();
-        assertThat(nestedProblemDetail.getDetail()).contains("No endpoint");
-        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00404");
-        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(nestedProblemDetail.getStatus()).isEqualTo(NOT_FOUND.value());
-        assertThat(nestedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-        assertThat(nestedProblemDetail.getErrors()).isNull();
+    @Nested
+    @TestPropertySource(properties = "spring.web.resources.add-mappings=false")
+    class NoHandlerFoundExceptionTest {
+        @Test
+        void noHandlerFoundException() {
+            String uri = BASE_PATH + "/no-handler-found";
+            MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+            assertThat(result)
+                    .hasStatus(NOT_FOUND)
+                    .hasContentType(APPLICATION_PROBLEM_JSON);
+            NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                    .convertTo(NestedProblemDetail.class).isNotNull().actual();
+            assertThat(nestedProblemDetail.getDetail()).contains("No endpoint");
+            assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00404");
+            assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(nestedProblemDetail.getStatus()).isEqualTo(NOT_FOUND.value());
+            assertThat(nestedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
+            assertThat(nestedProblemDetail.getErrors()).isNull();
+        }
     }
 
     @Test
