@@ -1,20 +1,25 @@
 package org.example.exceptionhandlerexample.controller;
 
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.AsyncListener;
 import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.response.NestedProblemDetail;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
-import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockAsyncContext;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -425,6 +430,46 @@ class ProblemDetailControllerTests {
         assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(nestedProblemDetail.getStatus()).isEqualTo(NOT_FOUND.value());
         assertThat(nestedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void noResourceFoundException() {
+        String uri = BASE_PATH + "/no-resource-found";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(NOT_FOUND)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).contains("No static resource");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00404");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(NOT_FOUND.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void asyncRequestTimeoutException() throws IOException {
+        String uri = BASE_PATH + "/async-request-timeout";
+        MvcTestResult mvcTestResult = mockMvcTester.get().uri(uri).asyncExchange();
+        assertThat(mvcTestResult.getRequest().isAsyncStarted()).isTrue();
+        AsyncContext asyncContext = mvcTestResult.getRequest().getAsyncContext();
+        assertThat(asyncContext).isNotNull();
+        AsyncListener listener = ((MockAsyncContext) asyncContext).getListeners().getFirst();
+        listener.onTimeout(null);
+        MvcTestResult result = mockMvcTester.perform(MockMvcRequestBuilders.asyncDispatch(mvcTestResult.getMvcResult()));
+        assertThat(result)
+                .hasStatus(SERVICE_UNAVAILABLE)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).isNull();
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00503");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(SERVICE_UNAVAILABLE.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(SERVICE_UNAVAILABLE.getReasonPhrase());
         assertThat(nestedProblemDetail.getErrors()).isNull();
     }
 }

@@ -1,13 +1,8 @@
 package org.example.exceptionhandlerexample.controller;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.reuqest.problem.ProblemDetailRequest;
 import org.example.exceptionhandlerexample.reuqest.valid.annocation.CheckMultipartFile;
@@ -17,9 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -132,5 +130,10 @@ public class ProblemDetailController {
     @PostMapping("/request-body-validation-result")
     public void requestBodyValidationResult(@RequestBody List<@NotBlank(message = "元素不能包含空") String> list) {
         log.info("list.size = {}, list: {}", list.size(), list);
+    }
+
+    @GetMapping("/async-request-timeout")
+    public DeferredResult<String> asyncRequestTimeoutException() {
+        return new DeferredResult<>(1L);
     }
 }
