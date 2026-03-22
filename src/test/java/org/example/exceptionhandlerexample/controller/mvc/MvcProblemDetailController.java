@@ -1,4 +1,4 @@
-package org.example.exceptionhandlerexample.controller;
+package org.example.exceptionhandlerexample.controller.mvc;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,8 +19,8 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/problem-detail")
-public class ProblemDetailController {
+@RequestMapping("/mvc-problem-detail")
+public class MvcProblemDetailController {
 
     @GetMapping("/param")
     public void get(@RequestParam Integer id) {

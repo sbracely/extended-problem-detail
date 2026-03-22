@@ -1,10 +1,10 @@
-package org.example.exceptionhandlerexample.test.controller;
+package org.example.exceptionhandlerexample.test.controller.mvc;
 
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.AsyncListener;
 import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
-import org.example.exceptionhandlerexample.controller.ProblemDetailController;
+import org.example.exceptionhandlerexample.controller.mvc.MvcProblemDetailController;
 import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.response.NestedProblemDetail;
 import org.junit.jupiter.api.Nested;
@@ -30,13 +30,13 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.*;
 
 @Slf4j
-@WebMvcTest(ProblemDetailController.class)
-class ProblemDetailControllerTests {
+@WebMvcTest(MvcProblemDetailController.class)
+class FluxMvcProblemDetailControllerTests {
 
     @Autowired
     private MockMvcTester mockMvcTester;
 
-    private static final String BASE_PATH = "/problem-detail";
+    private static final String BASE_PATH = "/mvc-problem-detail";
 
     @Test
     void httpRequestMethodNotSupportedException() {
