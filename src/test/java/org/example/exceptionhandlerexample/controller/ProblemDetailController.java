@@ -135,9 +135,4 @@ public class ProblemDetailController {
         return new DeferredResult<>(1L);
     }
 
-
-//    @GetMapping(path = "/api-version")
-//    public void apiVersion() {
-//
-//    }
 }

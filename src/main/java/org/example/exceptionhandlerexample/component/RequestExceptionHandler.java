@@ -1,10 +1,11 @@
 package org.example.exceptionhandlerexample.component;
 
-import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.response.ErrorCode;
 import org.example.exceptionhandlerexample.response.NestedProblemDetail;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -21,9 +22,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @RestControllerAdvice
 public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(RequestExceptionHandler.class);
 
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -85,7 +87,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
                   @Value @SessionAttribute @RequestAttribute ...
                  */
                 result.getResolvableErrors().forEach(error ->
-                        log.error("codes: {}, defaultMessage: {}", error.getCodes(), error.getDefaultMessage()));
+                        logger.error("codes: {}, defaultMessage: {}", error.getCodes(), error.getDefaultMessage()));
             }
 
             @Override
@@ -128,7 +130,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
                 }
             }
             case ProblemDetail problemDetail -> body = new NestedProblemDetail(problemDetail);
-            default -> log.error("body class: {}", body.getClass());
+            default -> logger.error("body class: {}", body.getClass());
         }
 
         return super.createResponseEntity(body, headers, statusCode, request);
