@@ -5,16 +5,12 @@ import jakarta.servlet.AsyncListener;
 import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.controller.MvcProblemDetailController;
-import org.example.exceptionhandlerexample.endpoint.DemoEndpoint;
 import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.response.NestedProblemDetail;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockAsyncContext;
@@ -543,5 +539,24 @@ class MvcProblemDetailControllerTests {
             assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
             assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         }
+    }
+
+    @Test
+    void errorResponseExceptionMethodNotAllowed() {
+        String uri = BASE_PATH + "/method-not-allowed";
+        MvcTestResult result = mockMvcTester.delete().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(METHOD_NOT_ALLOWED)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        assertThat(nestedProblemDetail.getDetail()).startsWith("Supported methods: [")
+                .contains("GET", "POST").endsWith("]");
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo("Method Not Allowed");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00405");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
     }
 }

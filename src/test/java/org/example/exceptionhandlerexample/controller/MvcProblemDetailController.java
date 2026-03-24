@@ -9,13 +9,16 @@ import org.example.exceptionhandlerexample.reuqest.valid.annocation.CheckMultipa
 import org.example.exceptionhandlerexample.reuqest.valid.annocation.CheckPassword;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ContentTooLargeException;
+import org.springframework.web.server.MethodNotAllowedException;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -141,5 +144,15 @@ public class MvcProblemDetailController {
     public void contentTooLarge(@RequestPart MultipartFile file) {
         log.info("file: {}", file);
         throw new ContentTooLargeException(new RuntimeException("content too large"));
+    }
+
+    @RequestMapping("/method-not-allowed")
+    public void methodNotAllowed(HttpMethod httpMethod) {
+        List<HttpMethod> supportedMethods = Arrays.asList(HttpMethod.GET, HttpMethod.POST);
+        log.info("httpMethod: {}", httpMethod);
+        if (supportedMethods.contains(httpMethod)) {
+            return;
+        }
+        throw new MethodNotAllowedException(httpMethod, supportedMethods);
     }
 }
