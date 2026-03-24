@@ -542,7 +542,7 @@ class MvcProblemDetailControllerTests {
     }
 
     @Test
-    void errorResponseExceptionMethodNotAllowed() {
+    void errorResponseExceptionMethodNotAllowedException() {
         String uri = BASE_PATH + "/method-not-allowed";
         MvcTestResult result = mockMvcTester.delete().uri(uri).exchange();
         assertThat(result)
@@ -559,4 +559,22 @@ class MvcProblemDetailControllerTests {
         assertThat(nestedProblemDetail.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
         assertThat(nestedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
     }
+
+    @Test
+    void errorResponseExceptionMissRequestValueException() {
+        String uri = BASE_PATH + "/missing-request-value";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("Required request param 'id' is not present.");
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+    }
+
 }
