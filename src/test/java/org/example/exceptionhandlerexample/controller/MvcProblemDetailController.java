@@ -21,13 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ContentTooLargeException;
-import org.springframework.web.server.MethodNotAllowedException;
-import org.springframework.web.server.MissingRequestValueException;
-import org.springframework.web.server.NotAcceptableStatusException;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.PayloadTooLargeException;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.*;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -209,6 +203,17 @@ public class MvcProblemDetailController {
     @PostMapping("/payload-too-large")
     public void payloadTooLarge(@RequestPart MultipartFile file) {
         log.info("file: {}", file);
-        throw new PayloadTooLargeException(new RuntimeException("payload too large"));
+        PayloadTooLargeException payloadTooLarge = new PayloadTooLargeException(new RuntimeException("payload too large"));
+        payloadTooLarge.setDetail("payload too large");
+        throw payloadTooLarge;
+    }
+
+    @GetMapping("/server-error")
+    public void serverError() {
+        log.info("server error");
+        RuntimeException cause = new RuntimeException("server internal error");
+        ServerErrorException ex = new ServerErrorException("server error", cause);
+        ex.setDetail("server internal error");
+        throw ex;
     }
 }

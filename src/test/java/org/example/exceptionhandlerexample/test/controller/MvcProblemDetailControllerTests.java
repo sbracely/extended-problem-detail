@@ -605,11 +605,29 @@ class MvcProblemDetailControllerTests {
         NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
                 .convertTo(NestedProblemDetail.class).isNotNull().actual();
         log.info("nestedProblemDetail: {}", nestedProblemDetail);
-        assertThat(nestedProblemDetail.getDetail()).isNull();
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("payload too large");
         assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00413");
         assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(nestedProblemDetail.getStatus()).isEqualTo(CONTENT_TOO_LARGE.value());
         assertThat(nestedProblemDetail.getTitle()).isEqualTo(CONTENT_TOO_LARGE.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void errorResponseExceptionServerErrorException() {
+        String uri = BASE_PATH + "/server-error";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(INTERNAL_SERVER_ERROR)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("server internal error");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00500");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
         assertThat(nestedProblemDetail.getErrors()).isNull();
     }
 }
