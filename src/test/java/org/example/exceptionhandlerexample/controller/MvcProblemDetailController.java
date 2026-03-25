@@ -211,9 +211,12 @@ public class MvcProblemDetailController {
     @GetMapping("/server-error")
     public void serverError() {
         log.info("server error");
-        RuntimeException cause = new RuntimeException("server internal error");
-        ServerErrorException ex = new ServerErrorException("server error", cause);
-        ex.setDetail("server internal error");
-        throw ex;
+        throw new ServerErrorException("server error", new RuntimeException());
+    }
+
+    @GetMapping("/server-web-input")
+    public void serverWebInput() {
+        log.info("server web input");
+        throw new ServerWebInputException("server web input error");
     }
 }

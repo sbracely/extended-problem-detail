@@ -623,11 +623,29 @@ class MvcProblemDetailControllerTests {
         NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
                 .convertTo(NestedProblemDetail.class).isNotNull().actual();
         log.info("nestedProblemDetail: {}", nestedProblemDetail);
-        assertThat(nestedProblemDetail.getDetail()).isEqualTo("server internal error");
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("server error");
         assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00500");
         assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(nestedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
         assertThat(nestedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void errorResponseExceptionServerWebInputException() {
+        String uri = BASE_PATH + "/server-web-input";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("server web input error");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(nestedProblemDetail.getErrors()).isNull();
     }
 }
