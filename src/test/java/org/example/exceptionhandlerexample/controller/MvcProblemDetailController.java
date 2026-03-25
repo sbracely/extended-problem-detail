@@ -187,6 +187,11 @@ public class MvcProblemDetailController {
         throw new MissingRequestValueException("id", String.class, "request param", methodParameters[0]);
     }
 
+    @GetMapping(path = "/api-version")
+    public void apiVersion() {
+        log.info("apiVersion");
+    }
+
     @PostMapping("/file-max-size")
     public void fileMaxSize(@RequestPart MultipartFile file) {
         log.info("file.size: {}", file.getSize());

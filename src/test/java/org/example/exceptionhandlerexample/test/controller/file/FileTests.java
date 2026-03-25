@@ -1,4 +1,4 @@
-package org.example.exceptionhandlerexample.test.file;
+package org.example.exceptionhandlerexample.test.controller.file;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.exceptionhandlerexample.response.NestedProblemDetail;

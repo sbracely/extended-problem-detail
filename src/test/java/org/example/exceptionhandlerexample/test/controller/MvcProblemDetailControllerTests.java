@@ -500,23 +500,20 @@ class MvcProblemDetailControllerTests {
     }
 
     @Nested
-    @TestPropertySource(properties = {
-            "spring.mvc.apiversion.use.header=API-Version",
-            "spring.mvc.apiversion.supported=1"
-    })
+    @TestPropertySource(properties = "spring.mvc.apiversion.use.header=API-Version")
     class ApiVersionTest {
         @Test
         void errorResponseExceptionInvalidApiVersionException() {
-            String uri = BASE_PATH + "/param";
-            MvcTestResult result = mockMvcTester.get().uri(uri).param("id", "1")
-                    .header("API-Version", "2").exchange();
+            String uri = BASE_PATH + "/api-version";
+            MvcTestResult result = mockMvcTester.get().uri(uri)
+                    .header("API-Version", "1").exchange();
             assertThat(result)
                     .hasStatus(BAD_REQUEST)
                     .hasContentType(APPLICATION_PROBLEM_JSON);
             NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
                     .convertTo(NestedProblemDetail.class).isNotNull().actual();
             log.info("nestedProblemDetail: {}", nestedProblemDetail);
-            assertThat(nestedProblemDetail.getDetail()).isEqualTo("Invalid API version: '2.0.0'.");
+            assertThat(nestedProblemDetail.getDetail()).isEqualTo("Invalid API version: '1.0.0'.");
             assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
             assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
             assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
@@ -525,8 +522,8 @@ class MvcProblemDetailControllerTests {
 
         @Test
         void errorResponseExceptionMissingApiVersionException() {
-            String uri = BASE_PATH + "/param";
-            MvcTestResult result = mockMvcTester.get().uri(uri).param("id", "1").exchange();
+            String uri = BASE_PATH + "/api-version";
+            MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
             assertThat(result)
                     .hasStatus(BAD_REQUEST)
                     .hasContentType(APPLICATION_PROBLEM_JSON);
