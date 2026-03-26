@@ -785,4 +785,99 @@ class MvcProblemDetailControllerTests {
                 new Error(Error.Type.PARAMETER, "confirmPassword", "密码与确认密码不一致")
         );
     }
+
+
+    @Test
+    void conversionNotSupportedException() {
+        String uri = BASE_PATH + "/conversion-not-supported";
+        MvcTestResult result = mockMvcTester.get().uri(uri).param("data", "test-value").exchange();
+        assertThat(result)
+                .hasStatus(INTERNAL_SERVER_ERROR)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        // TODO custom detail
+        assertThat(nestedProblemDetail.getDetail()).contains("Failed to convert 'null' with value: 'test-value'");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00500");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void conversionNotSupportedExceptionMethodArgumentConversionNotSupportedException() {
+        String uri = BASE_PATH + "/method-argument-conversion-not-supported";
+        MvcTestResult result = mockMvcTester.get().uri(uri).param("error", "test-value").exchange();
+        assertThat(result)
+                .hasStatus(INTERNAL_SERVER_ERROR)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        assertThat(nestedProblemDetail.getDetail()).contains("Failed to convert");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00500");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void typeMismatchException() {
+        String uri = BASE_PATH + "/type-mismatch-exception";
+        MvcTestResult result = mockMvcTester.get().uri(uri).param("integer", "a").exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        // TODO custom detail
+        assertThat(nestedProblemDetail.getDetail()).contains("Failed to convert 'null' with value: 'test'");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void typeMismatchExceptionMethodArgumentTypeMismatchException() {
+        String uri = BASE_PATH + "/method-argument-type-mismatch";
+        MvcTestResult result = mockMvcTester.get().uri(uri).param("integer", "a").exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        assertThat(nestedProblemDetail.getDetail()).contains("Failed to convert").contains("'a'");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void httpMessageNotReadableException() {
+        String uri = BASE_PATH + "/http-message-not-readable";
+        MvcTestResult result = mockMvcTester.post().uri(uri).contentType(APPLICATION_JSON).content("""
+                           {
+                """).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        NestedProblemDetail nestedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(NestedProblemDetail.class).isNotNull().actual();
+        log.info("nestedProblemDetail: {}", nestedProblemDetail);
+        assertThat(nestedProblemDetail.getDetail()).isEqualTo("Failed to read request");
+        assertThat(nestedProblemDetail.getErrorCode()).isEqualTo("A00400");
+        assertThat(nestedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(nestedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(nestedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(nestedProblemDetail.getErrors()).isNull();
+    }
 }

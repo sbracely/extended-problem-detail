@@ -1,14 +1,18 @@
 package org.example.exceptionhandlerexample.controller;
 
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
+import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.reuqest.problem.detail.ProblemDetailRequest;
 import org.example.exceptionhandlerexample.reuqest.valid.annocation.CheckMultipartFile;
 import org.example.exceptionhandlerexample.reuqest.valid.annocation.CheckPassword;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpMethod;
@@ -19,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -30,6 +35,7 @@ import org.springframework.web.server.*;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -278,5 +284,45 @@ public class MvcProblemDetailController {
     public void responseStatusException() {
         log.info("response status exception");
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "exception");
+    }
+
+    @GetMapping("/conversion-not-supported")
+    public void conversionNotSupported(String data) throws Exception {
+        log.info("data: {}", data);
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (null == servletRequestAttributes) {
+            throw new MissingServletRequestParameterException("data", "String");
+        }
+        HttpServletRequest request = servletRequestAttributes.getRequest();
+        HandlerExecutionChain handlerExecutionChain = requestMappingHandlerMapping.getHandler(request);
+        if (null == handlerExecutionChain) {
+            throw new MissingServletRequestParameterException("data", "String");
+        }
+        HandlerMethod handlerMethod = (HandlerMethod) handlerExecutionChain.getHandler();
+        MethodParameter[] methodParameters = handlerMethod.getMethodParameters();
+        SimpleTypeConverter simpleTypeConverter = new SimpleTypeConverter();
+        ProblemDetailRequest problemDetailRequest = simpleTypeConverter.convertIfNecessary(data, ProblemDetailRequest.class, methodParameters[0]);
+        log.info("problemDetailRequest: {}", problemDetailRequest);
+    }
+
+    @GetMapping("/method-argument-conversion-not-supported")
+    public void methodArgumentConversionNotSupported(@RequestParam Error error) {
+        log.info("error: {}", error);
+    }
+
+    @GetMapping("/type-mismatch-exception")
+    public void typeMismatchException() {
+        log.info("type mismatch exception");
+        throw new TypeMismatchException("test", Integer.class);
+    }
+
+    @GetMapping("/method-argument-type-mismatch")
+    public void methodArgumentTypeMismatch(Integer integer) {
+        log.info("integer: {}", integer);
+    }
+
+    @PostMapping("/http-message-not-readable")
+    public void httpMessageNotReadable(@RequestBody ProblemDetailRequest data) {
+        log.info("data: {}", data);
     }
 }

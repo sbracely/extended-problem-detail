@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.exceptionhandlerexample.response.Error;
 import org.example.exceptionhandlerexample.reuqest.valid.annocation.ConfirmPassword;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
@@ -26,4 +27,7 @@ public class ProblemDetailRequest {
 
     private String password;
     private String confirmPassword;
+
+    // test for conversionNotSupportedException
+    private Error error;
 }
