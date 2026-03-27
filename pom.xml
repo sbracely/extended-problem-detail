@@ -6,14 +6,15 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>4.0.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
-    <groupId>org.example</groupId>
-    <artifactId>exception-handler-example</artifactId>
+    <groupId>com.github.sbrace-git</groupId>
+    <artifactId>nested-problem-detail</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>exception-handler-example</name>
-    <description>exception-handler-example</description>
-    <url/>
+    <packaging>pom</packaging>
+    <name>nested-problem-detail</name>
+    <description>Spring Boot Starter for nested ProblemDetail exception handling</description>
+    <url>https://github.com/sbrace-git/nested-problem-detail</url>
     <licenses>
         <license/>
     </licenses>
@@ -28,44 +29,33 @@
     </scm>
     <properties>
         <java.version>25</java.version>
+        <nested-problem-detail.version>0.0.1-SNAPSHOT</nested-problem-detail.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-restclient-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.20.0</version>
-            <scope>test</scope>
-        </dependency>
+    <modules>
+        <module>nested-problem-detail-autoconfigure</module>
+        <module>nested-problem-detail-spring-boot-starter</module>
+        <module>nested-problem-detail-test-mvc</module>
+        <module>nested-problem-detail-test-flux</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.github.sbrace-git</groupId>
+                <artifactId>nested-problem-detail-autoconfigure</artifactId>
+                <version>${nested-problem-detail.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.sbrace-git</groupId>
+                <artifactId>nested-problem-detail-spring-boot-starter</artifactId>
+                <version>${nested-problem-detail.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- 父POM中不声明具体依赖，由子模块管理 -->
     </dependencies>
 
     <build>
@@ -74,24 +64,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: nested-problem-detail-test-mvc
