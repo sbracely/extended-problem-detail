@@ -904,17 +904,4 @@ class MvcProblemDetailControllerTests {
         assertThat(nestedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
         assertThat(nestedProblemDetail.getErrors()).isNull();
     }
-
-    /**
-     * TODO: Test async request not usable exception
-     * {@link org.springframework.web.context.request.async.AsyncRequestNotUsableException }
-     * {@link MvcProblemDetailController#asyncRequestNotUsable()}
-     */
-    @Test
-    @Disabled
-    void asyncRequestNotUsableException() {
-        String uri = BASE_PATH + "/async-request-not-usable";
-        MvcTestResult result = mockMvcTester.get().uri(uri).asyncExchange();
-        result.getRequest().getAsyncContext().complete();
-    }
 }

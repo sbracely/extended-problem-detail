@@ -2,7 +2,10 @@ package org.example.exceptionhandlerexample.test.controller.async;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -23,7 +26,8 @@ public class AsyncRequestNotUsableExceptionTests {
     private int port;
 
     @Test
-    void asyncRequestNotUsableException() {
+    @ExtendWith(OutputCaptureExtension.class)
+    void asyncRequestNotUsableException(CapturedOutput output) {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setReadTimeout(Duration.ofMillis(1));
 
@@ -48,5 +52,8 @@ public class AsyncRequestNotUsableExceptionTests {
             Thread.currentThread().interrupt();
         }
 
+
+        assertThat(output.getOut())
+                .contains("handleAsyncRequestNotUsableException");
     }
 }

@@ -356,7 +356,7 @@ public class MvcProblemDetailController {
                 log.error("Thread sleep interrupted", e);
                 Thread.currentThread().interrupt();
             } catch (Exception e) {
-                log.error("Emitter error: {}", e.getClass().getSimpleName(), e);
+                log.error("Emitter error: {}", e.getClass().getSimpleName());
                 emitter.completeWithError(e);
             }
         });

@@ -162,7 +162,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected @Nullable ResponseEntity<Object> handleAsyncRequestNotUsableException(
             AsyncRequestNotUsableException ex, WebRequest request) {
-        log.error("================================handleAsyncRequestNotUsableException========================================", ex);
+        log.error("handleAsyncRequestNotUsableException", ex);
         return null;
     }
 }
