@@ -8,7 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>extended-problem-detail-core</artifactId>
+    <artifactId>extended-problem-detail-response</artifactId>
     <name>extended-problem-deatil-core</name>
     <description>Core for extended ProblemDetail exception handling</description>
 

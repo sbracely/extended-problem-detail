@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
-class MvcProblemDetailControllerTests {
+class ExtendProblemDetailWebMvcTests {
 
     @Autowired
     private MockMvcTester mockMvcTester;

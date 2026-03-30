@@ -38,7 +38,7 @@
     </properties>
 
     <modules>
-        <module>extended-problem-detail-core</module>
+        <module>extended-problem-detail-response</module>
         <module>extended-problem-detail-autoconfigure-webmvc</module>
         <module>extended-problem-detail-spring-boot-starter-webmvc</module>
         <module>extended-problem-detail-test-flux</module>
@@ -48,7 +48,7 @@
         <dependencies>
             <dependency>
                 <groupId>com.github.sbracely</groupId>
-                <artifactId>extended-problem-detail-core</artifactId>
+                <artifactId>extended-problem-detail-response</artifactId>
                 <version>${extended-problem-detail.version}</version>
             </dependency>
             <dependency>
