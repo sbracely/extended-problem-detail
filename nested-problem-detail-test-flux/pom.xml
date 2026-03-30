@@ -16,7 +16,7 @@
         <!-- Starter under test -->
         <dependency>
             <groupId>com.github.sbracely</groupId>
-            <artifactId>nested-problem-detail-spring-boot-starter</artifactId>
+            <artifactId>nested-problem-detail-spring-boot-starter-webmvc</artifactId>
         </dependency>
 
         <!-- Spring Boot Test -->

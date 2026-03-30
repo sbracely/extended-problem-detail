@@ -8,16 +8,33 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nested-problem-detail-test-mvc</artifactId>
-    <name>nested-problem-detail-test-mvc</name>
-    <description>Test module for Spring MVC exception handling</description>
+    <artifactId>nested-problem-detail-autoconfigure-webmvc</artifactId>
+    <name>nested-problem-detail-autoconfigure</name>
+    <description>Auto-configuration for nested ProblemDetail exception handling</description>
 
     <dependencies>
         <dependency>
             <groupId>com.github.sbracely</groupId>
-            <artifactId>nested-problem-detail-spring-boot-starter</artifactId>
+            <artifactId>nested-problem-detail-core</artifactId>
         </dependency>
-
+        <!-- Compile dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <!-- Configuration processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-validation</artifactId>
+        </dependency>
+        <!-- test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
@@ -63,17 +80,14 @@
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </path>
                     </annotationProcessorPaths>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

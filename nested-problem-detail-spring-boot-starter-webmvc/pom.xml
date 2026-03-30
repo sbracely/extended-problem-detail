@@ -8,14 +8,14 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>nested-problem-detail-spring-boot-starter</artifactId>
+    <artifactId>nested-problem-detail-spring-boot-starter-webmvc</artifactId>
     <name>nested-problem-detail-spring-boot-starter</name>
     <description>Spring Boot Starter for nested ProblemDetail exception handling</description>
 
     <dependencies>
         <dependency>
             <groupId>com.github.sbracely</groupId>
-            <artifactId>nested-problem-detail-autoconfigure</artifactId>
+            <artifactId>nested-problem-detail-autoconfigure-webmvc</artifactId>
         </dependency>
     </dependencies>
 
