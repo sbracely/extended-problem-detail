@@ -84,4 +84,4 @@ The project covers **50+ test methods** for **35+ exception classes** including:
 
 ## License
 
-MIT
+Apache License 2.0

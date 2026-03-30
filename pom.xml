@@ -16,10 +16,16 @@
     <description>Spring Boot Starter for nested ProblemDetail exception handling</description>
     <url>https://github.com/sbracely/nested-problem-detail</url>
     <licenses>
-        <license/>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <name>sbrace</name>
+            <email>sbrace0822@gmail.com</email>
+        </developer>
     </developers>
     <scm>
         <connection/>
@@ -54,7 +60,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- 父POM中不声明具体依赖，由子模块管理 -->
     </dependencies>
 
     <build>
