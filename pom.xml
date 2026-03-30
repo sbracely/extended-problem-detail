@@ -40,8 +40,9 @@
     <modules>
         <module>response</module>
         <module>autoconfigure-webmvc</module>
+        <module>autoconfigure-webflux</module>
         <module>starter-webmvc</module>
-        <module>test-flux</module>
+        <module>starter-webflux</module>
     </modules>
 
     <dependencyManagement>
@@ -58,7 +59,7 @@
             </dependency>
             <dependency>
                 <groupId>com.github.sbracely</groupId>
-                <artifactId>extended-problem-detail-spring-boot-starter-webmvc</artifactId>
+                <artifactId>extended-problem-detail-autoconfigure-webflux</artifactId>
                 <version>${extended-problem-detail.version}</version>
             </dependency>
         </dependencies>
