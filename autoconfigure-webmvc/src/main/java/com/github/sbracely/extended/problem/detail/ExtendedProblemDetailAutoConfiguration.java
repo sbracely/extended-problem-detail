@@ -1,6 +1,6 @@
 package com.github.sbracely.extended.problem.detail;
 
-import com.github.sbracely.extended.problem.detail.handler.RequestExceptionHandler;
+import com.github.sbracely.extended.problem.detail.handler.ExtendedProblemDetailExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -19,8 +19,8 @@ public class ExtendedProblemDetailAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RequestExceptionHandler requestExceptionHandler() {
-        return new RequestExceptionHandler();
+    public ExtendedProblemDetailExceptionHandler requestExceptionHandler() {
+        return new ExtendedProblemDetailExceptionHandler();
     }
 
 }

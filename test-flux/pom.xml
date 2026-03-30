@@ -9,8 +9,8 @@
     </parent>
 
     <artifactId>extended-problem-detail-test-flux</artifactId>
-    <name>extended-problem-detail-test-flux</name>
-    <description>Test module for Spring WebFlux exception handling (TODO)</description>
+    <name>Extended Problem Detail Test for WebFlux</name>
+    <description>Test module for extended ProblemDetail exception handling in Spring WebFlux applications</description>
 
     <dependencies>
         <!-- Starter under test -->

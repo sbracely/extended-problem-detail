@@ -9,8 +9,8 @@
     </parent>
 
     <artifactId>extended-problem-detail-response</artifactId>
-    <name>extended-problem-deatil-core</name>
-    <description>Core for extended ProblemDetail exception handling</description>
+    <name>Extended Problem Detail Core</name>
+    <description>Core module providing extended ProblemDetail response model with field-level error support</description>
 
     <dependencies>
         <!-- Compile dependencies -->

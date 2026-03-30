@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
-public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(RequestExceptionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ExtendedProblemDetailExceptionHandler.class);
 
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -109,7 +109,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
             }
 
             private void processParameterErrors(ParameterErrors errors) {
-                errors.getAllErrors().stream().map(RequestExceptionHandler.this::ObjectErrorConvertToError).forEach(errorList::add);
+                errors.getAllErrors().stream().map(ExtendedProblemDetailExceptionHandler.this::ObjectErrorConvertToError).forEach(errorList::add);
             }
         });
         ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail(ex.getBody());
