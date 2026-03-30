@@ -1,8 +1,6 @@
 package com.github.sbracely.nested.problem.detail.response;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
 import java.util.Objects;
 
@@ -21,14 +19,6 @@ public class Error {
         this.type = type;
         this.field = field;
         this.message = message;
-    }
-
-    public Error(ObjectError objectError) {
-        if (objectError instanceof FieldError fieldError) {
-            this.field = fieldError.getField();
-        }
-        this.message = objectError.getDefaultMessage();
-        this.type = Type.PARAMETER;
     }
 
     public @Nullable Type getType() {

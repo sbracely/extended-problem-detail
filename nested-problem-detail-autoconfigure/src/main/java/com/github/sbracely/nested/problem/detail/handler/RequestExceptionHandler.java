@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.method.ParameterErrors;
 import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.ErrorResponseException;
@@ -40,7 +42,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        List<Error> errors = ex.getBindingResult().getAllErrors().stream().map(Error::new).toList();
+        List<Error> errors = ex.getBindingResult().getAllErrors().stream().map(this::ObjectErrorConvertToError).toList();
         NestedProblemDetail nestedProblemDetail = new NestedProblemDetail(ex.getBody());
         nestedProblemDetail.setErrors(errors);
         return handleExceptionInternal(ex, nestedProblemDetail, headers, status, request);
@@ -115,7 +117,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
             }
 
             private void processParameterErrors(ParameterErrors errors) {
-                errors.getAllErrors().stream().map(Error::new).forEach(errorList::add);
+                errors.getAllErrors().stream().map(RequestExceptionHandler.this::ObjectErrorConvertToError).forEach(errorList::add);
             }
         });
         NestedProblemDetail nestedProblemDetail = new NestedProblemDetail(ex.getBody());
@@ -129,7 +131,7 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
         if (ex instanceof WebExchangeBindException exchangeBindException) {
             ProblemDetail body = exchangeBindException.getBody();
             BindingResult bindingResult = exchangeBindException.getBindingResult();
-            List<Error> errors = bindingResult.getAllErrors().stream().map(Error::new).toList();
+            List<Error> errors = bindingResult.getAllErrors().stream().map(this::ObjectErrorConvertToError).toList();
             NestedProblemDetail nestedProblemDetail = new NestedProblemDetail(body);
             nestedProblemDetail.setErrors(errors);
             return handleExceptionInternal(ex, nestedProblemDetail, headers, status, request);
@@ -164,5 +166,15 @@ public class RequestExceptionHandler extends ResponseEntityExceptionHandler {
             AsyncRequestNotUsableException ex, WebRequest request) {
         log.error("handleAsyncRequestNotUsableException", ex);
         return null;
+    }
+
+    private Error ObjectErrorConvertToError(ObjectError objectError) {
+        Error error = new Error();
+        if (objectError instanceof FieldError fieldError) {
+            error.setField(fieldError.getField());
+        }
+        error.setMessage(objectError.getDefaultMessage());
+        error.setType(Error.Type.PARAMETER);
+        return error;
     }
 }
