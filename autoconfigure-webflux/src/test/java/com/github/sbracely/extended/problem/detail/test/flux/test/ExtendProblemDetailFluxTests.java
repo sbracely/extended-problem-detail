@@ -1,12 +1,15 @@
 package com.github.sbracely.extended.problem.detail.test.flux.test;
 
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
+import io.micrometer.core.ipc.http.HttpSender;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -14,12 +17,15 @@ import java.io.IOException;
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.ALLOW;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @Slf4j
 @SpringBootTest
-@AutoConfigureWebTestClient
+@AutoConfigureWebTestClient(timeout = "PT10M")
 class ExtendProblemDetailFluxTests {
 
     @Autowired
@@ -32,6 +38,7 @@ class ExtendProblemDetailFluxTests {
         String uri = BASE_PATH + "/method-not-allowed";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.delete().uri(uri).exchange()
                 .expectStatus().isEqualTo(METHOD_NOT_ALLOWED)
+                .expectHeader().valueEquals(ALLOW, GET.name())
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
@@ -41,6 +48,27 @@ class ExtendProblemDetailFluxTests {
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Supported methods: [GET]");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void notAcceptableStatusException() {
+        String uri = BASE_PATH + "/not-acceptable-status";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .header(HttpHeaders.ACCEPT, "application/xml")
+                .exchange()
+                .expectStatus().isEqualTo(NOT_ACCEPTABLE)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(NOT_ACCEPTABLE.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Acceptable representations: [application/json].");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
@@ -610,22 +638,6 @@ class ExtendProblemDetailFluxTests {
 //        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
     }
 
-    @Test
-    void errorResponseExceptionNotAcceptableStatusException() {
-//        String uri = BASE_PATH + "/not-acceptable-status";
-//        MvcTestResult result = webTestClient.get().uri(uri).exchange();
-//        assertThat(result)
-//                .hasStatus(NOT_ACCEPTABLE)
-//                .hasContentType(APPLICATION_PROBLEM_JSON)
-//                .hasHeader(ACCEPT, APPLICATION_JSON_VALUE);
-//        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-//                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-//        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Acceptable representations: [application/json].");
-//        assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
-//        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-//        assertThat(extendedProblemDetail.getStatus()).isEqualTo(NOT_ACCEPTABLE.value());
-//        assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
-    }
 
     @Test
     void errorResponseExceptionPayloadTooLargeException() {

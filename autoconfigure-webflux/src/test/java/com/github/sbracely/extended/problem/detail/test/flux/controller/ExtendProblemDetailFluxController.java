@@ -39,6 +39,11 @@ public class ExtendProblemDetailFluxController {
         log.info("method-not-allowed");
     }
 
+    @GetMapping(path = "/not-acceptable-status", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void notAcceptableStatus() {
+        log.info("not-acceptable-status");
+    }
+
 //    private final ProblemDetailService problemDetailService;
 //
 //    public ExtendProblemDetailFluxController(ProblemDetailService problemDetailService) {
@@ -178,11 +183,6 @@ public class ExtendProblemDetailFluxController {
     @GetMapping(path = "/api-version")
     public void apiVersion() {
         log.info("apiVersion");
-    }
-
-    @GetMapping("/not-acceptable-status")
-    public void notAcceptableStatus() {
-        throw new NotAcceptableStatusException(List.of(MediaType.APPLICATION_JSON));
     }
 
     @PostMapping("/file-max-size")
