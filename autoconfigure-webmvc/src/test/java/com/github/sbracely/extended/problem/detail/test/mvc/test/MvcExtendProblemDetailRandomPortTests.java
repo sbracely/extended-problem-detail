@@ -38,7 +38,7 @@ import static org.springframework.http.HttpStatus.CONTENT_TOO_LARGE;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ExtendProblemDetailMvcRandomPortTests {
+class MvcExtendProblemDetailRandomPortTests {
 
     @LocalServerPort
     private int port;

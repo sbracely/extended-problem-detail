@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -28,7 +27,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient(timeout = "PT10M")
-class ExtendProblemDetailFluxRandomPortTests {
+class FluxExtendProblemDetailRandomPortTests {
 
     @LocalServerPort
     private int port;

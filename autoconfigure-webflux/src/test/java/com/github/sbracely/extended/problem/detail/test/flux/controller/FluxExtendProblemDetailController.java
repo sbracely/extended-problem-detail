@@ -16,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.accept.InvalidApiVersionException;
+import org.springframework.web.accept.MissingApiVersionException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.resource.NoResourceFoundException;
-import org.springframework.web.server.*;
-import org.springframework.web.accept.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ServerErrorException;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -27,11 +29,11 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/extend-problem-detail-flux")
-public class ExtendProblemDetailFluxController {
+public class FluxExtendProblemDetailController {
 
     private final ProblemDetailService problemDetailService;
 
-    public ExtendProblemDetailFluxController(ProblemDetailService problemDetailService) {
+    public FluxExtendProblemDetailController(ProblemDetailService problemDetailService) {
         this.problemDetailService = problemDetailService;
     }
 

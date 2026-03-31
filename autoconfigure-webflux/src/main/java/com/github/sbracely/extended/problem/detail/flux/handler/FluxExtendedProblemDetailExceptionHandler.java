@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
-public class ExtendedProblemDetailFluxExceptionHandler extends ResponseEntityExceptionHandler {
+public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ExtendedProblemDetailFluxExceptionHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(FluxExtendedProblemDetailExceptionHandler.class);
 
     @Override
     protected Mono<ResponseEntity<Object>> handleWebExchangeBindException(WebExchangeBindException ex, HttpHeaders headers, HttpStatusCode status, ServerWebExchange exchange) {
@@ -109,7 +109,7 @@ public class ExtendedProblemDetailFluxExceptionHandler extends ResponseEntityExc
             }
 
             private void processParameterErrors(ParameterErrors errors) {
-                errors.getAllErrors().stream().map(ExtendedProblemDetailFluxExceptionHandler.this::ObjectErrorConvertToError).forEach(errorList::add);
+                errors.getAllErrors().stream().map(FluxExtendedProblemDetailExceptionHandler.this::ObjectErrorConvertToError).forEach(errorList::add);
             }
         });
         ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail(ex.getBody());
