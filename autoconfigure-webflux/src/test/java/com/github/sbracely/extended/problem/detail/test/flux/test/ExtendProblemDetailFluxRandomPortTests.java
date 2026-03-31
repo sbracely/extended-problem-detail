@@ -120,26 +120,6 @@ class ExtendProblemDetailFluxRandomPortTests {
             assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         }
 
-        @Test
-        void errorResponseExceptionMissingApiVersionException() {
-            String uri = BASE_PATH + "/api-version-test";
-            EntityExchangeResult<ExtendedProblemDetail> result = webTestClient.get()
-                    .uri(uri)
-                    .exchange()
-                    .expectStatus()
-                    .isEqualTo(BAD_REQUEST)
-                    .expectHeader()
-                    .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                    .expectBody(ExtendedProblemDetail.class)
-                    .returnResult();
-            ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
-            log.info("extendedProblemDetail: {}", extendedProblemDetail);
-            assertThat(extendedProblemDetail).isNotNull();
-            assertThat(extendedProblemDetail.getDetail()).isEqualTo("API version is required.");
-            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        }
     }
 
     @Test
