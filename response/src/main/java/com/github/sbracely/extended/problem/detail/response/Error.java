@@ -66,6 +66,15 @@ public class Error {
         return Objects.hash(type, field, message);
     }
 
+    @Override
+    public String toString() {
+        return "Error{" +
+                "type=" + type +
+                ", field='" + field + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
+
     public enum Type {
         PARAMETER,
         COOKIE,

@@ -1,5 +1,6 @@
 package com.github.sbracely.extended.problem.detail.test.flux.test;
 
+import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -106,5 +107,210 @@ class ExtendProblemDetailFluxTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void unsatisfiedRequestParameterException() {
+        String uri = BASE_PATH + "/unsatisfied-request-param";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .exchange()
+                .expectStatus().isEqualTo(BAD_REQUEST)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isNotNull();
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void webExchangeBindException() {
+        String uri = BASE_PATH + "/web-exchange-bind";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
+                .contentType(APPLICATION_JSON)
+                .bodyValue("""
+                        {
+                            "name": "abc",
+                            "password": "123"
+                        }
+                        """)
+                .exchange()
+                .expectStatus().isEqualTo(BAD_REQUEST)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid request content.");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
+                new Error(Error.Type.PARAMETER, "name", "姓名长度范围 6-10"),
+                new Error(Error.Type.PARAMETER, "age", "年龄不可为空"),
+                new Error(Error.Type.PARAMETER, "password", "密码与确认密码不一致"),
+                new Error(Error.Type.PARAMETER, "confirmPassword", "密码与确认密码不一致")
+        );
+    }
+
+    @Test
+    void handlerMethodValidationException() {
+        String uri = BASE_PATH + "/handler-method-validation";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(uri)
+                        .queryParam("param", "")
+                        .queryParam("value", "ab")
+                        .build())
+                .exchange()
+                .expectStatus().isEqualTo(BAD_REQUEST)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
+                new Error(Error.Type.PARAMETER, "param", "参数不能为空"),
+                new Error(Error.Type.PARAMETER, "value", "长度至少5")
+        );
+    }
+
+    @Test
+    void serverWebInputException() {
+        // 通过类型转换失败触发ServerWebInputException
+        String uri = BASE_PATH + "/server-web-input";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uriBuilder ->
+                        uriBuilder.queryParam("number", "not-a-number").build())
+                .exchange()
+                .expectStatus().isEqualTo(BAD_REQUEST)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).contains("Failed to convert");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+
+    @Test
+    void serverErrorException() {
+        String uri = BASE_PATH + "/server-error";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .exchange()
+                .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("server error");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void responseStatusException() {
+        String uri = BASE_PATH + "/response-status-exception";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .exchange()
+                .expectStatus().isEqualTo(BAD_REQUEST)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("exception");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void errorResponseException() {
+        String uri = BASE_PATH + "/error-response-exception";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .exchange()
+                .expectStatus().isEqualTo(BAD_REQUEST)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("error response exception");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void methodValidationException() {
+        String uri = BASE_PATH + "/method-validation";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .exchange()
+                .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failed");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void customizedException() {
+        String uri = BASE_PATH + "/customized";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .exchange()
+                .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("支付失败");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
+                new Error("余额不足"),
+                new Error("支付频繁")
+        );
     }
 }
