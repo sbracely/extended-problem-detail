@@ -161,6 +161,11 @@ public class ExtendProblemDetailFluxController {
         return Mono.empty();
     }
 
+    @GetMapping("/response-status-exception-invalid-api-version")
+    public Mono<Void> responseStatusExceptionInvalidApiVersion() {
+        log.info("response status exception invalid api version");
+        return Mono.empty();
+    }
 
 
 

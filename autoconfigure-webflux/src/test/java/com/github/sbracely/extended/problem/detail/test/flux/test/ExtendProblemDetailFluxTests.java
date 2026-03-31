@@ -3,6 +3,7 @@ package com.github.sbracely.extended.problem.detail.test.flux.test;
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.system.CapturedOutput;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -483,10 +488,122 @@ class ExtendProblemDetailFluxTests {
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
+    @Nested
+    @TestPropertySource(properties = "spring.webflux.apiversion.use.header=API-Version")
+    class ApiVersionTests {
+
+        @Test
+        void responseStatusExceptionInvalidApiVersionException() {
+            String uri = BASE_PATH + "/response-status-exception-invalid-api-version";
+            ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                    .header("API-Version", "1")
+                    .exchange()
+                    .expectStatus().isEqualTo(BAD_REQUEST)
+                    .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                    .expectBody(ExtendedProblemDetail.class)
+                    .returnResult().getResponseBody();
+            log.info("extendedProblemDetail: {}", extendedProblemDetail);
+            assertThat(extendedProblemDetail).isNotNull();
+            assertThat(extendedProblemDetail.getType()).isNull();
+            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+            assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid API version: '1.0.0'.");
+            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(extendedProblemDetail.getProperties()).isNull();
+            assertThat(extendedProblemDetail.getErrors()).isNull();
+        }
+    }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Test
+    void errorResponseExceptionNotAcceptableApiVersionException() {
+        String uri = BASE_PATH + "/api-version-test";
+        EntityExchangeResult<ExtendedProblemDetail> result = webTestClient.get()
+                .uri(uri)
+                .header("API-Version", "2")
+                .exchange()
+                .expectStatus()
+                .isEqualTo(BAD_REQUEST)
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult();
+        ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid API version: '2.0.0'.");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+    }
+
+    @Test
+    void errorResponseExceptionMissingApiVersionException() {
+        String uri = BASE_PATH + "/api-version-test";
+        EntityExchangeResult<ExtendedProblemDetail> result = webTestClient.get()
+                .uri(uri)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(BAD_REQUEST)
+                .expectHeader()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult();
+        ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("API version is required.");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+    }
 
 
 
