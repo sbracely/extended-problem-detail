@@ -36,33 +36,39 @@ public class ExtendProblemDetailFluxController {
     }
 
     @GetMapping("/method-not-allowed")
-    public void methodNotAllowed() {
+    public Mono<Void> methodNotAllowed() {
         log.info("method-not-allowed");
+        return Mono.empty();
     }
 
     @GetMapping(path = "/not-acceptable-status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void notAcceptableStatus() {
+    public Mono<Void> notAcceptableStatus() {
         log.info("not-acceptable-status");
+        return Mono.empty();
     }
 
     @PostMapping(path = "/unsupported-media-type", consumes = MediaType.APPLICATION_XML_VALUE)
-    public void unsupportedMediaType() {
+    public Mono<Void> unsupportedMediaType() {
         log.info("unsupported media type");
+        return Mono.empty();
     }
 
     @GetMapping("/missing-request-value")
-    public void missingRequestValue(@RequestParam String id) {
+    public Mono<Void> missingRequestValue(@RequestParam String id) {
         log.info("missing-request-value id: {}", id);
+        return Mono.empty();
     }
 
     @GetMapping(path = "/unsatisfied-request-param", params = {"type=1", "exist", "!debug"})
-    public void unsatisfiedRequestParam() {
+    public Mono<Void> unsatisfiedRequestParam() {
         log.info("unsatisfied request param");
+        return Mono.empty();
     }
 
     @PostMapping("/web-exchange-bind")
-    public void webExchangeBind(@RequestBody @Validated ProblemDetailRequest problemDetailRequest) {
+    public Mono<Void> webExchangeBind(@RequestBody @Validated ProblemDetailRequest problemDetailRequest) {
         log.info("web exchange bind: {}", problemDetailRequest);
+        return Mono.empty();
     }
 
     @GetMapping("/handler-method-validation-cookie")
@@ -152,26 +158,27 @@ public class ExtendProblemDetailFluxController {
     }
 
     @GetMapping("/response-status-exception")
-    public void responseStatusException() {
+    public Mono<Void> responseStatusException() {
         log.info("response status exception");
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "exception");
     }
 
     @GetMapping("/error-response-exception")
-    public void errorResponseException() {
+    public Mono<Void> errorResponseException() {
         log.info("error response exception");
         throw new org.springframework.web.ErrorResponseException(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/method-validation")
-    public void methodValidation() {
+    public Mono<Void> methodValidation() {
         log.info("method validation");
         String result = problemDetailService.createProblemDetail("");
         log.info("result: {}", result);
+        return Mono.empty();
     }
 
     @GetMapping("/customized")
-    public void customized() {
+    public Mono<Void> customized() {
         log.info("customized");
         ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail();
         extendedProblemDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
