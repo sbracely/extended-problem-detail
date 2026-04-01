@@ -3,6 +3,7 @@ package com.github.sbracely.extended.problem.detail.test.flux.test;
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
 import com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController;
+import com.github.sbracely.extended.problem.detail.test.flux.exception.ExtendedErrorResponseException;
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDetailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
@@ -19,11 +20,18 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.validation.method.MethodValidationException;
 import org.springframework.validation.method.ParameterErrors;
 import org.springframework.validation.method.ParameterValidationResult;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.MethodNotAllowedException;
-import org.springframework.web.server.NotAcceptableStatusException;
+import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.reactive.resource.NoResourceFoundException;
+import org.springframework.web.server.*;
+import org.springframework.web.accept.InvalidApiVersionException;
+import org.springframework.web.accept.MissingApiVersionException;
+import org.springframework.web.accept.NotAcceptableApiVersionException;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -49,8 +57,10 @@ class FluxExtendedProblemDetailTests {
     private static final String BASE_PATH = "/flux-extended-problem-detail";
 
     /**
-     * {@link MethodNotAllowedException}
-     * {@link FluxExtendedProblemDetailController#methodNotAllowedException()}.
+     * Test method not allowed exception handling.
+     *
+     * @see MethodNotAllowedException
+     * @see FluxExtendedProblemDetailController#methodNotAllowedException()
      */
     @Test
     void methodNotAllowedException() {
@@ -73,8 +83,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link NotAcceptableStatusException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#notAcceptableStatusException()}.
+     * Test not acceptable status exception handling.
+     *
+     * @see NotAcceptableStatusException
+     * @see FluxExtendedProblemDetailController#notAcceptableStatusException()
      */
     @Test
     void notAcceptableStatusException() {
@@ -99,8 +111,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.UnsupportedMediaTypeStatusException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#unsupportedMediaTypeStatusException()}.
+     * Test unsupported media type status exception handling.
+     *
+     * @see UnsupportedMediaTypeStatusException
+     * @see FluxExtendedProblemDetailController#unsupportedMediaTypeStatusException()
      */
     @Test
     void unsupportedMediaTypeStatusException() {
@@ -123,8 +137,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.MissingRequestValueException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#missingRequestValueException(String)} ()}.
+     * Test missing request value exception handling.
+     *
+     * @see MissingRequestValueException
+     * @see FluxExtendedProblemDetailController#missingRequestValueException(String)
      */
     @Test
     void missingRequestValueException() {
@@ -146,8 +162,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.UnsatisfiedRequestParameterException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#unsatisfiedRequestParameterException()}.
+     * Test unsatisfied request parameter exception handling.
+     *
+     * @see UnsatisfiedRequestParameterException
+     * @see FluxExtendedProblemDetailController#unsatisfiedRequestParameterException()
      */
     @Test
     void unsatisfiedRequestParameterException() {
@@ -170,8 +188,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.bind.support.WebExchangeBindException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#webExchangeBindException(ProblemDetailRequest)} ()}.
+     * Test web exchange bind exception handling.
+     *
+     * @see WebExchangeBindException
+     * @see FluxExtendedProblemDetailController#webExchangeBindException(ProblemDetailRequest)
      */
     @Test
     void webExchangeBindException() {
@@ -205,9 +225,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link  org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionCookieValue(String)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#cookieValue(CookieValue, ParameterValidationResult)}
+     * Test handler method validation exception for cookie value.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionCookieValue(String)
+     * @see HandlerMethodValidationException.Visitor#cookieValue(CookieValue, ParameterValidationResult)
      */
     @Test
     void handlerMethodValidationExceptionCookieValue() {
@@ -232,9 +254,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionMatrix(String, List)} )}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#matrixVariable(MatrixVariable, ParameterValidationResult)}
+     * Test handler method validation exception for matrix variable.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionMatrix(String, List)
+     * @see HandlerMethodValidationException.Visitor#matrixVariable(MatrixVariable, ParameterValidationResult)
      */
     @Test
     void handlerMethodValidationExceptionMatrixVariable() {
@@ -258,9 +282,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionModelAttribute(ProblemDetailRequest)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#modelAttribute(ModelAttribute, ParameterErrors)}
+     * Test handler method validation exception for model attribute.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionModelAttribute(ProblemDetailRequest)
+     * @see HandlerMethodValidationException.Visitor#modelAttribute(ModelAttribute, ParameterErrors)
      */
     @Test
     void handlerMethodValidationExceptionModelAttribute() {
@@ -284,9 +310,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionPathVariable(String)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#pathVariable(PathVariable, ParameterValidationResult)}
+     * Test handler method validation exception for path variable.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionPathVariable(String)
+     * @see HandlerMethodValidationException.Visitor#pathVariable(PathVariable, ParameterValidationResult)
      */
     @Test
     void handlerMethodValidationExceptionPathVariable() {
@@ -310,9 +338,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestBody(ProblemDetailRequest)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#requestBody(RequestBody, ParameterErrors)}
+     * Test handler method validation exception for request body.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestBody(ProblemDetailRequest)
+     * @see HandlerMethodValidationException.Visitor#requestBody(RequestBody, ParameterErrors)
      */
     @Test
     void handlerMethodValidationExceptionRequestBody() {
@@ -342,9 +372,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestBodyValidationResult(List)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#requestBodyValidationResult(RequestBody, ParameterValidationResult)}
+     * Test handler method validation exception for request body validation result.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestBodyValidationResult(List)
+     * @see HandlerMethodValidationException.Visitor#requestBodyValidationResult(RequestBody, ParameterValidationResult)
      */
     @Test
     void handlerMethodValidationExceptionRequestBodyValidationResult() {
@@ -372,9 +404,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestHeader(String)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#requestHeader(RequestHeader, ParameterValidationResult)}
+     * Test handler method validation exception for request header.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestHeader(String)
+     * @see HandlerMethodValidationException.Visitor#requestHeader(RequestHeader, ParameterValidationResult)
      */
     @Test
     void handlerMethodValidationExceptionRequestHeader() {
@@ -399,9 +433,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestParam(String, String)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#requestParam(RequestParam, ParameterValidationResult)}
+     * Test handler method validation exception for request param.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestParam(String, String)
+     * @see HandlerMethodValidationException.Visitor#requestParam(RequestParam, ParameterValidationResult)
      */
     @Test
     void handlerMethodValidationExceptionRequestParam() {
@@ -432,9 +468,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestPart(FilePart)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#requestPart(RequestPart, ParameterErrors)}
+     * Test handler method validation exception for request part.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionRequestPart(FilePart)
+     * @see HandlerMethodValidationException.Visitor#requestPart(RequestPart, ParameterErrors)
      */
     @Test
     void handlerMethodValidationExceptionRequestPart() {
@@ -459,9 +497,11 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#handlerMethodValidationExceptionOther(String, String, String)} ()}.
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException.Visitor#other(ParameterValidationResult)}
+     * Test handler method validation exception for other parameters.
+     *
+     * @see HandlerMethodValidationException
+     * @see FluxExtendedProblemDetailController#handlerMethodValidationExceptionOther(String, String, String)
+     * @see HandlerMethodValidationException.Visitor#other(ParameterValidationResult)
      */
     @Test
     @ExtendWith(OutputCaptureExtension.class)
@@ -490,8 +530,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.ServerWebInputException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#serverWebInputException()}.
+     * Test server web input exception handling.
+     *
+     * @see ServerWebInputException
+     * @see FluxExtendedProblemDetailController#serverWebInputException()
      */
     @Test
     void serverWebInputException() {
@@ -514,8 +556,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.ServerErrorException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#serverErrorException()}.
+     * Test server error exception handling.
+     *
+     * @see ServerErrorException
+     * @see FluxExtendedProblemDetailController#serverErrorException()
      */
     @Test
     void serverErrorException() {
@@ -538,8 +582,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.ResponseStatusException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#responseStatusException()}.
+     * Test response status exception handling.
+     *
+     * @see ResponseStatusException
+     * @see FluxExtendedProblemDetailController#responseStatusException()
      */
     @Test
     void responseStatusException() {
@@ -562,8 +608,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.ContentTooLargeException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#contentTooLargeException(byte[])} ()}.
+     * Test content too large exception handling.
+     *
+     * @see ContentTooLargeException
+     * @see FluxExtendedProblemDetailController#contentTooLargeException(byte[])
      */
     @Test
     void contentTooLargeException() {
@@ -601,8 +649,10 @@ class FluxExtendedProblemDetailTests {
     class ApiVersionTests {
 
         /**
-         * {@link org.springframework.web.accept.InvalidApiVersionException}
-         * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#invalidApiVersionException()}
+         * Test invalid API version exception handling.
+         *
+         * @see InvalidApiVersionException
+         * @see FluxExtendedProblemDetailController#invalidApiVersionException()
          */
         @Test
         void invalidApiVersionException() {
@@ -626,8 +676,10 @@ class FluxExtendedProblemDetailTests {
         }
 
         /**
-         * {@link org.springframework.web.accept.MissingApiVersionException}
-         * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#missingApiVersionException()}
+         * Test missing API version exception handling.
+         *
+         * @see MissingApiVersionException
+         * @see FluxExtendedProblemDetailController#missingApiVersionException()
          */
         @Test
         void missingApiVersionException() {
@@ -663,8 +715,10 @@ class FluxExtendedProblemDetailTests {
         }
 
         /**
-         * {@link org.springframework.web.accept.NotAcceptableApiVersionException}
-         * {@link NotAcceptableApiVersionController#notAcceptableApiVersion()}
+         * Test not acceptable API version exception handling.
+         *
+         * @see NotAcceptableApiVersionException
+         * @see NotAcceptableApiVersionController#notAcceptableApiVersion()
          */
         @Test
         void notAcceptableApiVersionException() {
@@ -689,7 +743,9 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.reactive.resource.NoResourceFoundException}
+     * Test no resource found exception handling.
+     *
+     * @see NoResourceFoundException
      */
     @Test
     void noResourceFoundException() {
@@ -712,8 +768,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.server.PayloadTooLargeException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#payloadTooLargeException(byte[])} ()}.
+     * Test payload too large exception handling.
+     *
+     * @see PayloadTooLargeException
+     * @see FluxExtendedProblemDetailController#payloadTooLargeException(byte[])
      */
     @Test
     void payloadTooLargeException() {
@@ -737,8 +795,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.web.ErrorResponseException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#errorResponseException()}.
+     * Test error response exception handling.
+     *
+     * @see ErrorResponseException
+     * @see FluxExtendedProblemDetailController#errorResponseException()
      */
     @Test
     void errorResponseException() {
@@ -763,8 +823,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.exception.ExtendedErrorResponseException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#extendedErrorResponseException()}.
+     * Test extended error response exception handling.
+     *
+     * @see ExtendedErrorResponseException
+     * @see FluxExtendedProblemDetailController#extendedErrorResponseException()
      */
     @Test
     void extendedErrorResponseException() {
@@ -790,8 +852,10 @@ class FluxExtendedProblemDetailTests {
     }
 
     /**
-     * {@link org.springframework.validation.method.MethodValidationException}
-     * {@link com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController#methodValidationException()}.
+     * Test method validation exception handling.
+     *
+     * @see MethodValidationException
+     * @see FluxExtendedProblemDetailController#methodValidationException()
      */
     @Test
     void methodValidationException() {

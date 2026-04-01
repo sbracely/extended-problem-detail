@@ -16,12 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.method.MethodValidationException;
 import org.springframework.web.ErrorResponseException;
+import org.springframework.web.accept.InvalidApiVersionException;
+import org.springframework.web.accept.MissingApiVersionException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.PayloadTooLargeException;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.server.ServerErrorException;
-import org.springframework.web.server.ServerWebInputException;
+import org.springframework.web.bind.support.WebExchangeBindException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.server.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -38,7 +40,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.MethodNotAllowedException}
+     * Handle method not allowed exception.
+     *
+     * @see MethodNotAllowedException
      */
     @GetMapping("/method-not-allowed-exception")
     public Mono<Void> methodNotAllowedException() {
@@ -47,7 +51,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.NotAcceptableStatusException}
+     * Handle not acceptable status exception.
+     *
+     * @see NotAcceptableStatusException
      */
     @GetMapping(path = "/not-acceptable-status-exception", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<Void> notAcceptableStatusException() {
@@ -56,7 +62,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.UnsupportedMediaTypeStatusException}
+     * Handle unsupported media type status exception.
+     *
+     * @see UnsupportedMediaTypeStatusException
      */
     @PostMapping(path = "/unsupported-media-type-status-exception", consumes = MediaType.APPLICATION_XML_VALUE)
     public Mono<Void> unsupportedMediaTypeStatusException() {
@@ -65,7 +73,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.bind.MissingRequestValueException}
+     * Handle missing request value exception.
+     *
+     * @see MissingRequestValueException
      */
     @GetMapping("/missing-request-value-exception")
     public Mono<Void> missingRequestValueException(@RequestParam String id) {
@@ -74,7 +84,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.UnsatisfiedRequestParameterException}
+     * Handle unsatisfied request parameter exception.
+     *
+     * @see UnsatisfiedRequestParameterException
      */
     @GetMapping(path = "/unsatisfied-request-parameter-exception", params = {"type=1", "exist", "!debug"})
     public Mono<Void> unsatisfiedRequestParameterException() {
@@ -83,7 +95,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.bind.support.WebExchangeBindException}
+     * Handle web exchange bind exception.
+     *
+     * @see WebExchangeBindException
      */
     @PostMapping("/web-exchange-bind-exception")
     public Mono<Void> webExchangeBindException(@RequestBody @Validated ProblemDetailRequest problemDetailRequest) {
@@ -92,7 +106,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for cookie value.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#cookieValue(CookieValue, ParameterValidationResult)
      */
     @GetMapping("/handler-method-validation-exception-cookie-value")
     public Mono<Void> handlerMethodValidationExceptionCookieValue(@CookieValue @NotBlank(message = "cookie 不能为空") String cookieValue) {
@@ -101,7 +118,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for matrix variable.
+     *
+     * @see HandlerMethodValidationException
      */
     @GetMapping("/handler-method-validation-exception-matrix/{id}")
     public Mono<Void> handlerMethodValidationExceptionMatrix(@PathVariable String id,
@@ -111,7 +130,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for model attribute.
+     *
+     * @see HandlerMethodValidationException
      */
     @GetMapping("/handler-method-validation-exception-model-attribute")
     public Mono<Void> handlerMethodValidationExceptionModelAttribute(@CheckPassword(message = "密码不能是空") ProblemDetailRequest problemDetailRequest) {
@@ -120,7 +141,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for path variable.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#pathVariable(PathVariable, ParameterValidationResult)
      */
     @GetMapping("/handler-method-validation-exception-path-variable/{id}")
     public Mono<Void> handlerMethodValidationExceptionPathVariable(@PathVariable @Size(min = 5, message = "id 长度至少 5") String id) {
@@ -129,7 +153,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for request body.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#requestBody(RequestBody, ParameterErrors)
      */
     @PostMapping("/handler-method-validation-exception-request-body")
     public Mono<Void> handlerMethodValidationExceptionRequestBody(@RequestBody @CheckPassword(message = "密码不能是空") ProblemDetailRequest problemDetailRequest) {
@@ -138,7 +165,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for request body validation result.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#requestBodyValidationResult(RequestBody, ParameterValidationResult)
      */
     @PostMapping("/handler-method-validation-exception-request-body-validation-result")
     public Mono<Void> handlerMethodValidationExceptionRequestBodyValidationResult(@RequestBody List<@NotBlank(message = "元素不能包含空") String> list) {
@@ -147,7 +177,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for request header.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#requestHeader(RequestHeader, ParameterValidationResult)
      */
     @GetMapping(path = "/handler-method-validation-exception-request-header")
     public Mono<Void> handlerMethodValidationExceptionRequestHeader(@RequestHeader @NotBlank(message = "header 不能为空") String headerValue) {
@@ -156,7 +189,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for request param.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#requestParam(RequestParam, ParameterValidationResult)
      */
     @GetMapping("/handler-method-validation-exception-request-param")
     public Mono<Void> handlerMethodValidationExceptionRequestParam(@RequestParam @NotBlank(message = "参数不能为空") String param,
@@ -166,7 +202,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for request part.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#requestPart(RequestPart, ParameterErrors)
      */
     @PostMapping("/handler-method-validation-exception-request-part")
     public Mono<Void> handlerMethodValidationExceptionRequestPart(@RequestPart(required = false)
@@ -176,7 +215,10 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.method.annotation.HandlerMethodValidationException}
+     * Handle handler method validation exception for other.
+     *
+     * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#other(ParameterValidationResult)
      */
     @GetMapping("/handler-method-validation-exception-other")
     public Mono<Void> handlerMethodValidationExceptionOther(
@@ -188,7 +230,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.ServerWebInputException}
+     * Handle server web input exception.
+     *
+     * @see ServerWebInputException
      */
     @GetMapping("/server-web-input-exception")
     public Mono<Void> serverWebInputException() {
@@ -197,7 +241,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.ServerErrorException}
+     * Handle server error exception.
+     *
+     * @see ServerErrorException
      */
     @GetMapping("/server-error-exception")
     public Mono<Void> serverErrorException() {
@@ -206,7 +252,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.ResponseStatusException}
+     * Handle response status exception.
+     *
+     * @see ResponseStatusException
      */
     @GetMapping("/response-status-exception")
     public Mono<Void> responseStatusException() {
@@ -215,7 +263,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.ContentTooLargeException}
+     * Handle content too large exception.
+     *
+     * @see ContentTooLargeException
      */
     @PostMapping("/content-too-large-exception")
     public Mono<Void> contentTooLargeException(@RequestBody byte[] body) {
@@ -224,7 +274,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.accept.InvalidApiVersionException}
+     * Handle invalid API version exception.
+     *
+     * @see InvalidApiVersionException
      */
     @GetMapping("/invalid-api-version-exception")
     public Mono<Void> invalidApiVersionException() {
@@ -233,7 +285,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.accept.MissingApiVersionException}
+     * Handle missing API version exception.
+     *
+     * @see MissingApiVersionException
      */
     @GetMapping("/missing-api-version-exception")
     public Mono<Void> missingApiVersionException() {
@@ -242,7 +296,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.server.PayloadTooLargeException}
+     * Handle payload too large exception.
+     *
+     * @see PayloadTooLargeException
      */
     @PostMapping("/payload-too-large-exception")
     public Mono<Void> payloadTooLargeException(@RequestBody byte[] body) {
@@ -251,7 +307,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.web.ErrorResponseException}
+     * Handle error response exception.
+     *
+     * @see ErrorResponseException
      */
     @GetMapping("/error-response-exception")
     public Mono<Void> errorResponseException() {
@@ -265,7 +323,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link ExtendedErrorResponseException}
+     * Handle extended error response exception.
+     *
+     * @see ExtendedErrorResponseException
      */
     @GetMapping("/extended-error-response-exception")
     public Mono<Void> extendedErrorResponseException() {
@@ -279,7 +339,9 @@ public class FluxExtendedProblemDetailController {
     }
 
     /**
-     * {@link org.springframework.validation.method.MethodValidationException}
+     * Handle method validation exception.
+     *
+     * @see MethodValidationException
      */
     @GetMapping("/method-validation-exception")
     public Mono<Void> methodValidationException() {
