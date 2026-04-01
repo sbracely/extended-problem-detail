@@ -246,10 +246,10 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "name", "姓名长度范围 6-10"),
-                new Error(Error.Type.PARAMETER, "age", "年龄不可为空"),
-                new Error(Error.Type.PARAMETER, "password", "密码与确认密码不一致"),
-                new Error(Error.Type.PARAMETER, "confirmPassword", "密码与确认密码不一致")
+                new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
+                new Error(Error.Type.PARAMETER, "age", "Age cannot be null"),
+                new Error(Error.Type.PARAMETER, "password", "Password and confirm password do not match"),
+                new Error(Error.Type.PARAMETER, "confirmPassword", "Password and confirm password do not match")
         );
     }
 
@@ -267,7 +267,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.COOKIE, "name", "姓名长度最小是 2"));
+                .isEqualTo(new Error(Error.Type.COOKIE, "name", "Name length must be at least 2"));
     }
 
     @Test
@@ -284,7 +284,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "最大长度是 2"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "Maximum size is 2"));
     }
 
     @Test
@@ -301,7 +301,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "密码不能是空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
     }
 
     @Test
@@ -318,7 +318,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "id 最小长度是 2"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "ID minimum length is 2"));
     }
 
     @Test
@@ -339,7 +339,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "密码不能是空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
     }
 
     @Test
@@ -356,7 +356,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.HEADER, "headerValue", "最小长度是 2"));
+                .isEqualTo(new Error(Error.Type.HEADER, "headerValue", "Minimum length is 2"));
     }
 
     @Test
@@ -373,9 +373,9 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "param", "参数不能为空"),
-                new Error(Error.Type.PARAMETER, "param2", "参数2不能为空"),
-                new Error(Error.Type.PARAMETER, "param2", "参数2不能为null")
+                new Error(Error.Type.PARAMETER, "param", "Parameter cannot be empty"),
+                new Error(Error.Type.PARAMETER, "param2", "Parameter 2 cannot be null"),
+                new Error(Error.Type.PARAMETER, "param2", "Parameter 2 cannot be blank")
         );
     }
 
@@ -394,7 +394,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "file", "文件不能为空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "file", "File cannot be empty"));
     }
 
     @Test
@@ -429,7 +429,7 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, null, "元素不能包含空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, null, "Element cannot contain empty values"));
 
     }
 
@@ -764,10 +764,10 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "name", "姓名长度范围 6-10"),
-                new Error(Error.Type.PARAMETER, "age", "年龄不可为空"),
-                new Error(Error.Type.PARAMETER, "password", "密码与确认密码不一致"),
-                new Error(Error.Type.PARAMETER, "confirmPassword", "密码与确认密码不一致")
+                new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
+                new Error(Error.Type.PARAMETER, "age", "Age cannot be null"),
+                new Error(Error.Type.PARAMETER, "password", "Password and confirm password do not match"),
+                new Error(Error.Type.PARAMETER, "confirmPassword", "Password and confirm password do not match")
         );
     }
 
@@ -905,13 +905,13 @@ class MvcExtendedProblemDetailTests {
         ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
                 .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
         log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("支付失败");
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Payment failed");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("余额不足"),
-                new Error("支付频繁")
+                new Error("Insufficient balance"),
+                new Error("Payment frequent")
         );
     }
 }

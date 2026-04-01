@@ -205,10 +205,10 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid request content.");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "name", "姓名长度范围 6-10"),
-                new Error(Error.Type.PARAMETER, "age", "年龄不可为空"),
-                new Error(Error.Type.PARAMETER, "password", "密码与确认密码不一致"),
-                new Error(Error.Type.PARAMETER, "confirmPassword", "密码与确认密码不一致")
+                new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
+                new Error(Error.Type.PARAMETER, "age", "Age cannot be null"),
+                new Error(Error.Type.PARAMETER, "password", "Password and confirm password do not match"),
+                new Error(Error.Type.PARAMETER, "confirmPassword", "Password and confirm password do not match")
         );
     }
 
@@ -236,7 +236,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.COOKIE, "cookieValue", "cookie 不能为空"));
+                .isEqualTo(new Error(Error.Type.COOKIE, "cookieValue", "cookie cannot be empty"));
     }
 
     /**
@@ -262,7 +262,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "list 最大长度是 2"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "list maximum size is 2"));
     }
 
     /**
@@ -288,7 +288,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "密码不能是空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
     }
 
     /**
@@ -314,7 +314,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "id 长度至少 5"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "id length must be at least 5"));
     }
 
     /**
@@ -346,7 +346,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "密码不能是空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
     }
 
     /**
@@ -376,7 +376,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, null, "元素不能包含空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, null, "Element cannot contain empty values"));
     }
 
     /**
@@ -403,7 +403,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.HEADER, "headerValue", "header 不能为空"));
+                .isEqualTo(new Error(Error.Type.HEADER, "headerValue", "Header cannot be empty"));
     }
 
     /**
@@ -434,8 +434,8 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "param", "参数不能为空"),
-                new Error(Error.Type.PARAMETER, "value", "长度至少 5")
+                new Error(Error.Type.PARAMETER, "param", "Parameter cannot be empty"),
+                new Error(Error.Type.PARAMETER, "value", "Length must be at least 5")
         );
     }
 
@@ -463,7 +463,7 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "file", "文件不能为空"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "file", "File cannot be empty"));
     }
 
     /**
@@ -491,9 +491,9 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
         assertThat(output.getOut()).contains(Arrays.asList(
-                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.sessionAttribute, NotBlank.sessionAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: sessionAttribute 不能为空",
-                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.requestAttribute, NotBlank.requestAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: requestAttribute 不能为空",
-                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.value, NotBlank.value, NotBlank.java.lang.String, NotBlank], defaultMessage: value 不能为空"
+                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.sessionAttribute, NotBlank.sessionAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: sessionAttribute cannot be empty",
+                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.requestAttribute, NotBlank.requestAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: requestAttribute cannot be empty",
+                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.value, NotBlank.value, NotBlank.java.lang.String, NotBlank], defaultMessage: value cannot be empty"
         ));
     }
 
@@ -760,13 +760,13 @@ class FluxExtendedProblemDetailTests {
         log.info("extendedProblemDetail: {}", extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo("错误标题");
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo("Error title");
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("错误详情");
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Error details");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("错误信息 1"), new Error("错误信息 2")
+                new Error("Error message 1"), new Error("Error message 2")
         );
     }
 
@@ -786,14 +786,14 @@ class FluxExtendedProblemDetailTests {
         log.info("extendedProblemDetail: {}", extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo("支付失败标题");
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("支付失败详情");
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo("Payment failed title");
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Payment failed details");
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("余额不足"),
-                new Error("支付频繁")
+                new Error("Insufficient balance"),
+                new Error("Payment frequent")
         );
     }
 

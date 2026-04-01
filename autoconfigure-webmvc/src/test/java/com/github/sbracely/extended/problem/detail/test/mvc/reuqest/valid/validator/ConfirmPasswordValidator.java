@@ -1,11 +1,11 @@
 package com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.validator;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.Strings;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.ConfirmPassword;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+import java.util.Objects;
 
 public class ConfirmPasswordValidator implements ConstraintValidator<ConfirmPassword, ProblemDetailRequest> {
 
@@ -18,11 +18,11 @@ public class ConfirmPasswordValidator implements ConstraintValidator<ConfirmPass
 
     @Override
     public boolean isValid(ProblemDetailRequest problemDetailRequest, ConstraintValidatorContext context) {
-        boolean valid = Strings.CS.equals(problemDetailRequest.getPassword(), problemDetailRequest.getConfirmPassword());
+        boolean valid = Objects.equals(problemDetailRequest.getPassword(), problemDetailRequest.getConfirmPassword());
         if (valid) {
             return true;
         }
-        if (ArrayUtils.isEmpty(fields)) {
+        if (null == fields || fields.length == 0) {
             return false;
         }
         context.disableDefaultConstraintViolation();

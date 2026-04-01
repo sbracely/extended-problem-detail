@@ -4,7 +4,6 @@ import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annoc
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.codec.multipart.FilePart;
 
 import java.util.Arrays;
@@ -56,7 +55,7 @@ public class CheckFilePartValidator implements ConstraintValidator<CheckFilePart
         if (null == filePart) {
             return false;
         }
-        if (ArrayUtils.isEmpty(extensions)) {
+        if (null == extensions || extensions.length == 0) {
             return true;
         }
         String originalFilename = filePart.filename();

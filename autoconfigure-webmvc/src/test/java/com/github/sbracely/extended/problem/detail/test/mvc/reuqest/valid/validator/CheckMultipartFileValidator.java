@@ -1,10 +1,9 @@
 package com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.validator;
 
+import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.CheckMultipartFile;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.ArrayUtils;
-import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.CheckMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -56,7 +55,7 @@ public class CheckMultipartFileValidator implements ConstraintValidator<CheckMul
         if (null == multipartFile) {
             return false;
         }
-        if (ArrayUtils.isEmpty(extensions)) {
+        if (null == extensions || extensions.length == 0) {
             return true;
         }
         String originalFilename = multipartFile.getOriginalFilename();

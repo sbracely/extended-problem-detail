@@ -1,10 +1,9 @@
 package com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.validator;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.StringUtils;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.CheckPassword;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ public class CheckPasswordValidator implements ConstraintValidator<CheckPassword
     public boolean isValid(ProblemDetailRequest problemDetailRequest, ConstraintValidatorContext context) {
         boolean valid = Optional.ofNullable(problemDetailRequest)
                 .map(ProblemDetailRequest::getPassword)
-                .map(StringUtils::isNotBlank)
+                .map(password -> !password.isBlank())
                 .orElse(false);
         if (valid) {
             return true;

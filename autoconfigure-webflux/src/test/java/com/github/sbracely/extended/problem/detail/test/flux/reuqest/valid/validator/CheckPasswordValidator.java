@@ -4,7 +4,6 @@ import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDeta
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation.CheckPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ public class CheckPasswordValidator implements ConstraintValidator<CheckPassword
     public boolean isValid(ProblemDetailRequest problemDetailRequest, ConstraintValidatorContext context) {
         boolean valid = Optional.ofNullable(problemDetailRequest)
                 .map(ProblemDetailRequest::getPassword)
-                .map(StringUtils::isNotBlank)
+                .map(password -> !password.isBlank())
                 .orElse(false);
         if (valid) {
             return true;

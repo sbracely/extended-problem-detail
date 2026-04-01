@@ -25,11 +25,49 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * WebFlux Extended Problem Detail Exception Handler.
+ * <p>
+ * This exception handler extends Spring WebFlux's {@link ResponseEntityExceptionHandler} to provide
+ * enhanced validation error handling for reactive web applications. It intercepts validation
+ * exceptions and converts them into extended problem detail responses with field-level error information.
+ * </p>
+ * <p>
+ * This handler processes the following types of exceptions:
+ * </p>
+ * <ul>
+ *     <li>{@link WebExchangeBindException} - Validation failures for data binding</li>
+ *     <li>{@link HandlerMethodValidationException} - Method parameter validation failures using Visitor pattern</li>
+ * </ul>
+ * <p>
+ * The handler uses the Visitor pattern to process different types of parameter validation results,
+ * including annotations like {@code @CookieValue}, {@code @MatrixVariable}, {@code @ModelAttribute},
+ * {@code @PathVariable}, {@code @RequestBody}, {@code @RequestHeader}, {@code @RequestParam},
+ * and {@code @RequestPart}. All operations return {@link Mono} for reactive processing.
+ * </p>
+ *
+ * @see ResponseEntityExceptionHandler
+ * @see MvcExtendedProblemDetailExceptionHandler WebMVC version of exception handler
+ * @since 0.0.1-SNAPSHOT
+ */
 @RestControllerAdvice
 public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(FluxExtendedProblemDetailExceptionHandler.class);
 
+    /**
+     * Handles web exchange bind exceptions.
+     * <p>
+     * Converts validation errors from BindingResult into a list of Error objects
+     * and wraps them in an ExtendedProblemDetail response.
+     * </p>
+     *
+     * @param ex      the WebExchangeBindException that was thrown
+     * @param headers the HTTP headers to be used in the response
+     * @param status  the HTTP status code
+     * @param exchange the current server web exchange
+     * @return Mono containing ResponseEntity with the ExtendedProblemDetail with validation errors
+     */
     @Override
     protected Mono<ResponseEntity<Object>> handleWebExchangeBindException(WebExchangeBindException ex, HttpHeaders headers, HttpStatusCode status, ServerWebExchange exchange) {
         ProblemDetail body = ex.getBody();
@@ -40,6 +78,20 @@ public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExc
         return handleExceptionInternal(ex, extendedProblemDetail, headers, status, exchange);
     }
 
+    /**
+     * Handles handler method validation exceptions using Visitor pattern.
+     * <p>
+     * This method processes validation results for various parameter annotations by visiting
+     * each type of validation result and converting them into Error objects. Unsupported
+     * validation results are logged as errors.
+     * </p>
+     *
+     * @param ex       the HandlerMethodValidationException that was thrown
+     * @param headers  the HTTP headers to be used in the response
+     * @param status   the HTTP status code
+     * @param exchange the current server web exchange
+     * @return Mono containing ResponseEntity with the ExtendedProblemDetail with validation errors
+     */
     @Override
     protected Mono<ResponseEntity<Object>> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, ServerWebExchange exchange) {
         List<Error> errorList = new ArrayList<>();
@@ -117,6 +169,16 @@ public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExc
         return handleExceptionInternal(ex, extendedProblemDetail, headers, status, exchange);
     }
 
+    /**
+     * Converts an ObjectError to an Error object.
+     * <p>
+     * If the ObjectError is a FieldError, extracts the field name.
+     * Sets the error type to PARAMETER by default.
+     * </p>
+     *
+     * @param objectError the ObjectError to convert
+     * @return Error object with field and message information
+     */
     private Error ObjectErrorConvertToError(ObjectError objectError) {
         Error error = new Error();
         if (objectError instanceof FieldError fieldError) {

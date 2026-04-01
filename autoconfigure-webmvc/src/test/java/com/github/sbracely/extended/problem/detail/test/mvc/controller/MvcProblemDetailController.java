@@ -109,60 +109,60 @@ public class MvcProblemDetailController {
     }
 
     @GetMapping(value = "/cookie-value")
-    public String cookieValue(@CookieValue @Length(min = 2, message = "姓名长度最小是 2") String name) {
+    public String cookieValue(@CookieValue @Length(min = 2, message = "Name length must be at least 2") String name) {
         log.info("name: {}", name);
         return name;
     }
 
     @GetMapping("/matrix-variable/{id}")
     public void matrixVariable(@PathVariable String id,
-                               @MatrixVariable @Size(max = 2, message = "最大长度是 2") List<String> list) {
+                               @MatrixVariable @Size(max = 2, message = "Maximum size is 2") List<String> list) {
         log.info("id: {}, list: {}", id, list);
     }
-
+    
     @GetMapping("/model-attribute")
-    public void modelAttribute(@CheckPassword(message = "密码不能是空") ProblemDetailRequest problemDetailRequest) {
+    public void modelAttribute(@CheckPassword(message = "Password cannot be empty") ProblemDetailRequest problemDetailRequest) {
         log.info("problemRequest: {}", problemDetailRequest);
     }
-
+    
     @GetMapping("/path-variable/{id}")
-    public void pathVariable(@PathVariable @Length(min = 2, message = "id 最小长度是 2") String id) {
+    public void pathVariable(@PathVariable @Length(min = 2, message = "ID minimum length is 2") String id) {
         log.info("id: {}", id);
     }
-
+    
     @PostMapping("/request-body")
-    public void requestBody(@RequestBody @CheckPassword(message = "密码不能是空") ProblemDetailRequest problemDetailRequest) {
+    public void requestBody(@RequestBody @CheckPassword(message = "Password cannot be empty") ProblemDetailRequest problemDetailRequest) {
         log.info("problemDetailRequest: {}", problemDetailRequest);
     }
-
+    
     @GetMapping("/request-header")
-    public void requestHeader(@RequestHeader @Length(min = 2, message = "最小长度是 2") String headerValue) {
+    public void requestHeader(@RequestHeader @Length(min = 2, message = "Minimum length is 2") String headerValue) {
         log.info("headerValue: {}", headerValue);
     }
-
+    
     @GetMapping("/request-param")
-    public void requestParam(@NotBlank(message = "参数不能为空") String param,
-                             @NotNull(message = "参数2不能为空") @NotNull(message = "参数2不能为null") String param2) {
+    public void requestParam(@NotBlank(message = "Parameter cannot be empty") String param,
+                             @NotNull(message = "Parameter 2 cannot be null") @NotBlank(message = "Parameter 2 cannot be blank") String param2) {
         log.info("param: {}, param2: {}", param, param2);
     }
-
+    
     @GetMapping("/request-part")
-    public void requestPart(@RequestPart(required = false) @CheckMultipartFile(extensionIncludeMessage = "文件类型不支持",
-            extensionInclude = "txt", requiredMessage = "文件不能为空") MultipartFile file) {
+    public void requestPart(@RequestPart(required = false) @CheckMultipartFile(extensionIncludeMessage = "File type not supported",
+            extensionInclude = "txt", requiredMessage = "File cannot be empty") MultipartFile file) {
         log.info("file: {}", file);
     }
-
+    
     @GetMapping("/request-other")
-    public void requestOther(@SessionAttribute(required = false) @NotBlank(message = "sessionAttribute 不能为空")
+    public void requestOther(@SessionAttribute(required = false) @NotBlank(message = "sessionAttribute cannot be empty")
                              String sessionAttribute,
-                             @RequestAttribute(required = false) @NotBlank(message = "requestAttribute 不能为空")
+                             @RequestAttribute(required = false) @NotBlank(message = "requestAttribute cannot be empty")
                              String requestAttribute,
-                             @Value("") @NotBlank(message = "value 不能为空") String value) {
+                             @Value("") @NotBlank(message = "value cannot be empty") String value) {
         log.info("sessionAttribute: {}, requestAttribute: {}, value: {}", sessionAttribute, requestAttribute, value);
     }
-
+    
     @PostMapping("/request-body-validation-result")
-    public void requestBodyValidationResult(@RequestBody List<@NotBlank(message = "元素不能包含空") String> list) {
+    public void requestBodyValidationResult(@RequestBody List<@NotBlank(message = "Element cannot contain empty values") String> list) {
         log.info("list.size = {}, list: {}", list.size(), list);
     }
 
@@ -371,8 +371,8 @@ public class MvcProblemDetailController {
         log.info("business");
         ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail();
         extendedProblemDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        extendedProblemDetail.setDetail("支付失败");
-        extendedProblemDetail.setErrors(Lists.newArrayList(new Error("余额不足"), new Error("支付频繁")));
+        extendedProblemDetail.setDetail("Payment failed");
+        extendedProblemDetail.setErrors(Lists.newArrayList(new Error("Insufficient balance"), new Error("Payment frequent")));
         throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, extendedProblemDetail);
     }
 }
