@@ -603,7 +603,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void noResourceFoundException() {
-        String uri = BASE_PATH + "/no-resource-found/nonexistent.js";
+        String uri = BASE_PATH + "/no-resource-found";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(NOT_FOUND)
@@ -616,6 +616,27 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(NOT_FOUND.value());
         assertThat(extendedProblemDetail.getDetail()).contains("No static resource");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    @Test
+    void payloadTooLargeException() {
+        String uri = BASE_PATH + "/payload-too-large";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
+                .bodyValue("text")
+                .exchange()
+                .expectStatus().isEqualTo(PAYLOAD_TOO_LARGE)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(CONTENT_TOO_LARGE.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(PAYLOAD_TOO_LARGE.value());
+        assertThat(extendedProblemDetail.getDetail()).isNull();
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
@@ -794,26 +815,4 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
-
-    @Test
-    void payloadTooLargeException() {
-        String uri = BASE_PATH + "/payload-too-large";
-        // 通过发送过大的请求体触发 PayloadTooLargeException
-        ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
-                .bodyValue("x".repeat(1024 * 1024)) // 1MB 数据
-                .exchange()
-                .expectStatus().isEqualTo(PAYLOAD_TOO_LARGE)
-                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-                .expectBody(ExtendedProblemDetail.class)
-                .returnResult().getResponseBody();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail).isNotNull();
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(PAYLOAD_TOO_LARGE.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(PAYLOAD_TOO_LARGE.value());
-        assertThat(extendedProblemDetail.getDetail()).isNotEmpty();
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
 }

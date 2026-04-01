@@ -19,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.accept.InvalidApiVersionException;
 import org.springframework.web.accept.MissingApiVersionException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.PayloadTooLargeException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerErrorException;
 import org.springframework.web.server.ServerWebInputException;
@@ -175,7 +176,11 @@ public class FluxExtendProblemDetailController {
         return Mono.empty();
     }
 
-
+    @PostMapping("/payload-too-large")
+    public Mono<Void> payloadTooLarge(@RequestBody byte[] body) {
+        log.info("body.length: {}", body.length);
+        throw new PayloadTooLargeException(new RuntimeException("payload too large"));
+    }
 
 
 
@@ -257,8 +262,4 @@ public class FluxExtendProblemDetailController {
     }
 
     // PayloadTooLargeException - 通过请求实体过大触发
-    @PostMapping("/payload-too-large")
-    public Mono<Void> payloadTooLarge(@RequestBody byte[] body) {
-        return Mono.empty();
-    }
 }
