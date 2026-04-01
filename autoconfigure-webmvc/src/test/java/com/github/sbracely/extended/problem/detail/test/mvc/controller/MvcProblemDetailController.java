@@ -2,7 +2,7 @@ package com.github.sbracely.extended.problem.detail.test.mvc.controller;
 
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
-import com.github.sbracely.extended.problem.detail.test.mvc.exception.CustomizedException;
+import com.github.sbracely.extended.problem.detail.test.mvc.exception.BusinessException;
 import com.github.sbracely.extended.problem.detail.test.mvc.response.ProblemDetailResponse;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.CheckMultipartFile;
@@ -366,13 +366,13 @@ public class MvcProblemDetailController {
         return emitter;
     }
 
-    @GetMapping("/customized")
-    public void customized() {
-        log.info("customized");
+    @GetMapping("/business")
+    public void business() {
+        log.info("business");
         ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail();
         extendedProblemDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         extendedProblemDetail.setDetail("支付失败");
         extendedProblemDetail.setErrors(Lists.newArrayList(new Error("余额不足"), new Error("支付频繁")));
-        throw new CustomizedException(HttpStatus.INTERNAL_SERVER_ERROR, extendedProblemDetail);
+        throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, extendedProblemDetail);
     }
 }

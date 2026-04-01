@@ -2,7 +2,7 @@ package com.github.sbracely.extended.problem.detail.test.flux.controller;
 
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
-import com.github.sbracely.extended.problem.detail.test.flux.exception.CustomizedException;
+import com.github.sbracely.extended.problem.detail.test.flux.exception.BusinessException;
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation.CheckFilePart;
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation.CheckPassword;
@@ -194,7 +194,16 @@ public class FluxExtendProblemDetailController {
         throw new ErrorResponseException(HttpStatus.BAD_REQUEST,extendedProblemDetail,new RuntimeException("business exception"));
     }
 
-
+    @GetMapping("/business")
+    public Mono<Void> business() {
+        log.info("business");
+        ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail();
+        extendedProblemDetail.setTitle("支付失败标题");
+        extendedProblemDetail.setDetail("支付失败详情");
+        extendedProblemDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        extendedProblemDetail.setErrors(Lists.newArrayList(new Error("余额不足"), new Error("支付频繁")));
+        throw new BusinessException(HttpStatus.INTERNAL_SERVER_ERROR, extendedProblemDetail);
+    }
 
 
 
@@ -245,15 +254,7 @@ public class FluxExtendProblemDetailController {
         return Mono.empty();
     }
 
-    @GetMapping("/customized")
-    public Mono<Void> customized() {
-        log.info("customized");
-        ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail();
-        extendedProblemDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        extendedProblemDetail.setDetail("支付失败");
-        extendedProblemDetail.setErrors(Lists.newArrayList(new Error("余额不足"), new Error("支付频繁")));
-        throw new CustomizedException(HttpStatus.INTERNAL_SERVER_ERROR, extendedProblemDetail);
-    }
+
 
     // InvalidApiVersionException - 通过无效的 API 版本触发
     @GetMapping("/invalid-api-version")

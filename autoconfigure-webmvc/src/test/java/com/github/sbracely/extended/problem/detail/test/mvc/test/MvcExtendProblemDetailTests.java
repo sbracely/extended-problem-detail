@@ -896,8 +896,8 @@ class MvcExtendProblemDetailTests {
     }
 
     @Test
-    void customized() {
-        String uri = BASE_PATH + "/customized";
+    void business() {
+        String uri = BASE_PATH + "/business";
         MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
         assertThat(result)
                 .hasStatus(INTERNAL_SERVER_ERROR)

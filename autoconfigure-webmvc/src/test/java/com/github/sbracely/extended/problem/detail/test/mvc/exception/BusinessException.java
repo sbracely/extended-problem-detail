@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.ErrorResponseException;
 
-public class CustomizedException extends ErrorResponseException {
+public class BusinessException extends ErrorResponseException {
 
-    public CustomizedException(HttpStatusCode status, ProblemDetail body) {
+    public BusinessException(HttpStatusCode status, ProblemDetail body) {
         super(status, body, null);
     }
 
-    public CustomizedException(HttpStatusCode status, ProblemDetail body, Throwable cause) {
+    public BusinessException(HttpStatusCode status, ProblemDetail body, Throwable cause) {
         super(status, body, cause);
     }
 }

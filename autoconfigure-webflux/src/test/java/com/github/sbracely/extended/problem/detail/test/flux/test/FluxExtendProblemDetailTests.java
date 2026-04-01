@@ -664,6 +664,28 @@ class FluxExtendProblemDetailTests {
         );
     }
 
+    @Test
+    void businessException() {
+        String uri = BASE_PATH + "/business";
+        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                .exchange()
+                .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
+                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                .expectBody(ExtendedProblemDetail.class)
+                .returnResult().getResponseBody();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo("支付失败标题");
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("支付失败详情");
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
+                new Error("余额不足"),
+                new Error("支付频繁")
+        );
+    }
 
 
 
@@ -729,26 +751,4 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
-    @Test
-    void customizedException() {
-        String uri = BASE_PATH + "/customized";
-        ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
-                .exchange()
-                .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
-                .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-                .expectBody(ExtendedProblemDetail.class)
-                .returnResult().getResponseBody();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail).isNotNull();
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("支付失败");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("余额不足"),
-                new Error("支付频繁")
-        );
-    }
 }
