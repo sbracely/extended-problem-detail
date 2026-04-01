@@ -34,16 +34,16 @@ import static org.springframework.http.MediaType.*;
 @Slf4j
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "PT10M")
-class FluxExtendProblemDetailTests {
+class FluxExtendedProblemDetailTests {
 
     @Autowired
     private WebTestClient webTestClient;
 
-    private static final String BASE_PATH = "/flux-extend-problem-detail";
+    private static final String BASE_PATH = "/flux-extended-problem-detail";
 
     @Test
     void methodNotAllowedException() {
-        String uri = BASE_PATH + "/method-not-allowed";
+        String uri = BASE_PATH + "/method-not-allowed-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.delete().uri(uri).exchange()
                 .expectStatus().isEqualTo(METHOD_NOT_ALLOWED)
                 .expectHeader().valueEquals(ALLOW, GET.name())
@@ -63,7 +63,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void notAcceptableStatusException() {
-        String uri = BASE_PATH + "/not-acceptable-status";
+        String uri = BASE_PATH + "/not-acceptable-status-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .header(ACCEPT, APPLICATION_XML_VALUE)
                 .exchange()
@@ -85,7 +85,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void unsupportedMediaTypeStatusException() {
-        String uri = BASE_PATH + "/unsupported-media-type-status";
+        String uri = BASE_PATH + "/unsupported-media-type-status-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri).exchange()
                 .expectStatus().isEqualTo(UNSUPPORTED_MEDIA_TYPE)
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -105,7 +105,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void missingRequestValueException() {
-        String uri = BASE_PATH + "/missing-request-value";
+        String uri = BASE_PATH + "/missing-request-value-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri).exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
@@ -124,7 +124,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void unsatisfiedRequestParameterException() {
-        String uri = BASE_PATH + "/unsatisfied-request-parameter";
+        String uri = BASE_PATH + "/unsatisfied-request-parameter-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
@@ -144,7 +144,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void webExchangeBindException() {
-        String uri = BASE_PATH + "/web-exchange-bind";
+        String uri = BASE_PATH + "/web-exchange-bind-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
                 .contentType(APPLICATION_JSON)
                 .bodyValue("""
@@ -175,7 +175,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void handlerMethodValidationExceptionCookie() {
-        String uri = BASE_PATH + "/handler-method-validation-cookie";
+        String uri = BASE_PATH + "/handler-method-validation-exception-cookie";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .cookie("cookieValue", "")
                 .exchange()
@@ -192,12 +192,12 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.COOKIE, "cookieValue", "cookie不能为空"));
+                .isEqualTo(new Error(Error.Type.COOKIE, "cookieValue", "cookie 不能为空"));
     }
 
     @Test
     void handlerMethodValidationExceptionMatrixVariable() {
-        String uri = BASE_PATH + "/handler-method-validation-matrix/abc;list=a,b,c";
+        String uri = BASE_PATH + "/handler-method-validation-exception-matrix/abc;list=a,b,c";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
@@ -213,12 +213,12 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "list最大长度是2"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "list 最大长度是 2"));
     }
 
     @Test
     void handlerMethodValidationExceptionModelAttribute() {
-        String uri = BASE_PATH + "/handler-method-validation-model";
+        String uri = BASE_PATH + "/handler-method-validation-exception-model-attribute";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
@@ -239,7 +239,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void handlerMethodValidationExceptionPathVariable() {
-        String uri = BASE_PATH + "/handler-method-validation-path/abc";
+        String uri = BASE_PATH + "/handler-method-validation-exception-path/abc";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
@@ -255,12 +255,12 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "id长度至少5"));
+                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "id 长度至少 5"));
     }
 
     @Test
     void handlerMethodValidationExceptionRequestBody() {
-        String uri = BASE_PATH + "/handler-method-validation-body";
+        String uri = BASE_PATH + "/handler-method-validation-exception-body";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
                 .contentType(APPLICATION_JSON)
                 .bodyValue("""
@@ -287,7 +287,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void handlerMethodValidationExceptionHeader() {
-        String uri = BASE_PATH + "/handler-method-validation-header";
+        String uri = BASE_PATH + "/handler-method-validation-exception-header";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .header("headerValue", "")
                 .exchange()
@@ -304,12 +304,12 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).singleElement()
-                .isEqualTo(new Error(Error.Type.HEADER, "headerValue", "header不能为空"));
+                .isEqualTo(new Error(Error.Type.HEADER, "headerValue", "header 不能为空"));
     }
 
     @Test
     void handlerMethodValidationExceptionRequestParam() {
-        String uri = BASE_PATH + "/handler-method-validation-request-param";
+        String uri = BASE_PATH + "/handler-method-validation-exception-request-param";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(uri)
@@ -331,13 +331,13 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
                 new Error(Error.Type.PARAMETER, "param", "参数不能为空"),
-                new Error(Error.Type.PARAMETER, "value", "长度至少5")
+                new Error(Error.Type.PARAMETER, "value", "长度至少 5")
         );
     }
 
     @Test
     void handlerMethodValidationExceptionRequestPart() {
-        String uri = BASE_PATH + "/handler-method-validation-request-part";
+        String uri = BASE_PATH + "/handler-method-validation-exception-request-part";
         // 测试文件为空的情况 - 使用 body() 方法让 WebTestClient 自动添加 boundary
         ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
                 .bodyValue(Collections.emptyMap())
@@ -360,7 +360,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void handlerMethodValidationExceptionRequestBodyValidationResult() {
-        String uri = BASE_PATH + "/handler-method-validation-request-body-validation-result";
+        String uri = BASE_PATH + "/handler-method-validation-exception-request-body-validation-result";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
                 .contentType(APPLICATION_JSON)
                 .bodyValue("""
@@ -386,7 +386,7 @@ class FluxExtendProblemDetailTests {
     @Test
     @ExtendWith(OutputCaptureExtension.class)
     void handlerMethodValidationExceptionOther(CapturedOutput output) {
-        String uri = BASE_PATH + "/handler-method-validation-other";
+        String uri = BASE_PATH + "/handler-method-validation-exception-other";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
@@ -403,16 +403,16 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
         assertThat(output.getOut()).contains(Arrays.asList(
-                "codes: [NotBlank.fluxExtendProblemDetailController#handlerMethodValidationOther.sessionAttribute, NotBlank.sessionAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: sessionAttribute 不能为空",
-                "codes: [NotBlank.fluxExtendProblemDetailController#handlerMethodValidationOther.requestAttribute, NotBlank.requestAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: requestAttribute 不能为空",
-                "codes: [NotBlank.fluxExtendProblemDetailController#handlerMethodValidationOther.value, NotBlank.value, NotBlank.java.lang.String, NotBlank], defaultMessage: value 不能为空"
+                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.sessionAttribute, NotBlank.sessionAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: sessionAttribute 不能为空",
+                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.requestAttribute, NotBlank.requestAttribute, NotBlank.java.lang.String, NotBlank], defaultMessage: requestAttribute 不能为空",
+                "codes: [NotBlank.fluxExtendedProblemDetailController#handlerMethodValidationExceptionOther.value, NotBlank.value, NotBlank.java.lang.String, NotBlank], defaultMessage: value 不能为空"
         ));
     }
 
 
     @Test
     void serverWebInputException() {
-        String uri = BASE_PATH + "/server-web-input";
+        String uri = BASE_PATH + "/server-web-input-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
@@ -432,7 +432,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void serverErrorException() {
-        String uri = BASE_PATH + "/server-error";
+        String uri = BASE_PATH + "/server-error-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
@@ -472,7 +472,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void responseStatusExceptionContentTooLargeException() {
-        String uri = BASE_PATH + "/content-too-large";
+        String uri = BASE_PATH + "/content-too-large-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
                 .bodyValue("x".repeat(1024 * 1024)) // 1MB
                 .exchange()
@@ -501,8 +501,8 @@ class FluxExtendProblemDetailTests {
     class ApiVersionTests {
 
         @Test
-        void responseStatusExceptionInvalidApiVersionException() {
-            String uri = BASE_PATH + "/not-acceptable-status-invalid-api-version";
+        void invalidApiVersionException() {
+            String uri = BASE_PATH + "/invalid-api-version-exception";
             ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                     .header("API-Version", "3")
                     .exchange()
@@ -522,8 +522,8 @@ class FluxExtendProblemDetailTests {
         }
 
         @Test
-        void responseStatusExceptionMissingApiVersionException() {
-            String uri = BASE_PATH + "/response-status-exception-missing-api-version";
+        void missingApiVersionException() {
+            String uri = BASE_PATH + "/missing-api-version-exception";
             EntityExchangeResult<ExtendedProblemDetail> result = webTestClient.get()
                     .uri(uri)
                     .exchange()
@@ -544,16 +544,16 @@ class FluxExtendProblemDetailTests {
 
         @RestController
         static class NotAcceptableApiVersionController {
-            @GetMapping(value = "/response-status-exception-not-acceptable-api-version", version = "1")
-            public Mono<Void> responseStatusExceptionNotAcceptableApiVersion() {
+            @GetMapping(value = "/not-acceptable-api-version", version = "1")
+            public Mono<Void> notAcceptableApiVersion() {
                 log.info("response status exception not acceptable api version");
                 return Mono.empty();
             }
         }
 
         @Test
-        void responseStatusExceptionNotAcceptableApiVersionException() {
-            String uri = "/response-status-exception-not-acceptable-api-version";
+        void notAcceptableApiVersionException() {
+            String uri = "/not-acceptable-api-version";
             ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                     .header("API-Version", "2")
                     .exchange()
@@ -622,7 +622,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void payloadTooLargeException() {
-        String uri = BASE_PATH + "/payload-too-large";
+        String uri = BASE_PATH + "/payload-too-large-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.post().uri(uri)
                 .bodyValue("text")
                 .exchange()
@@ -643,7 +643,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void errorResponseException() {
-        String uri = BASE_PATH + "/error-response";
+        String uri = BASE_PATH + "/error-response-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(BAD_REQUEST)
@@ -659,13 +659,13 @@ class FluxExtendProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("错误信息1"),new Error("错误信息2")
+                new Error("错误信息 1"), new Error("错误信息 2")
         );
     }
 
     @Test
     void businessException() {
-        String uri = BASE_PATH + "/business";
+        String uri = BASE_PATH + "/business-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
@@ -688,7 +688,7 @@ class FluxExtendProblemDetailTests {
 
     @Test
     void methodValidationException() {
-        String uri = BASE_PATH + "/method-validation";
+        String uri = BASE_PATH + "/method-validation-exception";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()
                 .expectStatus().isEqualTo(INTERNAL_SERVER_ERROR)
