@@ -765,6 +765,29 @@ class MvcExtendedProblemDetailTests {
     }
 
     /**
+     * @see ResponseStatusException
+     * @see MvcProblemDetailController#responseStatusException()
+     */
+    @Test
+    void responseStatusException() {
+        String uri = BASE_PATH + "/response-status-exception";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("exception");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
      * @see MethodNotAllowedException
      * @see MvcProblemDetailController#methodNotAllowedException(HttpMethod)
      */
@@ -916,28 +939,6 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
-    /**
-     * @see ResponseStatusException
-     * @see MvcProblemDetailController#responseStatusException()
-     */
-    @Test
-    void responseStatusExceptionTest() {
-        String uri = BASE_PATH + "/response-status-exception";
-        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
-        assertThat(result)
-                .hasStatus(BAD_REQUEST)
-                .hasContentType(APPLICATION_PROBLEM_JSON);
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("exception");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
 
     /**
      * @see ServerErrorException

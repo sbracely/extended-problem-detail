@@ -447,10 +447,10 @@ public class MvcProblemDetailController {
     /**
      * @see ResponseStatusException
      */
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "reason text")
     @GetMapping("/response-status-exception")
     public void responseStatusException() {
         log.info("responseStatusException");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "exception");
     }
 
     /**
