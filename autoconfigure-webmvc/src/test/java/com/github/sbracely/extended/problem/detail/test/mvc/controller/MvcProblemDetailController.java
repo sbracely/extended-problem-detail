@@ -33,6 +33,7 @@ import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.accept.InvalidApiVersionException;
 import org.springframework.web.accept.MissingApiVersionException;
 import org.springframework.web.bind.*;
@@ -57,7 +58,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -72,6 +72,14 @@ public class MvcProblemDetailController {
     public MvcProblemDetailController(RequestMappingHandlerMapping requestMappingHandlerMapping, ProblemDetailService problemDetailService) {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.problemDetailService = problemDetailService;
+    }
+
+    /**
+     * @see HttpRequestMethodNotSupportedException
+     */
+    @GetMapping("/http-request-method-not-supported-exception")
+    public void httpRequestMethodNotSupportedException() {
+        log.info("httpRequestMethodNotSupportedException");
     }
 
     /**

@@ -29,6 +29,7 @@ import org.springframework.validation.method.ParameterErrors;
 import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.*;
 import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +64,31 @@ class MvcExtendedProblemDetailTests {
     private MockMvcTester mockMvcTester;
 
     private static final String BASE_PATH = "/mvc-extended-problem-detail";
+
+
+    /**
+     * @see HttpRequestMethodNotSupportedException
+     * @see MvcProblemDetailController#httpRequestMethodNotSupportedException()
+     */
+    @Test
+    void httpRequestMethodNotSupportedException() {
+        String uri = BASE_PATH + "/http-request-method-not-supported-exception";
+        MvcTestResult result = mockMvcTester.post().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(METHOD_NOT_ALLOWED)
+                .hasContentType(APPLICATION_PROBLEM_JSON)
+                .hasHeader(ALLOW, GET.name());
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Method 'POST' is not supported.");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
 
     /**
      * @see MethodNotAllowedException
