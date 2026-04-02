@@ -83,14 +83,6 @@ public class MvcProblemDetailController {
     }
 
     /**
-     * @see MissingServletRequestParameterException
-     */
-    @GetMapping("/missing-servlet-request-parameter-exception")
-    public void missingServletRequestParameterException(@RequestParam Integer id) {
-        log.info("missingServletRequestParameterException, id: {}", id);
-    }
-
-    /**
      * @see HttpMediaTypeNotSupportedException
      */
     @PutMapping(path = "/http-media-type-not-supported-exception", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -99,19 +91,27 @@ public class MvcProblemDetailController {
     }
 
     /**
-     * @see HttpMediaTypeNotAcceptableException
-     */
-    @PutMapping(path = "/http-media-type-not-acceptable-exception", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void httpMediaTypeNotAcceptableException(ProblemDetailRequest problemDetailRequest) {
-        log.info("httpMediaTypeNotAcceptableException, problemDetailRequest: {}", problemDetailRequest);
-    }
-
-    /**
      * @see MissingPathVariableException
      */
     @DeleteMapping("/missing-path-variable-exception")
     public void missingPathVariableException(@PathVariable Integer id) {
         log.info("missingPathVariableException, id: {}", id);
+    }
+
+    /**
+     * @see MissingServletRequestParameterException
+     */
+    @GetMapping("/missing-servlet-request-parameter-exception")
+    public void missingServletRequestParameterException(@RequestParam Integer id) {
+        log.info("missingServletRequestParameterException, id: {}", id);
+    }
+
+    /**
+     * @see HttpMediaTypeNotAcceptableException
+     */
+    @PutMapping(path = "/http-media-type-not-acceptable-exception", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void httpMediaTypeNotAcceptableException(ProblemDetailRequest problemDetailRequest) {
+        log.info("httpMediaTypeNotAcceptableException, problemDetailRequest: {}", problemDetailRequest);
     }
 
     /**

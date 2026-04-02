@@ -65,7 +65,6 @@ class MvcExtendedProblemDetailTests {
 
     private static final String BASE_PATH = "/mvc-extended-problem-detail";
 
-
     /**
      * @see HttpRequestMethodNotSupportedException
      * @see MvcProblemDetailController#httpRequestMethodNotSupportedException()
@@ -91,36 +90,6 @@ class MvcExtendedProblemDetailTests {
     }
 
     /**
-     * @see MethodNotAllowedException
-     * @see MvcProblemDetailController#methodNotAllowedException(HttpMethod)
-     */
-    @Test
-    void methodNotAllowedException() {
-        String uri = BASE_PATH + "/method-not-allowed-exception";
-        MvcTestResult result = mockMvcTester.delete().uri(uri).exchange();
-        assertThat(result)
-                .hasStatus(METHOD_NOT_ALLOWED)
-                .hasContentType(APPLICATION_PROBLEM_JSON)
-                .containsHeader(ALLOW)
-                .headers()
-                .hasHeaderSatisfying(ALLOW, header ->
-                        assertThat(header)
-                                .singleElement()
-                                .matches(h -> h.contains(GET.name()) && h.contains(POST.name())));
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
-        assertThat(extendedProblemDetail.getDetail()).startsWith("Supported methods: [")
-                .contains("GET", "POST").endsWith("]");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
-
-    /**
      * @see HttpMediaTypeNotSupportedException
      * @see MvcProblemDetailController#httpMediaTypeNotSupportedException(ProblemDetailRequest)
      */
@@ -139,31 +108,6 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(UNSUPPORTED_MEDIA_TYPE.getReasonPhrase());
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(UNSUPPORTED_MEDIA_TYPE.value());
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Content-Type 'null' is not supported.");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
-
-    /**
-     * @see HttpMediaTypeNotAcceptableException
-     * @see MvcProblemDetailController#httpMediaTypeNotAcceptableException(ProblemDetailRequest)
-     */
-    @Test
-    void httpMediaTypeNotAcceptableException() {
-        String uri = BASE_PATH + "/http-media-type-not-acceptable-exception";
-        MvcTestResult result = mockMvcTester.put().uri(uri)
-                .header(ACCEPT, APPLICATION_XML_VALUE).exchange();
-        assertThat(result)
-                .hasStatus(NOT_ACCEPTABLE)
-                .hasContentType(APPLICATION_PROBLEM_JSON)
-                .hasHeader(ACCEPT, APPLICATION_JSON_VALUE);
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(NOT_ACCEPTABLE.value());
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Acceptable representations: [application/json].");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
@@ -214,6 +158,62 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
+
+    /**
+     * @see MethodNotAllowedException
+     * @see MvcProblemDetailController#methodNotAllowedException(HttpMethod)
+     */
+    @Test
+    void methodNotAllowedException() {
+        String uri = BASE_PATH + "/method-not-allowed-exception";
+        MvcTestResult result = mockMvcTester.delete().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(METHOD_NOT_ALLOWED)
+                .hasContentType(APPLICATION_PROBLEM_JSON)
+                .containsHeader(ALLOW)
+                .headers()
+                .hasHeaderSatisfying(ALLOW, header ->
+                        assertThat(header)
+                                .singleElement()
+                                .matches(h -> h.contains(GET.name()) && h.contains(POST.name())));
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(METHOD_NOT_ALLOWED.value());
+        assertThat(extendedProblemDetail.getDetail()).startsWith("Supported methods: [")
+                .contains("GET", "POST").endsWith("]");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
+     * @see HttpMediaTypeNotAcceptableException
+     * @see MvcProblemDetailController#httpMediaTypeNotAcceptableException(ProblemDetailRequest)
+     */
+    @Test
+    void httpMediaTypeNotAcceptableException() {
+        String uri = BASE_PATH + "/http-media-type-not-acceptable-exception";
+        MvcTestResult result = mockMvcTester.put().uri(uri)
+                .header(ACCEPT, APPLICATION_XML_VALUE).exchange();
+        assertThat(result)
+                .hasStatus(NOT_ACCEPTABLE)
+                .hasContentType(APPLICATION_PROBLEM_JSON)
+                .hasHeader(ACCEPT, APPLICATION_JSON_VALUE);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(NOT_ACCEPTABLE.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Acceptable representations: [application/json].");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
 
     /**
      * @see MissingServletRequestPartException
