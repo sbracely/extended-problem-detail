@@ -107,19 +107,28 @@ public class MvcProblemDetailController {
     }
 
     /**
-     * @see HttpMediaTypeNotAcceptableException
-     */
-    @PutMapping(path = "/http-media-type-not-acceptable-exception", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void httpMediaTypeNotAcceptableException(ProblemDetailRequest problemDetailRequest) {
-        log.info("httpMediaTypeNotAcceptableException, problemDetailRequest: {}", problemDetailRequest);
-    }
-
-    /**
      * @see MissingServletRequestPartException
      */
     @PutMapping("/missing-servlet-request-part-exception")
     public void missingServletRequestPartException(@RequestPart MultipartFile file) {
         log.info("missingServletRequestPartException, file: {}", file);
+    }
+
+    /**
+     * @see ServletRequestBindingException
+     */
+    @GetMapping("/servlet-request-binding-exception")
+    public void servletRequestBindingException() throws ServletRequestBindingException {
+        log.info("servletRequestBindingException");
+        throw new ServletRequestBindingException("binding error");
+    }
+
+    /**
+     * @see HttpMediaTypeNotAcceptableException
+     */
+    @PutMapping(path = "/http-media-type-not-acceptable-exception", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void httpMediaTypeNotAcceptableException(ProblemDetailRequest problemDetailRequest) {
+        log.info("httpMediaTypeNotAcceptableException, problemDetailRequest: {}", problemDetailRequest);
     }
 
     /**
@@ -400,15 +409,6 @@ public class MvcProblemDetailController {
     public void missingRequestValueMvcException(String id) throws org.springframework.web.bind.MissingRequestValueException {
         log.info("missingRequestValueMvcException, id: {}", id);
         throw new org.springframework.web.bind.MissingRequestValueException("id is required", true);
-    }
-
-    /**
-     * @see ServletRequestBindingException
-     */
-    @GetMapping("/servlet-request-binding-exception")
-    public void servletRequestBindingException() throws ServletRequestBindingException {
-        log.info("servletRequestBindingException");
-        throw new ServletRequestBindingException("binding error");
     }
 
     /**

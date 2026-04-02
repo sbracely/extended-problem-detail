@@ -160,6 +160,52 @@ class MvcExtendedProblemDetailTests {
     }
 
     /**
+     * @see MissingServletRequestPartException
+     * @see MvcProblemDetailController#missingServletRequestPartException(MultipartFile)
+     */
+    @Test
+    void missingServletRequestPartException() {
+        String uri = BASE_PATH + "/missing-servlet-request-part-exception";
+        MvcTestResult result = mockMvcTester.put().multipart().contentType(MULTIPART_FORM_DATA).uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Required part 'file' is not present.");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
+     * @see ServletRequestBindingException
+     * @see MvcProblemDetailController#servletRequestBindingException()
+     */
+    @Test
+    void servletRequestBindingException() {
+        String uri = BASE_PATH + "/servlet-request-binding-exception";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isNull();
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
      * @see MethodNotAllowedException
      * @see MvcProblemDetailController#methodNotAllowedException(HttpMethod)
      */
@@ -214,29 +260,6 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
-
-    /**
-     * @see MissingServletRequestPartException
-     * @see MvcProblemDetailController#missingServletRequestPartException(MultipartFile)
-     */
-    @Test
-    void missingServletRequestPartException() {
-        String uri = BASE_PATH + "/missing-servlet-request-part-exception";
-        MvcTestResult result = mockMvcTester.put().multipart().contentType(MULTIPART_FORM_DATA).uri(uri).exchange();
-        assertThat(result)
-                .hasStatus(BAD_REQUEST)
-                .hasContentType(APPLICATION_PROBLEM_JSON);
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Required part 'file' is not present.");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
 
     /**
      * @see MissingMatrixVariableException
