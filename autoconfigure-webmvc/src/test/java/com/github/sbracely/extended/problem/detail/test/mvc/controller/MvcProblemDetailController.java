@@ -124,6 +124,23 @@ public class MvcProblemDetailController {
     }
 
     /**
+     * @see UnsatisfiedServletRequestParameterException
+     */
+    @GetMapping(path = "/unsatisfied-servlet-request-parameter-exception", params = {"type=1", "exist", "!debug"})
+    public void unsatisfiedServletRequestParameterException() {
+        log.info("unsatisfiedServletRequestParameterException");
+    }
+
+    /**
+     * @see org.springframework.web.bind.MissingRequestValueException
+     */
+    @GetMapping("/org-spring-web-bind-missing-request-value-exception")
+    public void orgSpringWebBindMissingRequestValueException() throws org.springframework.web.bind.MissingRequestValueException {
+        log.info("orgSpringWebBindMissingRequestValueException");
+        throw new org.springframework.web.bind.MissingRequestValueException("missing request value", true);
+    }
+
+    /**
      * @see HttpMediaTypeNotAcceptableException
      */
     @PutMapping(path = "/http-media-type-not-acceptable-exception", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -400,15 +417,6 @@ public class MvcProblemDetailController {
         HandlerMethod handlerMethod = (HandlerMethod) handlerExecutionChain.getHandler();
         MethodParameter[] methodParameters = handlerMethod.getMethodParameters();
         throw new WebExchangeBindException(methodParameters[0], bindingResult);
-    }
-
-    /**
-     * @see org.springframework.web.bind.MissingRequestValueException
-     */
-    @GetMapping("/missing-request-value-mvc-exception")
-    public void missingRequestValueMvcException(String id) throws org.springframework.web.bind.MissingRequestValueException {
-        log.info("missingRequestValueMvcException, id: {}", id);
-        throw new org.springframework.web.bind.MissingRequestValueException("id is required", true);
     }
 
     /**

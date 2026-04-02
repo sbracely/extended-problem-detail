@@ -31,7 +31,6 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.*;
-import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
@@ -114,29 +113,6 @@ class MvcExtendedProblemDetailTests {
     }
 
     /**
-     * @see MissingPathVariableException
-     * @see MvcProblemDetailController#missingPathVariableException(Integer)
-     */
-    @Test
-    void missingPathVariableException() {
-        String uri = BASE_PATH + "/missing-path-variable-exception";
-        MvcTestResult result = mockMvcTester.delete().uri(uri).exchange();
-        assertThat(result)
-                .hasStatus(INTERNAL_SERVER_ERROR)
-                .hasContentType(APPLICATION_PROBLEM_JSON);
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
-        assertThat(extendedProblemDetail.getDetail()).contains("Required path variable");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
-
-    /**
      * @see MissingServletRequestParameterException
      * @see MvcProblemDetailController#missingServletRequestParameterException(Integer)
      */
@@ -206,6 +182,94 @@ class MvcExtendedProblemDetailTests {
     }
 
     /**
+     * @see UnsatisfiedServletRequestParameterException
+     * @see MvcProblemDetailController#unsatisfiedServletRequestParameterException()
+     */
+    @Test
+    void unsatisfiedServletRequestParameterException() {
+        String uri = BASE_PATH + "/unsatisfied-servlet-request-parameter-exception";
+        MvcTestResult result = mockMvcTester.get().uri(uri).param("type", "1").exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid request parameters.");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+    }
+
+    /**
+     * @see org.springframework.web.bind.MissingRequestValueException
+     * @see MvcProblemDetailController#orgSpringWebBindMissingRequestValueException()
+     */
+    @Test
+    void orgSpringWebBindMissingRequestValueExceptionTest() {
+        String uri = BASE_PATH + "/org-spring-web-bind-missing-request-value-exception";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).isNull();
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
+     * @see MissingMatrixVariableException
+     * @see MvcProblemDetailController#missingMatrixVariableException(String, List)
+     */
+    @Test
+    void missingMatrixVariableException() {
+        String uri = BASE_PATH + "/missing-matrix-variable-exception/abc;list1=a,b,c";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getDetail()).contains("Required path parameter 'list' is not present.");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
+     * @see MissingPathVariableException
+     * @see MvcProblemDetailController#missingPathVariableException(Integer)
+     */
+    @Test
+    void missingPathVariableException() {
+        String uri = BASE_PATH + "/missing-path-variable-exception";
+        MvcTestResult result = mockMvcTester.delete().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(INTERNAL_SERVER_ERROR)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(INTERNAL_SERVER_ERROR.value());
+        assertThat(extendedProblemDetail.getDetail()).contains("Required path variable");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
      * @see MethodNotAllowedException
      * @see MvcProblemDetailController#methodNotAllowedException(HttpMethod)
      */
@@ -260,29 +324,6 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
-
-    /**
-     * @see MissingMatrixVariableException
-     * @see MvcProblemDetailController#missingMatrixVariableException(String, List)
-     */
-    @Test
-    void missingMatrixVariableException() {
-        String uri = BASE_PATH + "/missing-matrix-variable-exception/abc;list1=a,b,c";
-        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
-        assertThat(result)
-                .hasStatus(BAD_REQUEST)
-                .hasContentType(APPLICATION_PROBLEM_JSON);
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-        assertThat(extendedProblemDetail.getDetail()).contains("Required path parameter 'list' is not present.");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
 
     /**
      * @see MissingRequestCookieException
@@ -724,28 +765,6 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
-    /**
-     * @see MissingRequestValueException
-     * @see MvcProblemDetailController#missingRequestValueException(String)
-     */
-    @Test
-    void missingRequestValueExceptionTest() {
-        String uri = BASE_PATH + "/missing-request-value-exception";
-        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
-        assertThat(result)
-                .hasStatus(BAD_REQUEST)
-                .hasContentType(APPLICATION_PROBLEM_JSON);
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Required request param 'id' is not present.");
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
 
     /**
      * @see NotAcceptableStatusException
