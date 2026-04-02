@@ -279,15 +279,6 @@ public class MvcProblemDetailController {
     }
 
     /**
-     * @see UnsatisfiedRequestParameterException
-     */
-    @GetMapping(path = "/unsatisfied-request-parameter-exception", params = {"type=1", "exist", "!debug"})
-    public void unsatisfiedRequestParameterException() {
-        log.info("unsatisfiedRequestParameterException");
-    }
-
-
-    /**
      * @see AsyncRequestTimeoutException
      */
     @GetMapping("/async-request-timeout-exception")
@@ -295,6 +286,24 @@ public class MvcProblemDetailController {
         log.info("asyncRequestTimeoutException");
         return new DeferredResult<>(1L);
     }
+
+    /**
+     * @see ErrorResponseException
+     */
+    @GetMapping("/error-response-exception")
+    public void errorResponseException() {
+        log.info("errorResponseException");
+        throw new ErrorResponseException(HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * @see UnsatisfiedRequestParameterException
+     */
+    @GetMapping(path = "/unsatisfied-request-parameter-exception", params = {"type=1", "exist", "!debug"})
+    public void unsatisfiedRequestParameterException() {
+        log.info("unsatisfiedRequestParameterException");
+    }
+
 
     /**
      * @see ContentTooLargeException
@@ -421,14 +430,7 @@ public class MvcProblemDetailController {
         throw new WebExchangeBindException(methodParameters[0], bindingResult);
     }
 
-    /**
-     * @see ErrorResponseException
-     */
-    @GetMapping("/error-response-exception")
-    public void errorResponseException() {
-        log.info("errorResponseException");
-        throw new ErrorResponseException(HttpStatus.BAD_REQUEST);
-    }
+
 
     /**
      * @see ResponseStatusException

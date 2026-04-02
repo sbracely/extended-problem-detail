@@ -29,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.method.MethodValidationException;
 import org.springframework.validation.method.ParameterErrors;
 import org.springframework.validation.method.ParameterValidationResult;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -686,6 +687,58 @@ class MvcExtendedProblemDetailTests {
     }
 
     /**
+     * @see AsyncRequestTimeoutException
+     * @see MvcProblemDetailController#asyncRequestTimeoutException()
+     */
+    @Test
+    void asyncRequestTimeoutException() throws IOException {
+        String uri = BASE_PATH + "/async-request-timeout-exception";
+        MvcTestResult mvcTestResult = mockMvcTester.get().uri(uri).asyncExchange();
+        assertThat(mvcTestResult.getRequest().isAsyncStarted()).isTrue();
+        AsyncContext asyncContext = mvcTestResult.getRequest().getAsyncContext();
+        assertThat(asyncContext).isNotNull();
+        AsyncListener listener = ((MockAsyncContext) asyncContext).getListeners().get(0);
+        listener.onTimeout(null);
+        MvcTestResult result = mockMvcTester.perform(MockMvcRequestBuilders.asyncDispatch(mvcTestResult.getMvcResult()));
+        assertThat(result)
+                .hasStatus(SERVICE_UNAVAILABLE)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(SERVICE_UNAVAILABLE.getReasonPhrase());
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(SERVICE_UNAVAILABLE.value());
+        assertThat(extendedProblemDetail.getDetail()).isNull();
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+    }
+
+    /**
+     * @see ErrorResponseException
+     * @see MvcProblemDetailController#errorResponseException()
+     */
+    @Test
+    void errorResponseException() {
+        String uri = BASE_PATH + "/error-response-exception";
+        MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+        assertThat(result)
+                .hasStatus(BAD_REQUEST)
+                .hasContentType(APPLICATION_PROBLEM_JSON);
+        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        log.info("extendedProblemDetail: {}", extendedProblemDetail);
+        assertThat(extendedProblemDetail.getType()).isNull();
+        assertThat(extendedProblemDetail.getDetail()).isNull();
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        assertThat(extendedProblemDetail.getErrors()).isNull();
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+    }
+
+    /**
      * @see MethodNotAllowedException
      * @see MvcProblemDetailController#methodNotAllowedException(HttpMethod)
      */
@@ -733,36 +786,6 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
         assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
         assertThat(extendedProblemDetail.getDetail()).isNotNull();
-        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-        assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
-
-
-    /**
-     * @see AsyncRequestTimeoutException
-     * @see MvcProblemDetailController#asyncRequestTimeoutException()
-     */
-    @Test
-    void asyncRequestTimeoutException() throws IOException {
-        String uri = BASE_PATH + "/async-request-timeout-exception";
-        MvcTestResult mvcTestResult = mockMvcTester.get().uri(uri).asyncExchange();
-        assertThat(mvcTestResult.getRequest().isAsyncStarted()).isTrue();
-        AsyncContext asyncContext = mvcTestResult.getRequest().getAsyncContext();
-        assertThat(asyncContext).isNotNull();
-        AsyncListener listener = ((MockAsyncContext) asyncContext).getListeners().get(0);
-        listener.onTimeout(null);
-        MvcTestResult result = mockMvcTester.perform(MockMvcRequestBuilders.asyncDispatch(mvcTestResult.getMvcResult()));
-        assertThat(result)
-                .hasStatus(SERVICE_UNAVAILABLE)
-                .hasContentType(APPLICATION_PROBLEM_JSON);
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-        log.info("extendedProblemDetail: {}", extendedProblemDetail);
-        assertThat(extendedProblemDetail.getType()).isNull();
-        assertThat(extendedProblemDetail.getTitle()).isEqualTo(SERVICE_UNAVAILABLE.getReasonPhrase());
-        assertThat(extendedProblemDetail.getStatus()).isEqualTo(SERVICE_UNAVAILABLE.value());
-        assertThat(extendedProblemDetail.getDetail()).isNull();
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
