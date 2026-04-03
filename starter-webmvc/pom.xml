@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>extended-problem-detail-spring-boot-starter-webmvc</artifactId>
+    <packaging>pom</packaging>
     <name>Extended Problem Detail Starter for WebMVC</name>
     <description>Spring Boot starter combining all dependencies for extended ProblemDetail exception handling in WebMVC applications</description>
 

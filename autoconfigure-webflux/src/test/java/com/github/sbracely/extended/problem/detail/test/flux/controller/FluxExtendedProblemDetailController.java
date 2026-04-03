@@ -2,6 +2,7 @@ package com.github.sbracely.extended.problem.detail.test.flux.controller;
 
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
+import com.github.sbracely.extended.problem.detail.test.flux.config.MethodValidationConfiguration;
 import com.github.sbracely.extended.problem.detail.test.flux.exception.ExtendedErrorResponseException;
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation.CheckFilePart;
@@ -292,6 +293,7 @@ public class FluxExtendedProblemDetailController {
 
     /**
      * @see MethodValidationException
+     * @see MethodValidationConfiguration#validationPostProcessor()
      */
     @GetMapping("/method-validation-exception")
     public Mono<Void> methodValidationException() {

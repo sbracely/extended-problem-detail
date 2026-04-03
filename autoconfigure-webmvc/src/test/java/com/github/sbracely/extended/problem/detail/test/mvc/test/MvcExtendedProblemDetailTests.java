@@ -2,7 +2,9 @@ package com.github.sbracely.extended.problem.detail.test.mvc.test;
 
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
+import com.github.sbracely.extended.problem.detail.test.mvc.config.MethodValidationConfiguration;
 import com.github.sbracely.extended.problem.detail.test.mvc.controller.MvcProblemDetailController;
+import com.github.sbracely.extended.problem.detail.test.mvc.endpoint.DemoEndpoint;
 import com.github.sbracely.extended.problem.detail.test.mvc.exception.ExtendedErrorResponseException;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.mvc.service.ProblemDetailService;
@@ -17,8 +19,8 @@ import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.actuate.endpoint.web.AbstractWebMvcEndpointHandlerMapping;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -791,6 +793,34 @@ class MvcExtendedProblemDetailTests {
     }
 
     /**
+     * @see AbstractWebMvcEndpointHandlerMapping.InvalidEndpointBadRequestException
+     * @see DemoEndpoint#hello(String, String, String)
+     */
+    @Nested
+    @TestPropertySource(properties = "management.endpoints.web.exposure.include=demo")
+    class InvalidEndpointBadRequestExceptionTests {
+        private static final String BASE_PATH = "/actuator";
+
+        @Test
+        void invalidEndpointBadRequestException() {
+            String uri = BASE_PATH + "/demo/name";
+            MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+            assertThat(result)
+                    .hasStatus(BAD_REQUEST)
+                    .hasContentType(APPLICATION_PROBLEM_JSON);
+            ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                    .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+            log.info("extendedProblemDetail: {}", extendedProblemDetail);
+            assertThat(extendedProblemDetail.getDetail()).containsOnlyOnce("Missing parameters: ")
+                    .contains("param1", "param2");
+            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+            assertThat(extendedProblemDetail.getErrors()).isNull();
+        }
+    }
+
+    /**
      * @see ServerWebInputException
      * @see MvcProblemDetailController#serverWebInputException()
      */
@@ -1183,6 +1213,7 @@ class MvcExtendedProblemDetailTests {
      * @see MethodValidationException
      * @see MvcProblemDetailController#methodValidationException()
      * @see ProblemDetailService#createProblemDetail(String, ProblemDetailRequest)
+     * @see MethodValidationConfiguration#validationPostProcessor()
      */
     @Test
     void methodValidationException() {

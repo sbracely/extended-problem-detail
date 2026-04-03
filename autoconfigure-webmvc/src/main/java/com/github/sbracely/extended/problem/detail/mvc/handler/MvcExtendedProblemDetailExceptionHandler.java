@@ -2,12 +2,10 @@ package com.github.sbracely.extended.problem.detail.mvc.handler;
 
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
-import org.apache.logging.log4j.util.Strings;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -24,11 +22,8 @@ import org.springframework.web.context.request.async.AsyncRequestNotUsableExcept
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.lang.model.type.ErrorType;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MVC Extended Problem Detail Exception Handler.

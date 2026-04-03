@@ -2,6 +2,7 @@ package com.github.sbracely.extended.problem.detail.test.flux.test;
 
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
+import com.github.sbracely.extended.problem.detail.test.flux.config.MethodValidationConfiguration;
 import com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController;
 import com.github.sbracely.extended.problem.detail.test.flux.exception.ExtendedErrorResponseException;
 import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDetailRequest;
@@ -800,6 +801,7 @@ class FluxExtendedProblemDetailTests {
     /**
      * @see MethodValidationException
      * @see FluxExtendedProblemDetailController#methodValidationException()
+     * @see MethodValidationConfiguration#validationPostProcessor()
      */
     @Test
     void methodValidationException() {

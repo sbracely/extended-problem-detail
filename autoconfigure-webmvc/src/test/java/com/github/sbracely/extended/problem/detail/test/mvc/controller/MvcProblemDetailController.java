@@ -2,8 +2,10 @@ package com.github.sbracely.extended.problem.detail.test.mvc.controller;
 
 import com.github.sbracely.extended.problem.detail.response.Error;
 import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetail;
+import com.github.sbracely.extended.problem.detail.test.mvc.config.MethodValidationConfiguration;
 import com.github.sbracely.extended.problem.detail.test.mvc.exception.ExtendedErrorResponseException;
 import com.github.sbracely.extended.problem.detail.test.mvc.response.ProblemDetailResponse;
+import com.github.sbracely.extended.problem.detail.test.mvc.response.serializer.ProblemDetailResponseSerializer;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.CheckMultipartFile;
 import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.CheckPassword;
@@ -509,6 +511,7 @@ public class MvcProblemDetailController {
 
     /**
      * @see HttpMessageNotWritableException
+     * @see ProblemDetailResponseSerializer
      */
     @GetMapping("/http-message-not-writable-exception")
     public ProblemDetailResponse httpMessageNotWritableException() {
@@ -518,6 +521,7 @@ public class MvcProblemDetailController {
 
     /**
      * @see MethodValidationException
+     * @see MethodValidationConfiguration#validationPostProcessor()
      */
     @GetMapping("/method-validation-exception")
     public void methodValidationException() {
