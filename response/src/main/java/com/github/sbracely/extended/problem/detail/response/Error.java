@@ -7,25 +7,28 @@ import java.util.Objects;
 /**
  * Represents a detailed error information in the extended problem detail response.
  * <p>
- * This class encapsulates individual error details including error type, field name,
- * and error message. It is used to provide field-level validation error information
- * in API responses.
+ * This class encapsulates individual error details including error type, target,
+ * and error message. It is used to provide detailed error information in API responses,
+ * supporting both validation errors (parameter, cookie, header) and business logic errors.
  * </p>
  *
  * @see ExtendedProblemDetail
  * @since 0.0.1-SNAPSHOT
  */
 public class Error {
+
     /**
-     * The type of error (PARAMETER, COOKIE, or HEADER).
+     * The type of error (PARAMETER, COOKIE, HEADER, or BUSINESS).
      */
     @Nullable
     private Type type;
+
     /**
-     * The name of the field that caused the error.
+     * The target of the error, such as field name, resource name, or business entity.
      */
     @Nullable
-    private String field;
+    private String target;
+
     /**
      * The error message describing what went wrong.
      */
@@ -39,35 +42,15 @@ public class Error {
     }
 
     /**
-     * Constructs an error with only a message.
-     *
-     * @param message the error message
-     */
-    public Error(@Nullable String message) {
-        this.message = message;
-    }
-
-    /**
-     * Constructs an error with a field name and message.
-     *
-     * @param field   the field name that caused the error
-     * @param message the error message
-     */
-    public Error(@Nullable String field, @Nullable String message) {
-        this.field = field;
-        this.message = message;
-    }
-
-    /**
-     * Constructs a fully populated error with type, field, and message.
+     * Constructs a fully populated error with type, message, and target.
      *
      * @param type    the type of error
-     * @param field   the field name that caused the error
+     * @param target  the target of the error (field name, resource name, etc.)
      * @param message the error message
      */
-    public Error(@Nullable Type type, @Nullable String field, @Nullable String message) {
+    public Error(@Nullable Type type, @Nullable String target, @Nullable String message) {
         this.type = type;
-        this.field = field;
+        this.target = target;
         this.message = message;
     }
 
@@ -90,21 +73,21 @@ public class Error {
     }
 
     /**
-     * Gets the field name.
+     * Gets the error target.
      *
-     * @return the field name, or {@code null} if not set
+     * @return the target of the error, or {@code null} if not set
      */
-    public @Nullable String getField() {
-        return field;
+    public @Nullable String getTarget() {
+        return target;
     }
 
     /**
-     * Sets the field name.
+     * Sets the error target.
      *
-     * @param field the field name to set
+     * @param target the target to set (field name, resource name, etc.)
      */
-    public void setField(@Nullable String field) {
-        this.field = field;
+    public void setTarget(@Nullable String target) {
+        this.target = target;
     }
 
     /**
@@ -134,34 +117,36 @@ public class Error {
             return false;
         }
         Error error = (Error) o;
-        return type == error.type && Objects.equals(field, error.field) && Objects.equals(message, error.message);
+        return type == error.type && Objects.equals(target, error.target) && Objects.equals(message, error.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, field, message);
+        return Objects.hash(type, target, message);
     }
 
     @Override
     public String toString() {
         return "Error{" +
                 "type=" + type +
-                ", field='" + field + '\'' +
+                ", target='" + target + '\'' +
                 ", message='" + message + '\'' +
                 '}';
     }
 
     /**
-     * Enumeration of error types indicating the source of the validation error.
+     * Enumeration of error types indicating the source of the error.
      * <ul>
      *     <li>{@code PARAMETER} - Error from request parameter</li>
      *     <li>{@code COOKIE} - Error from cookie value</li>
      *     <li>{@code HEADER} - Error from request header</li>
+     *     <li>{@code BUSINESS} - Error from business logic</li>
      * </ul>
      */
     public enum Type {
         PARAMETER,
         COOKIE,
         HEADER,
+        BUSINESS,
     }
 }

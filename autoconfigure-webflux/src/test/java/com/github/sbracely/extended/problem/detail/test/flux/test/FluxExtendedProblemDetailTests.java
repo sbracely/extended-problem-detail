@@ -767,7 +767,8 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("Error message 1"), new Error("Error message 2")
+                new Error(Error.Type.BUSINESS, null, "Error message 1"),
+                new Error(Error.Type.BUSINESS, null, "Error message 2")
         );
     }
 
@@ -793,8 +794,8 @@ class FluxExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("Insufficient balance"),
-                new Error("Payment frequent")
+                new Error(Error.Type.BUSINESS, null, "Insufficient balance"),
+                new Error(Error.Type.BUSINESS, null, "Payment frequent")
         );
     }
 

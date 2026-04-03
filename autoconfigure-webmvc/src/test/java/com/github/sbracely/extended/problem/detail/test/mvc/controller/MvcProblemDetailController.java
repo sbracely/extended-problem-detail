@@ -306,7 +306,9 @@ public class MvcProblemDetailController {
         ExtendedProblemDetail extendedProblemDetail = new ExtendedProblemDetail();
         extendedProblemDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         extendedProblemDetail.setDetail("Payment failed");
-        extendedProblemDetail.setErrors(Lists.newArrayList(new Error("Insufficient balance"), new Error("Payment frequent")));
+        extendedProblemDetail.setErrors(Lists.newArrayList(
+                new Error(Error.Type.BUSINESS, null, "Insufficient balance"),
+                new Error(Error.Type.BUSINESS, null, "Payment frequent")));
         throw new ExtendedErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR, extendedProblemDetail);
     }
 

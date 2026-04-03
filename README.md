@@ -220,7 +220,7 @@ public class UserService {
             problem.setDetail("A user with this email already exists");
 
             List<Error> errors = new ArrayList<>();
-            errors.add(new Error("email", "Email is already registered"));
+            errors.add(new Error(Error.Type.BUSINESS, "email", "Email is already registered"));
             problem.setErrors(errors);
 
             throw new ErrorResponseException(HttpStatus.CONFLICT, problem, null);
@@ -248,8 +248,8 @@ public class InsufficientBalanceException extends ErrorResponseException {
         detail.setDetail(String.format("Current balance %s is less than required amount %s", current, required));
 
         List<Error> errors = new ArrayList<>();
-        errors.add(new Error("balance", "Insufficient balance"));
-        errors.add(new Error("amount", "Payment amount exceeds balance"));
+        errors.add(new Error(Error.Type.BUSINESS, "balance", "Insufficient balance"));
+        errors.add(new Error(Error.Type.BUSINESS, "amount", "Payment amount exceeds balance"));
         detail.setErrors(errors);
 
         return detail;
@@ -314,12 +314,12 @@ public class ExtendedProblemDetail extends ProblemDetail {
 
 ### Error
 
-Represents individual field-level error information:
+Represents individual error information:
 
 ```java
 public class Error {
-    private Type type;      // PARAMETER, COOKIE, or HEADER
-    private String field;   // Field name that caused the error
+    private Type type;      // PARAMETER, COOKIE, HEADER, or BUSINESS
+    private String target;  // Target of the error (field name, resource name, etc.)
     private String message; // Error message
 }
 ```

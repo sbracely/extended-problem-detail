@@ -273,7 +273,9 @@ public class FluxExtendedProblemDetailController {
         extendedProblemDetail.setDetail("Error details");
         extendedProblemDetail.setTitle("Error title");
         extendedProblemDetail.setStatus(HttpStatus.BAD_REQUEST.value());
-        extendedProblemDetail.setErrors(Lists.newArrayList(new Error("Error message 1"), new Error("Error message 2")));
+        extendedProblemDetail.setErrors(Lists.newArrayList(
+                new Error(Error.Type.BUSINESS, null, "Error message 1"),
+                new Error(Error.Type.BUSINESS, null, "Error message 2")));
         throw new ErrorResponseException(HttpStatus.BAD_REQUEST, extendedProblemDetail, new RuntimeException("business exception"));
     }
 
@@ -287,7 +289,9 @@ public class FluxExtendedProblemDetailController {
         extendedProblemDetail.setTitle("Payment failed title");
         extendedProblemDetail.setDetail("Payment failed details");
         extendedProblemDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        extendedProblemDetail.setErrors(Lists.newArrayList(new Error("Insufficient balance"), new Error("Payment frequent")));
+        extendedProblemDetail.setErrors(Lists.newArrayList(
+                new Error(Error.Type.BUSINESS, null, "Insufficient balance"),
+                new Error(Error.Type.BUSINESS, null, "Payment frequent")));
         throw new ExtendedErrorResponseException(HttpStatus.INTERNAL_SERVER_ERROR, extendedProblemDetail);
     }
 

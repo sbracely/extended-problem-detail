@@ -764,8 +764,8 @@ class MvcExtendedProblemDetailTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).containsExactlyInAnyOrder(
-                new Error("Insufficient balance"),
-                new Error("Payment frequent")
+                new Error(Error.Type.BUSINESS, null, "Insufficient balance"),
+                new Error(Error.Type.BUSINESS, null, "Payment frequent")
         );
     }
 

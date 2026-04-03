@@ -60,9 +60,9 @@ public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExc
      * and wraps them in an ExtendedProblemDetail response.
      * </p>
      *
-     * @param ex      the WebExchangeBindException that was thrown
-     * @param headers the HTTP headers to be used in the response
-     * @param status  the HTTP status code
+     * @param ex       the WebExchangeBindException that was thrown
+     * @param headers  the HTTP headers to be used in the response
+     * @param status   the HTTP status code
      * @param exchange the current server web exchange
      * @return Mono containing ResponseEntity with the ExtendedProblemDetail with validation errors
      */
@@ -185,21 +185,14 @@ public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExc
                 parameterErrors.getAllErrors().stream().map(this::ObjectErrorConvertToError).forEach(errors::add);
             } else {
                 String parameterName = parameterValidationResult.getMethodParameter().getParameterName();
-                parameterValidationResult.getResolvableErrors().stream().map(messageSourceResolvable -> {
-                    Error error = new Error();
-                    error.setField(parameterName);
-                    error.setType(Error.Type.PARAMETER);
-                    error.setMessage(messageSourceResolvable.getDefaultMessage());
-                    return error;
-                }).forEach(errors::add);
+                parameterValidationResult.getResolvableErrors().stream().map(messageSourceResolvable ->
+                        new Error(Error.Type.PARAMETER, parameterName, messageSourceResolvable.getDefaultMessage())
+                ).forEach(errors::add);
             }
         });
-        ex.getCrossParameterValidationResults().forEach(parameterValidationResult -> {
-            Error error = new Error();
-            error.setType(Error.Type.PARAMETER);
-            error.setMessage(parameterValidationResult.getDefaultMessage());
-            errors.add(error);
-        });
+        ex.getCrossParameterValidationResults().stream().map(parameterValidationResult ->
+                new Error(Error.Type.PARAMETER, null, parameterValidationResult.getDefaultMessage())
+        ).forEach(errors::add);
         return errors;
     }
 
@@ -214,12 +207,10 @@ public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExc
      * @return Error object with field and message information
      */
     private Error ObjectErrorConvertToError(ObjectError objectError) {
-        Error error = new Error();
+        String target = null;
         if (objectError instanceof FieldError fieldError) {
-            error.setField(fieldError.getField());
+            target = fieldError.getField();
         }
-        error.setMessage(objectError.getDefaultMessage());
-        error.setType(Error.Type.PARAMETER);
-        return error;
+        return new Error(Error.Type.PARAMETER, target, objectError.getDefaultMessage());
     }
 }
