@@ -6,7 +6,7 @@ import com.github.sbracely.extended.problem.detail.test.mvc.config.MethodValidat
 import com.github.sbracely.extended.problem.detail.test.mvc.controller.MvcProblemDetailController;
 import com.github.sbracely.extended.problem.detail.test.mvc.endpoint.DemoEndpoint;
 import com.github.sbracely.extended.problem.detail.test.mvc.exception.ExtendedErrorResponseException;
-import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.ProblemDetailRequest;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.ProblemDetailRequest;
 import com.github.sbracely.extended.problem.detail.test.mvc.service.ProblemDetailService;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.AsyncListener;

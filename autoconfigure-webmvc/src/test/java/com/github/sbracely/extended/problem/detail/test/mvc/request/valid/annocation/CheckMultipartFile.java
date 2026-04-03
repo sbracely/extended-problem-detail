@@ -1,6 +1,6 @@
-package com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation;
+package com.github.sbracely.extended.problem.detail.test.mvc.request.valid.annocation;
 
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.validator.CheckFilePartValidator;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.valid.validator.CheckMultipartFileValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -9,8 +9,8 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = CheckFilePartValidator.class)
-public @interface CheckFilePart {
+@Constraint(validatedBy = CheckMultipartFileValidator.class)
+public @interface CheckMultipartFile {
     String message() default "Check file error";
 
     Class<?>[] groups() default {};

@@ -1,11 +1,11 @@
-package com.github.sbracely.extended.problem.detail.test.mvc.reuqest;
+package com.github.sbracely.extended.problem.detail.test.mvc.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation.ConfirmPassword;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.valid.annocation.ConfirmPassword;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 

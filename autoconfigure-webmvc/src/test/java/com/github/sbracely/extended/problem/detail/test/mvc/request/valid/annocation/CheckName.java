@@ -1,7 +1,7 @@
-package com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.annocation;
+package com.github.sbracely.extended.problem.detail.test.mvc.request.valid.annocation;
 
 
-import com.github.sbracely.extended.problem.detail.test.mvc.reuqest.valid.validator.CheckNameValidator;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.valid.validator.CheckNameValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

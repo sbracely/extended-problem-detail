@@ -1,7 +1,7 @@
 package com.github.sbracely.extended.problem.detail.test.flux.service;
 
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDetailRequest;
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation.CheckName;
+import com.github.sbracely.extended.problem.detail.test.flux.request.ProblemDetailRequest;
+import com.github.sbracely.extended.problem.detail.test.flux.request.valid.annocation.CheckName;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

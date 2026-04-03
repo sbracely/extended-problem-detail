@@ -1,14 +1,14 @@
-package com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.validator;
+package com.github.sbracely.extended.problem.detail.test.mvc.request.valid.validator;
 
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation.CheckFilePart;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.valid.annocation.CheckMultipartFile;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 
-public class CheckFilePartValidator implements ConstraintValidator<CheckFilePart, FilePart> {
+public class CheckMultipartFileValidator implements ConstraintValidator<CheckMultipartFile, MultipartFile> {
 
     private boolean required;
     private String requiredMessage;
@@ -16,7 +16,7 @@ public class CheckFilePartValidator implements ConstraintValidator<CheckFilePart
     private String extensionsMessage;
 
     @Override
-    public void initialize(CheckFilePart constraintAnnotation) {
+    public void initialize(CheckMultipartFile constraintAnnotation) {
         required = constraintAnnotation.required();
         extensions = constraintAnnotation.extensionInclude();
         requiredMessage = constraintAnnotation.requiredMessage();
@@ -24,12 +24,12 @@ public class CheckFilePartValidator implements ConstraintValidator<CheckFilePart
     }
 
     @Override
-    public boolean isValid(FilePart filePart, ConstraintValidatorContext context) {
-        boolean valid = required(filePart);
+    public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext context) {
+        boolean valid = required(multipartFile);
         if (!valid) {
             return validFalse(context, requiredMessage);
         }
-        valid = extensions(filePart);
+        valid = extensions(multipartFile);
         if (valid) {
             return true;
         }
@@ -44,21 +44,21 @@ public class CheckFilePartValidator implements ConstraintValidator<CheckFilePart
         return false;
     }
 
-    private boolean required(FilePart filePart) {
-        if (!required) {
-            return true;
+    private boolean required(MultipartFile multipartFile) {
+        if (required) {
+            return null != multipartFile && !multipartFile.isEmpty();
         }
-        return null != filePart;
+        return true;
     }
 
-    private boolean extensions(FilePart filePart) {
-        if (null == filePart) {
+    private boolean extensions(MultipartFile multipartFile) {
+        if (null == multipartFile) {
             return false;
         }
         if (null == extensions || extensions.length == 0) {
             return true;
         }
-        String originalFilename = filePart.filename();
+        String originalFilename = multipartFile.getOriginalFilename();
         if (StringUtils.isBlank(originalFilename)) {
             return false;
         }

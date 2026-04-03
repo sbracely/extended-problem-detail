@@ -5,7 +5,7 @@ import com.github.sbracely.extended.problem.detail.response.ExtendedProblemDetai
 import com.github.sbracely.extended.problem.detail.test.flux.config.MethodValidationConfiguration;
 import com.github.sbracely.extended.problem.detail.test.flux.controller.FluxExtendedProblemDetailController;
 import com.github.sbracely.extended.problem.detail.test.flux.exception.ExtendedErrorResponseException;
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDetailRequest;
+import com.github.sbracely.extended.problem.detail.test.flux.request.ProblemDetailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

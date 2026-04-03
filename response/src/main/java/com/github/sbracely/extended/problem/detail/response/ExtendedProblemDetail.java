@@ -15,7 +15,7 @@ import java.util.List;
  * to understand and fix validation issues.
  * </p>
  * <p>
- * The extended problem detail follows RFC 7807 (Problem Details for HTTP APIs)
+ * The extended problem detail follows RFC 9457 (Problem Details for HTTP APIs)
  * while adding custom extensions for detailed error information.
  * </p>
  *

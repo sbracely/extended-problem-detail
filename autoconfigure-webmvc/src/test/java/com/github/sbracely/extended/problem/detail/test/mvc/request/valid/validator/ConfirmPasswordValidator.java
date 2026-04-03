@@ -1,7 +1,7 @@
-package com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.validator;
+package com.github.sbracely.extended.problem.detail.test.mvc.request.valid.validator;
 
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.ProblemDetailRequest;
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation.ConfirmPassword;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.ProblemDetailRequest;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.valid.annocation.ConfirmPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

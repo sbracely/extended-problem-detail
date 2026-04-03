@@ -1,6 +1,6 @@
-package com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation;
+package com.github.sbracely.extended.problem.detail.test.flux.request.valid.annocation;
 
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.validator.CheckPasswordValidator;
+import com.github.sbracely.extended.problem.detail.test.flux.request.valid.validator.CheckPasswordValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

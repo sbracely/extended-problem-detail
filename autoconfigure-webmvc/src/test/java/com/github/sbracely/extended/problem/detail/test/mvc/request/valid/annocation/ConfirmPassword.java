@@ -1,8 +1,8 @@
-package com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.annocation;
+package com.github.sbracely.extended.problem.detail.test.mvc.request.valid.annocation;
 
-import com.github.sbracely.extended.problem.detail.test.flux.reuqest.valid.validator.ConfirmPasswordValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import com.github.sbracely.extended.problem.detail.test.mvc.request.valid.validator.ConfirmPasswordValidator;
 
 import java.lang.annotation.*;
 
