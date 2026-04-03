@@ -2,48 +2,91 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://openjdk.java.net/)
+[![Java](https://img.shields.io/badge/Java-17%2B-orange.svg)](https://openjdk.org/)
 
-Enhanced Spring Boot ProblemDetail exception handling starter that provides out-of-the-box global exception handling for Spring MVC and WebFlux applications, with support for returning field-level detailed error information.
+A Spring Boot starter library that provides enhanced ProblemDetail exception handling with field-level error information, fully compliant with [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457) (Problem Details for HTTP APIs).
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Key Features](#key-features)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [Usage Examples](#usage-examples)
+- [Supported Exception Types](#supported-exception-types)
+- [Core Classes](#core-classes)
+- [Testing](#testing)
+- [Version Compatibility](#version-compatibility)
+- [Development Guide](#development-guide)
+- [Contributing](#contributing)
+- [License](#license)
+- [Authors](#authors)
+- [Related Links](#related-links)
 
 ## Project Overview
 
-This project extends Spring Framework's `ProblemDetail` (RFC 7807) to provide a richer error response format. When exceptions such as parameter validation failures occur, it can return specific field names and error messages, helping API consumers quickly identify and fix issues.
+Extended Problem Detail is a Spring Boot starter library designed to enhance API error responses by extending Spring Framework's `ProblemDetail` with detailed field-level validation error information. When validation fails, instead of receiving a generic error message, API consumers get precise information about which fields failed validation and why.
 
-### Key Features
+### Problem Solved
 
-- **Auto-configuration** - Zero configuration startup, ready to use out of the box
-- **Field-level errors** - Support for returning field errors from parameters, cookies, headers, and other sources
-- **Dual framework support** - Supports both Spring WebMVC and Spring WebFlux
-- **Standardized responses** - Follows RFC 7807 specification with custom extensions
-- **High test coverage** - 50+ test methods covering 35+ exception types
+Traditional Spring Boot validation error responses often lack detailed field-level information, making it difficult for API consumers to understand and fix validation issues. This library solves this by providing:
 
-## 📦 模块结构
+- Field-level error details (field name, error type, error message)
+- Support for various parameter sources (query parameters, headers, cookies, path variables, request body)
+- Consistent error response format following RFC 9457
+- Automatic integration with Spring's validation framework
+
+## Key Features
+
+- **RFC 9457 Compliant**: Follows the Problem Details for HTTP APIs standard
+- **Field-Level Error Details**: Provides specific field names and error messages for validation failures
+- **Multiple Parameter Source Support**: Handles errors from @RequestParam, @RequestHeader, @CookieValue, @PathVariable, @RequestBody, and more
+- **WebMVC & WebFlux Support**: Available for both synchronous and reactive Spring applications
+- **Zero Configuration**: Auto-configuration with sensible defaults
+- **Customizable**: Enable/disable via configuration properties
+- **Visitor Pattern Implementation**: Efficiently processes different parameter validation results
+
+## Project Structure
 
 ```
-extended-problem-detail
-├── response                          # 核心响应类 (ExtendedProblemDetail, Error)
-├── autoconfigure-webmvc              # WebMVC 自动配置与异常处理器
-├── autoconfigure-webflux             # WebFlux 自动配置与异常处理器
-├── starter-webmvc                    # WebMVC Starter (聚合依赖)
-└── starter-webflux                   # WebFlux Starter (聚合依赖)
+extended-problem-detail/
+├── response/                          # Core response classes
+│   └── src/main/java/.../response/
+│       ├── ExtendedProblemDetail.java # Extended ProblemDetail with error list
+│       └── Error.java                 # Individual error details
+├── autoconfigure-webmvc/              # WebMVC auto-configuration
+│   └── src/main/java/.../mvc/
+│       ├── MvcExtendedProblemDetailAutoConfiguration.java
+│       ├── MvcExtendedProblemDetailProperties.java
+│       └── handler/
+│           └── MvcExtendedProblemDetailExceptionHandler.java
+├── autoconfigure-webflux/             # WebFlux auto-configuration
+│   └── src/main/java/.../flux/
+│       ├── FluxExtendedProblemDetailAutoConfiguration.java
+│       ├── FluxExtendedProblemDetailProperties.java
+│       └── handler/
+│           └── FluxExtendedProblemDetailExceptionHandler.java
+├── starter-webmvc/                    # WebMVC starter (convenience dependency)
+└── starter-webflux/                   # WebFlux starter (convenience dependency)
 ```
 
-### 模块说明
+### Module Dependencies
 
-| 模块 | 说明 |
-|------|------|
-| `response` | 核心响应类：`ExtendedProblemDetail` 和 `Error` |
-| `autoconfigure-webmvc` | WebMVC 自动配置类和全局异常处理器 |
-| `autoconfigure-webflux` | WebFlux 自动配置类和全局异常处理器 |
-| `starter-webmvc` | WebMVC Starter，聚合所有必要依赖 |
-| `starter-webflux` | WebFlux Starter，聚合所有必要依赖 |
+```
+starter-webmvc
+    └── autoconfigure-webmvc
+            └── response
+
+starter-webflux
+    └── autoconfigure-webflux
+            └── response
+```
 
 ## Quick Start
 
-### Maven Dependencies
+### 1. Add Dependency
 
-#### WebMVC Project
+For Spring WebMVC applications:
 
 ```xml
 <dependency>
@@ -53,7 +96,7 @@ extended-problem-detail
 </dependency>
 ```
 
-#### WebFlux Project
+For Spring WebFlux applications:
 
 ```xml
 <dependency>
@@ -63,225 +106,295 @@ extended-problem-detail
 </dependency>
 ```
 
-### Configuration Options
+### 2. Enable Extended Problem Detail (Optional)
 
-Configure in `application.yml` (optional, enabled by default):
+By default, the feature is enabled. You can explicitly configure it in `application.yml`:
 
 ```yaml
 extended:
   problem-detail:
-    enabled: true  # Enable extended ProblemDetail, defaults to true
+    enabled: true
 ```
+
+Or in `application.properties`:
+
+```properties
+extended.problem-detail.enabled=true
+```
+
+### 3. That's It
+
+The library automatically configures itself and starts enhancing validation error responses.
 
 ## Usage Examples
 
-### Controller Example
+### Basic Validation Error Response
 
-```java
-@RestController
-@RequestMapping("/api")
-public class UserController {
-    
-    @PostMapping("/users")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserRequest request) {
-        // Business logic
-        return ResponseEntity.ok(user);
-    }
-    
-    @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Integer id) {
-        // Business logic
-        return ResponseEntity.ok(user);
-    }
-}
-```
-
-### Request Validation Example
-
-```java
-public class UserRequest {
-    
-    @NotBlank(message = "Username is required")
-    private String username;
-    
-    @Email(message = "Invalid email format")
-    private String email;
-    
-    @NotNull(message = "Age is required")
-    @Min(value = 18, message = "Age must be at least 18")
-    private Integer age;
-    
-    // getters and setters
-}
-```
-
-### Error Response Example
-
-When parameter validation fails, the returned JSON response:
+When a validation error occurs, the response will include detailed field information:
 
 ```json
 {
-  "type": null,
+  "type": "about:blank",
   "title": "Bad Request",
   "status": 400,
-  "detail": "Validation failed for argument [0] in public org.springframework.http.ResponseEntity<User> UserController.createUser(UserRequest)",
-  "instance": "/api/users",
+  "detail": "Validation failed",
   "errors": [
     {
       "type": "PARAMETER",
-      "field": "username",
-      "message": "Username is required"
-    },
-    {
-      "type": "PARAMETER",
       "field": "email",
-      "message": "Invalid email format"
+      "message": "must be a well-formed email address"
     },
     {
       "type": "PARAMETER",
       "field": "age",
-      "message": "Age must be at least 18"
+      "message": "must be greater than or equal to 18"
     }
   ]
 }
 ```
 
+### Controller with Validation
+
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @PostMapping
+    public ResponseEntity<User> createUser(
+            @Valid @RequestBody UserRequest request) {
+        // Implementation
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(
+            @PathVariable @Positive Long id) {
+        // Implementation
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> searchUsers(
+            @RequestParam @NotBlank String name,
+            @RequestHeader @NotNull String apiKey) {
+        // Implementation
+    }
+}
+```
+
+### Request DTO with Validation
+
+```java
+public class UserRequest {
+
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    private String name;
+
+    @Email(message = "Must be a valid email address")
+    private String email;
+
+    @Min(value = 18, message = "Must be at least 18 years old")
+    private Integer age;
+
+    // Getters and setters
+}
+```
+
+### Custom Error Response
+
+You can also create custom extended problem details programmatically:
+
+```java
+@Service
+public class UserService {
+
+    public User createUser(UserRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            ExtendedProblemDetail problem = new ExtendedProblemDetail();
+            problem.setStatus(HttpStatus.CONFLICT.value());
+            problem.setTitle("User already exists");
+            problem.setDetail("A user with this email already exists");
+
+            List<Error> errors = new ArrayList<>();
+            errors.add(new Error(Error.Type.PARAMETER, "email", "Email is already registered"));
+            problem.setErrors(errors);
+
+            throw new ExtendedErrorResponseException(HttpStatus.CONFLICT, problem);
+        }
+        // Implementation
+    }
+}
+```
+
 ## Supported Exception Types
 
-This starter automatically handles the following exception types:
+The library handles the following exception types:
 
-### WebMVC Support
+| Exception Type | Description | WebMVC | WebFlux |
+|---------------|-------------|--------|---------|
+| `MethodArgumentNotValidException` | @Valid annotation validation failure | Yes | No |
+| `HandlerMethodValidationException` | Method parameter validation failure | Yes | Yes |
+| `WebExchangeBindException` | Data binding exception | Yes | Yes |
+| `MethodValidationException` | Method-level validation exception | Yes | Yes |
 
-- `MethodArgumentNotValidException` - `@Valid` annotation parameter validation failure
-- `HandlerMethodValidationException` - Controller method parameter validation failure
-- `WebExchangeBindException` - Data binding exception
-- `HttpMediaTypeNotSupportedException` - Unsupported media type
-- `HttpMediaTypeNotAcceptableException` - Not acceptable media type
-- `MissingPathVariableException` - Missing path variable
-- `MissingServletRequestParameterException` - Missing request parameter
-- `MissingServletRequestPartException` - Missing request part
-- `TypeMismatchException` - Type mismatch
-- `HttpMessageNotReadableException` - Message not readable
-- `HttpMessageNotWritableException` - Message not writable
-- `HttpRequestMethodNotSupportedException` - Request method not supported
-- `NoHandlerFoundException` - No handler found
-- `AsyncRequestTimeoutException` - Async request timeout
+### Parameter Annotations Supported
 
-### WebFlux Support
+The following Spring annotations are supported for validation:
 
-- `WebExchangeBindException` - Data binding exception
-- `ServerWebInputException` - Server web input exception
-- `ServerErrorException` - Server internal error
-- `ResponseStatusException` - Response status exception
-- And other WebFlux related exceptions
+- `@RequestParam` - Query parameters (type: PARAMETER)
+- `@RequestHeader` - HTTP headers (type: HEADER)
+- `@CookieValue` - Cookies (type: COOKIE)
+- `@PathVariable` - Path variables (type: PARAMETER)
+- `@RequestBody` - Request body with @Valid (type: PARAMETER)
+- `@ModelAttribute` - Model attributes (type: PARAMETER)
+- `@RequestPart` - Multipart parts (type: PARAMETER)
+- `@MatrixVariable` - Matrix variables (type: PARAMETER)
 
 ## Core Classes
 
 ### ExtendedProblemDetail
 
-Extends Spring Framework's `ProblemDetail` and adds an `errors` property to store a list of detailed errors.
+Extends Spring's `ProblemDetail` to add a list of `Error` objects:
 
 ```java
 public class ExtendedProblemDetail extends ProblemDetail {
-    @Nullable
     private List<Error> errors;
-    
-    // getters and setters
+    // Getters and setters
 }
 ```
 
 ### Error
 
-Represents detailed information about a single error, including error type, field name, and error message.
+Represents individual field-level error information:
 
 ```java
 public class Error {
-    @Nullable
-    private Type type;      // PARAMETER, COOKIE, HEADER
-    
-    @Nullable
-    private String field;   // Field name
-    
-    @Nullable
+    private Type type;      // PARAMETER, COOKIE, or HEADER
+    private String field;   // Field name that caused the error
     private String message; // Error message
-    
-    // constructors, getters and setters
 }
 ```
 
+### Exception Handlers
+
+- **MvcExtendedProblemDetailExceptionHandler**: Handles exceptions for Spring WebMVC applications
+- **FluxExtendedProblemDetailExceptionHandler**: Handles exceptions for Spring WebFlux applications
+
+Both handlers extend Spring's `ResponseEntityExceptionHandler` and use the Visitor pattern to process different types of parameter validation results.
+
 ## Testing
 
-The project includes a comprehensive test suite:
+The library includes comprehensive test suites for both WebMVC and WebFlux modules.
 
-- **WebMVC Tests**: `MvcExtendedProblemDetailTests` - 200+ lines of test code
-- **WebFlux Tests**: `FluxExtendedProblemDetailTests` - Complete reactive tests
-- **Random Port Tests**: Integration tests with real environment support
-
-Run tests:
+### Running Tests
 
 ```bash
 # Run all tests
 ./mvnw test
 
-# Run WebMVC tests
+# Run tests for specific module
 ./mvnw test -pl autoconfigure-webmvc
-
-# Run WebFlux tests
 ./mvnw test -pl autoconfigure-webflux
+```
+
+### Test Structure
+
+```
+autoconfigure-webmvc/src/test/java/.../test/mvc/
+├── controller/
+│   └── MvcProblemDetailController.java
+├── request/
+│   ├── ProblemDetailRequest.java
+│   └── valid/
+│       ├── annotation/
+│       └── validator/
+├── service/
+│   └── ProblemDetailService.java
+└── test/
+    ├── MvcExtendedProblemDetailTests.java
+    └── MvcExtendedProblemDetailRandomPortTests.java
 ```
 
 ## Version Compatibility
 
-| Component | Version Requirement |
-|-----------|---------------------|
-| Java      | 17+                 |
-| Spring Boot | 4.0.5+            |
-| Spring Framework | 6.x+         |
+| Component | Version |
+|-----------|---------|
+| Spring Boot | 4.0.5 |
+| Java | 17+ |
+| Spring Framework | 6.2.x |
 
 ## Development Guide
 
-### Custom Exception Handler
+### Building the Project
 
-To customize exception handling logic, you can define your own bean in the application:
+```bash
+# Build all modules
+./mvnw clean install
 
-```java
-@Configuration
-public class CustomConfig {
-    
-    @Bean
-    public MvcExtendedProblemDetailExceptionHandler customExceptionHandler() {
-        return new CustomExceptionHandler();
-    }
-}
+# Skip tests
+./mvnw clean install -DskipTests
 ```
 
-### Extend Response Format
+### Module Development
 
-You can add custom properties by extending `ExtendedProblemDetail`:
+When adding new features:
 
-```java
-public class CustomProblemDetail extends ExtendedProblemDetail {
-    private String timestamp;
-    private String errorCode;
-    
-    // getters and setters
-}
-```
+1. **Response Module**: Add shared classes to `response` module
+2. **WebMVC Support**: Implement handlers in `autoconfigure-webmvc`
+3. **WebFlux Support**: Implement handlers in `autoconfigure-webflux`
+4. **Tests**: Add corresponding tests in each module's test directory
+
+### Configuration Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `extended.problem-detail.enabled` | Boolean | true | Enable/disable extended problem detail handling |
 
 ## Contributing
 
-Issues and Pull Requests are welcome!
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Code Style
+
+- Follow standard Java conventions
+- Use meaningful variable and method names
+- Add Javadoc comments for public APIs
+- Write unit tests for new features
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://www.apache.org/licenses/LICENSE-2.0) file for details.
+
+```
+Copyright 2025 sbracely
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
 
 ## Authors
 
-- **sbrace** - [GitHub](https://github.com/sbracely)
+- **sbracely** - Initial work - [GitHub](https://github.com/sbracely)
 
 ## Related Links
 
-- [Spring Boot Official Documentation](https://spring.io/projects/spring-boot)
-- [RFC 9457 - Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc9457)
-- [Spring Framework ProblemDetail](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ProblemDetail.html)
+- [RFC 9457 - Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc9457)
+- [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
+- [Spring Framework - ProblemDetail](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/ProblemDetail.html)
+- [Bean Validation Specification](https://beanvalidation.org/)
+- [Project Repository](https://github.com/sbracely/extended-problem-detail)
