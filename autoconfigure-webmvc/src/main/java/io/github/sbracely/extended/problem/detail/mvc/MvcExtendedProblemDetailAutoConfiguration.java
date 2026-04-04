@@ -2,7 +2,6 @@ package io.github.sbracely.extended.problem.detail.mvc;
 
 import io.github.sbracely.extended.problem.detail.core.logging.ExtendedProblemDetailLog;
 import io.github.sbracely.extended.problem.detail.core.response.ExtendedProblemDetail;
-import io.github.sbracely.extended.problem.detail.mvc.error.resolver.MvcErrorResolver;
 import io.github.sbracely.extended.problem.detail.mvc.handler.MvcExtendedProblemDetailExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -38,7 +37,6 @@ import org.springframework.context.annotation.Bean;
  * }</pre>
  *
  * @see MvcExtendedProblemDetailExceptionHandler
- * @see FluxExtendedProblemDetailAutoConfiguration WebFlux version of auto-configuration
  * @since 1.0.0
  */
 @AutoConfiguration
@@ -75,15 +73,8 @@ public class MvcExtendedProblemDetailAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MvcErrorResolver errorResolver(ExtendedProblemDetailLog extendedProblemDetailLog) {
-        return new MvcErrorResolver(extendedProblemDetailLog);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public MvcExtendedProblemDetailExceptionHandler requestExceptionHandler(MvcErrorResolver errorResolver,
-                                                                            ExtendedProblemDetailLog extendedProblemDetailLog) {
-        return new MvcExtendedProblemDetailExceptionHandler(errorResolver, extendedProblemDetailLog);
+    public MvcExtendedProblemDetailExceptionHandler requestExceptionHandler(ExtendedProblemDetailLog extendedProblemDetailLog) {
+        return new MvcExtendedProblemDetailExceptionHandler(extendedProblemDetailLog);
     }
 
 }
