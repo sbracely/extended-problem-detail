@@ -96,7 +96,7 @@ For Spring WebMVC applications:
 
 ```xml
 <dependency>
-    <groupId>com.github.sbracely</groupId>
+    <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-spring-boot-starter-webmvc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
@@ -106,7 +106,7 @@ For Spring WebFlux applications:
 
 ```xml
 <dependency>
-    <groupId>com.github.sbracely</groupId>
+    <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-spring-boot-starter-webflux</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>

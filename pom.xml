@@ -8,7 +8,7 @@
         <version>4.0.5</version>
         <relativePath/>
     </parent>
-    <groupId>com.github.sbracely</groupId>
+    <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -48,17 +48,17 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.github.sbracely</groupId>
+                <groupId>io.github.sbracely</groupId>
                 <artifactId>extended-problem-detail-core</artifactId>
                 <version>${extended-problem-detail.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.sbracely</groupId>
+                <groupId>io.github.sbracely</groupId>
                 <artifactId>extended-problem-detail-autoconfigure-webmvc</artifactId>
                 <version>${extended-problem-detail.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.sbracely</groupId>
+                <groupId>io.github.sbracely</groupId>
                 <artifactId>extended-problem-detail-autoconfigure-webflux</artifactId>
                 <version>${extended-problem-detail.version}</version>
             </dependency>

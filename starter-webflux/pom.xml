@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.github.sbracely</groupId>
+        <groupId>io.github.sbracely</groupId>
         <artifactId>extended-problem-detail</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.sbracely</groupId>
+            <groupId>io.github.sbracely</groupId>
             <artifactId>extended-problem-detail-autoconfigure-webflux</artifactId>
         </dependency>
     </dependencies>
