@@ -38,7 +38,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @see ConfigurationProperties
  * @see ExtendedProblemDetailProperties
- * @since 0.0.1-SNAPSHOT
+ * @since 1.0.0
  */
 @ConfigurationProperties(prefix = "extended.problem-detail")
 public class MvcExtendedProblemDetailProperties extends ExtendedProblemDetailProperties {

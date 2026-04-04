@@ -35,7 +35,7 @@ import org.springframework.boot.logging.LogLevel;
  * }</pre>
  *
  * @see LogLevel
- * @since 0.0.1-SNAPSHOT
+ * @since 1.0.0
  */
 public class ExtendedProblemDetailProperties {
 

@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>Extended Problem Detail Parent</name>
     <description>Parent POM for Extended Problem Detail - Spring Boot Starter providing enhanced ProblemDetail exception handling with field-level error information</description>
@@ -34,7 +34,7 @@
         <url>https://github.com/sbracely/extended-problem-detail</url>
     </scm>
     <properties>
-        <extended-problem-detail.version>0.0.1-SNAPSHOT</extended-problem-detail.version>
+        <extended-problem-detail.version>1.0.0</extended-problem-detail.version>
     </properties>
 
     <modules>

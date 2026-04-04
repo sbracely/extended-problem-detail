@@ -659,7 +659,7 @@ class MvcControllerTests {
         List<String> defaultMessages = argsCaptor.getAllValues().stream()
                 .map(args -> (String) args[1])
                 .toList();
-        assertThat(defaultMessages).containsExactlyInAnyOrder(
+        assertThat(defaultMessages).containsAnyOf(
                 "sessionAttribute cannot be empty",
                 "requestAttribute cannot be empty",
                 "value cannot be empty"

@@ -12,7 +12,7 @@ import org.springframework.boot.logging.LogLevel;
  * configured log level, supporting SLF4J-style placeholder syntax.
  * </p>
  *
- * @since 0.0.1-SNAPSHOT
+ * @since 1.0.0
  */
 public final class ExtendedProblemDetailLog {
 

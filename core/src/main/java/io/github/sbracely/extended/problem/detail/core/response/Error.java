@@ -14,7 +14,7 @@ import org.jspecify.annotations.Nullable;
  * @param target  the target of the error, such as field name, resource name, or business entity
  * @param message the error message describing what went wrong
  * @see ExtendedProblemDetail
- * @since 0.0.1-SNAPSHOT
+ * @since 1.0.0
  */
 public record Error(@Nullable Type type, @Nullable String target, @Nullable String message) {
 

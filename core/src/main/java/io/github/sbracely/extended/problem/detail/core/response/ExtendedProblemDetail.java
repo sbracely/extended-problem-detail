@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @see Error
  * @see ProblemDetail
- * @since 0.0.1-SNAPSHOT
+ * @since 1.0.0
  */
 public class ExtendedProblemDetail extends ProblemDetail {
 

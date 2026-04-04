@@ -16,11 +16,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.method.MethodValidationException;
 import org.springframework.validation.method.ParameterErrors;
 import org.springframework.validation.method.ParameterValidationResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.lang.reflect.Method;
@@ -30,33 +30,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for {@link ValidationErrorHandler} class.
+ * Unit tests for {@link AbstractErrorResolver} class.
  */
 @ExtendWith(MockitoExtension.class)
-class ValidationErrorHandlerTest {
+class AbstractErrorResolverTest {
 
     @Mock
     private ExtendedProblemDetailLog extendedProblemDetailLog;
 
-    private ValidationErrorHandler handler;
+    private TestErrorResolver resolver;
 
     @BeforeEach
     void setUp() {
-        handler = new ValidationErrorHandler(extendedProblemDetailLog);
+        resolver = new TestErrorResolver(extendedProblemDetailLog);
     }
 
     @Test
-    void shouldHandleMethodArgumentNotValidException() {
+    void shouldResolveWebExchangeBindException() {
         // Create a binding result with errors
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(
                 new Object(), "target");
         bindingResult.addError(new ObjectError("object", "Object error message"));
         bindingResult.addError(new FieldError("object", "fieldName", "Field error message"));
 
-        MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
+        WebExchangeBindException exception = mock(WebExchangeBindException.class);
         when(exception.getBindingResult()).thenReturn(bindingResult);
 
-        List<Error> errors = handler.handleMethodArgumentNotValidException(exception);
+        List<Error> errors = resolver.resolveWebExchangeBindException(exception);
 
         assertThat(errors).hasSize(2);
         assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
@@ -84,7 +84,7 @@ class ValidationErrorHandlerTest {
         when(exception.getParameterValidationResults()).thenReturn(List.of(result));
         when(exception.getCrossParameterValidationResults()).thenReturn(List.of());
 
-        List<Error> errors = handler.handleMethodValidationException(exception);
+        List<Error> errors = resolver.resolveMethodValidationException(exception);
 
         assertThat(errors).hasSize(1);
         assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
@@ -109,7 +109,7 @@ class ValidationErrorHandlerTest {
         when(exception.getParameterValidationResults()).thenReturn(List.of(parameterErrors));
         when(exception.getCrossParameterValidationResults()).thenReturn(List.of());
 
-        List<Error> errors = handler.handleMethodValidationException(exception);
+        List<Error> errors = resolver.resolveMethodValidationException(exception);
 
         assertThat(errors).hasSize(2);
         assertThat(errors.get(0).target()).isEqualTo("field1");
@@ -122,13 +122,13 @@ class ValidationErrorHandlerTest {
         when(exception.getParameterValidationResults()).thenReturn(List.of());
 
         // Cross parameter results are MessageSourceResolvable, not ParameterValidationResult
-        org.springframework.context.MessageSourceResolvable crossParamResult = 
+        org.springframework.context.MessageSourceResolvable crossParamResult =
             mock(org.springframework.context.MessageSourceResolvable.class);
         when(crossParamResult.getDefaultMessage()).thenReturn("Cross parameter error");
 
         when(exception.getCrossParameterValidationResults()).thenReturn(List.of(crossParamResult));
 
-        List<Error> errors = handler.handleMethodValidationException(exception);
+        List<Error> errors = resolver.resolveMethodValidationException(exception);
 
         assertThat(errors).hasSize(1);
         assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
@@ -151,7 +151,7 @@ class ValidationErrorHandlerTest {
             return null;
         }).when(exception).visitResults(any(HandlerMethodValidationException.Visitor.class));
 
-        List<Error> errors = handler.handleHandlerMethodValidationException(exception);
+        List<Error> errors = resolver.resolveHandlerMethodValidationException(exception);
 
         assertThat(errors).hasSize(1);
         assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
@@ -159,7 +159,7 @@ class ValidationErrorHandlerTest {
     }
 
     @Test
-    void shouldHandleCookieValueParameter() {
+    void shouldResolveCookieValueParameter() {
         HandlerMethodValidationException exception = mock(HandlerMethodValidationException.class);
 
         doAnswer(invocation -> {
@@ -170,14 +170,14 @@ class ValidationErrorHandlerTest {
             return null;
         }).when(exception).visitResults(any(HandlerMethodValidationException.Visitor.class));
 
-        List<Error> errors = handler.handleHandlerMethodValidationException(exception);
+        List<Error> errors = resolver.resolveHandlerMethodValidationException(exception);
 
         assertThat(errors).hasSize(1);
         assertThat(errors.get(0).type()).isEqualTo(Error.Type.COOKIE);
     }
 
     @Test
-    void shouldHandleRequestHeaderParameter() {
+    void shouldResolveRequestHeaderParameter() {
         HandlerMethodValidationException exception = mock(HandlerMethodValidationException.class);
 
         doAnswer(invocation -> {
@@ -188,14 +188,14 @@ class ValidationErrorHandlerTest {
             return null;
         }).when(exception).visitResults(any(HandlerMethodValidationException.Visitor.class));
 
-        List<Error> errors = handler.handleHandlerMethodValidationException(exception);
+        List<Error> errors = resolver.resolveHandlerMethodValidationException(exception);
 
         assertThat(errors).hasSize(1);
         assertThat(errors.get(0).type()).isEqualTo(Error.Type.HEADER);
     }
 
     @Test
-    void shouldHandlePathVariableParameter() {
+    void shouldResolvePathVariableParameter() {
         HandlerMethodValidationException exception = mock(HandlerMethodValidationException.class);
 
         doAnswer(invocation -> {
@@ -206,7 +206,7 @@ class ValidationErrorHandlerTest {
             return null;
         }).when(exception).visitResults(any(HandlerMethodValidationException.Visitor.class));
 
-        List<Error> errors = handler.handleHandlerMethodValidationException(exception);
+        List<Error> errors = resolver.resolveHandlerMethodValidationException(exception);
 
         assertThat(errors).hasSize(1);
         assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
@@ -214,7 +214,7 @@ class ValidationErrorHandlerTest {
     }
 
     @Test
-    void shouldHandleOtherParameterAndLog() {
+    void shouldResolveOtherParameterAndLog() {
         HandlerMethodValidationException exception = mock(HandlerMethodValidationException.class);
 
         doAnswer(invocation -> {
@@ -224,16 +224,16 @@ class ValidationErrorHandlerTest {
             return null;
         }).when(exception).visitResults(any(HandlerMethodValidationException.Visitor.class));
 
-        List<Error> errors = handler.handleHandlerMethodValidationException(exception);
+        List<Error> errors = resolver.resolveHandlerMethodValidationException(exception);
 
-        // handleOther doesn't add errors to the list, only logs
+        // resolveOther doesn't add errors to the list, only logs
         assertThat(errors).isEmpty();
         // Verify logging was called
         verify(extendedProblemDetailLog, atLeastOnce()).log(any(), any(), anyString(), any(), any());
     }
 
     @Test
-    void shouldHandleRequestBodyWithParameterErrors() {
+    void shouldResolveRequestBodyWithParameterErrors() {
         HandlerMethodValidationException exception = mock(HandlerMethodValidationException.class);
 
         doAnswer(invocation -> {
@@ -253,7 +253,7 @@ class ValidationErrorHandlerTest {
             return null;
         }).when(exception).visitResults(any(HandlerMethodValidationException.Visitor.class));
 
-        List<Error> result = handler.handleHandlerMethodValidationException(exception);
+        List<Error> result = resolver.resolveHandlerMethodValidationException(exception);
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).target()).isEqualTo("email");
@@ -261,7 +261,7 @@ class ValidationErrorHandlerTest {
     }
 
     @Test
-    void shouldHandleMultipleValidationErrors() {
+    void shouldResolveMultipleParameterErrors() {
         HandlerMethodValidationException exception = mock(HandlerMethodValidationException.class);
 
         doAnswer(invocation -> {
@@ -276,7 +276,7 @@ class ValidationErrorHandlerTest {
             return null;
         }).when(exception).visitResults(any(HandlerMethodValidationException.Visitor.class));
 
-        List<Error> errors = handler.handleHandlerMethodValidationException(exception);
+        List<Error> errors = resolver.resolveHandlerMethodValidationException(exception);
 
         assertThat(errors).hasSize(2);
     }
@@ -296,7 +296,7 @@ class ValidationErrorHandlerTest {
         MethodParameter methodParameter = MethodParameter.forExecutable(
                 getMethod("testMethod"), 0);
         methodParameter.initParameterNameDiscovery(new DefaultParameterNameDiscoverer());
-        
+
         when(result.getMethodParameter()).thenReturn(methodParameter);
         when(result.getResolvableErrors()).thenReturn(List.of(
                 new DefaultMessageSourceResolvable(new String[]{"error"}, "Error message")
@@ -310,6 +310,15 @@ class ValidationErrorHandlerTest {
                 new DefaultMessageSourceResolvable(new String[]{"code1", "code2"}, "Default message")
         ));
         return result;
+    }
+
+    /**
+     * Test implementation of AbstractErrorResolver for testing.
+     */
+    static class TestErrorResolver extends AbstractErrorResolver {
+        public TestErrorResolver(ExtendedProblemDetailLog extendedProblemDetailLog) {
+            super(extendedProblemDetailLog);
+        }
     }
 
     @SuppressWarnings("unused")

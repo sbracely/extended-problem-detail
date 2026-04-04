@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.sbracely</groupId>
         <artifactId>extended-problem-detail</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>extended-problem-detail-spring-boot-starter-webmvc</artifactId>

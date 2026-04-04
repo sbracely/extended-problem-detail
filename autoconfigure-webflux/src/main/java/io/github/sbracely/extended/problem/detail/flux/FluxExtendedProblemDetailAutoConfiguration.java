@@ -1,8 +1,8 @@
 package io.github.sbracely.extended.problem.detail.flux;
 
-import io.github.sbracely.extended.problem.detail.core.handler.ValidationErrorHandler;
 import io.github.sbracely.extended.problem.detail.core.logging.ExtendedProblemDetailLog;
 import io.github.sbracely.extended.problem.detail.core.response.ExtendedProblemDetail;
+import io.github.sbracely.extended.problem.detail.flux.error.resolver.FluxErrorResolver;
 import io.github.sbracely.extended.problem.detail.flux.handler.FluxExtendedProblemDetailExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -39,10 +39,10 @@ import org.springframework.context.annotation.Bean;
  *
  * @see FluxExtendedProblemDetailExceptionHandler
  * @see MvcExtendedProblemDetailAutoConfiguration WebMVC version of auto-configuration
- * @since 0.0.1-SNAPSHOT
+ * @since 1.0.0
  */
 @AutoConfiguration
-@ConditionalOnWebApplication
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @EnableConfigurationProperties(FluxExtendedProblemDetailProperties.class)
 @ConditionalOnProperty(prefix = "extended.problem-detail", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class FluxExtendedProblemDetailAutoConfiguration {
@@ -75,15 +75,15 @@ public class FluxExtendedProblemDetailAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ValidationErrorHandler validationErrorHandler(ExtendedProblemDetailLog extendedProblemDetailLog) {
-        return new ValidationErrorHandler(extendedProblemDetailLog);
+    public FluxErrorResolver errorResolver(ExtendedProblemDetailLog extendedProblemDetailLog) {
+        return new FluxErrorResolver(extendedProblemDetailLog);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public FluxExtendedProblemDetailExceptionHandler requestExceptionHandler(ValidationErrorHandler validationErrorHandler,
-                                                                            ExtendedProblemDetailLog extendedProblemDetailLog) {
-        return new FluxExtendedProblemDetailExceptionHandler(validationErrorHandler, extendedProblemDetailLog);
+    public FluxExtendedProblemDetailExceptionHandler requestExceptionHandler(FluxErrorResolver errorResolver,
+                                                                             ExtendedProblemDetailLog extendedProblemDetailLog) {
+        return new FluxExtendedProblemDetailExceptionHandler(errorResolver, extendedProblemDetailLog);
     }
 
 }

@@ -1,8 +1,8 @@
 package io.github.sbracely.extended.problem.detail.mvc;
 
-import io.github.sbracely.extended.problem.detail.core.handler.ValidationErrorHandler;
 import io.github.sbracely.extended.problem.detail.core.logging.ExtendedProblemDetailLog;
 import io.github.sbracely.extended.problem.detail.core.response.ExtendedProblemDetail;
+import io.github.sbracely.extended.problem.detail.mvc.error.resolver.MvcErrorResolver;
 import io.github.sbracely.extended.problem.detail.mvc.handler.MvcExtendedProblemDetailExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -39,10 +39,10 @@ import org.springframework.context.annotation.Bean;
  *
  * @see MvcExtendedProblemDetailExceptionHandler
  * @see FluxExtendedProblemDetailAutoConfiguration WebFlux version of auto-configuration
- * @since 0.0.1-SNAPSHOT
+ * @since 1.0.0
  */
 @AutoConfiguration
-@ConditionalOnWebApplication
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @EnableConfigurationProperties(MvcExtendedProblemDetailProperties.class)
 @ConditionalOnProperty(prefix = "extended.problem-detail", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class MvcExtendedProblemDetailAutoConfiguration {
@@ -75,15 +75,15 @@ public class MvcExtendedProblemDetailAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ValidationErrorHandler validationErrorHandler(ExtendedProblemDetailLog extendedProblemDetailLog) {
-        return new ValidationErrorHandler(extendedProblemDetailLog);
+    public MvcErrorResolver errorResolver(ExtendedProblemDetailLog extendedProblemDetailLog) {
+        return new MvcErrorResolver(extendedProblemDetailLog);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public MvcExtendedProblemDetailExceptionHandler requestExceptionHandler(ValidationErrorHandler validationErrorHandler,
-                                                                           ExtendedProblemDetailLog extendedProblemDetailLog) {
-        return new MvcExtendedProblemDetailExceptionHandler(validationErrorHandler, extendedProblemDetailLog);
+    public MvcExtendedProblemDetailExceptionHandler requestExceptionHandler(MvcErrorResolver errorResolver,
+                                                                            ExtendedProblemDetailLog extendedProblemDetailLog) {
+        return new MvcExtendedProblemDetailExceptionHandler(errorResolver, extendedProblemDetailLog);
     }
 
 }
