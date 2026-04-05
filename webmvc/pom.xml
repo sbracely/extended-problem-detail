@@ -5,17 +5,38 @@
     <parent>
         <groupId>io.github.sbracely</groupId>
         <artifactId>extended-problem-detail</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
-    <artifactId>extended-problem-detail-webmvc-parent</artifactId>
+    <artifactId>extended-problem-detail-webmvc</artifactId>
     <packaging>pom</packaging>
-    <name>Extended Problem Detail WebMVC Parent</name>
-    <description>Parent module for Extended Problem Detail WebMVC support</description>
+    <name>Extended Problem Detail WebMVC</name>
+    <description>module for Extended Problem Detail WebMVC support</description>
 
     <modules>
         <module>autoconfigure</module>
         <module>starter</module>
+        <module>example</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.sbracely</groupId>
+                <artifactId>extended-problem-detail-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sbracely</groupId>
+                <artifactId>extended-problem-detail-webmvc-autoconfigure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sbracely</groupId>
+                <artifactId>extended-problem-detail-webmvc-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

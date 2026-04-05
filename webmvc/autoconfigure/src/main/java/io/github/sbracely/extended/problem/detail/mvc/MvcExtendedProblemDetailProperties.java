@@ -1,6 +1,6 @@
 package io.github.sbracely.extended.problem.detail.mvc;
 
-import io.github.sbracely.extended.problem.detail.core.properties.ExtendedProblemDetailProperties;
+import io.github.sbracely.extended.problem.detail.common.properties.ExtendedProblemDetailProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**

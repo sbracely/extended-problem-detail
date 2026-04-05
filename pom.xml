@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <name>Extended Problem Detail Parent</name>
     <description>Parent POM for Extended Problem Detail - Spring Boot Starter providing enhanced ProblemDetail exception
@@ -35,10 +35,6 @@
         <tag>HEAD</tag>
         <url>https://github.com/sbracely/extended-problem-detail</url>
     </scm>
-    <properties>
-        <extended-problem-detail.version>1.0.0</extended-problem-detail.version>
-    </properties>
-
     <modules>
         <module>common</module>
         <module>webmvc</module>
@@ -50,17 +46,7 @@
             <dependency>
                 <groupId>io.github.sbracely</groupId>
                 <artifactId>extended-problem-detail-common</artifactId>
-                <version>${extended-problem-detail.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.sbracely</groupId>
-                <artifactId>extended-problem-detail-autoconfigure-webmvc</artifactId>
-                <version>${extended-problem-detail.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.sbracely</groupId>
-                <artifactId>extended-problem-detail-autoconfigure-webflux</artifactId>
-                <version>${extended-problem-detail.version}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

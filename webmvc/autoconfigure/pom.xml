@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.sbracely</groupId>
-        <artifactId>extended-problem-detail-webmvc-parent</artifactId>
-        <version>1.0.0</version>
+        <artifactId>extended-problem-detail-webmvc</artifactId>
+        <version>1.0.1</version>
     </parent>
 
-    <artifactId>extended-problem-detail-autoconfigure-webmvc</artifactId>
+    <artifactId>extended-problem-detail-webmvc-autoconfigure</artifactId>
     <name>Extended Problem Detail AutoConfiguration for WebMVC</name>
     <description>Spring Boot auto-configuration module providing extended ProblemDetail exception handling for Spring
         WebMVC applications

@@ -1,7 +1,7 @@
 package io.github.sbracely.extended.problem.detail.mvc.controller;
 
-import io.github.sbracely.extended.problem.detail.core.response.Error;
-import io.github.sbracely.extended.problem.detail.core.response.ExtendedProblemDetail;
+import io.github.sbracely.extended.problem.detail.common.response.Error;
+import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import io.github.sbracely.extended.problem.detail.mvc.config.MethodValidationConfiguration;
 import io.github.sbracely.extended.problem.detail.mvc.exception.ExtendedErrorResponseException;
 import io.github.sbracely.extended.problem.detail.mvc.request.ProblemDetailRequest;

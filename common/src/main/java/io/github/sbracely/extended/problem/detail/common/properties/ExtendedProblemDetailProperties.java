@@ -1,4 +1,4 @@
-package io.github.sbracely.extended.problem.detail.core.properties;
+package io.github.sbracely.extended.problem.detail.common.properties;
 
 import org.springframework.boot.logging.LogLevel;
 

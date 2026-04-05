@@ -1,4 +1,4 @@
-package io.github.sbracely.extended.problem.detail.core.logging;
+package io.github.sbracely.extended.problem.detail.common.logging;
 
 import org.apache.commons.logging.Log;
 import org.jspecify.annotations.Nullable;

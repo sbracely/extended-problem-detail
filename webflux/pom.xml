@@ -5,10 +5,10 @@
     <parent>
         <groupId>io.github.sbracely</groupId>
         <artifactId>extended-problem-detail</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
-    <artifactId>extended-problem-detail-webflux-parent</artifactId>
+    <artifactId>extended-problem-detail-webflux</artifactId>
     <packaging>pom</packaging>
     <name>Extended Problem Detail WebFlux Parent</name>
     <description>Parent module for Extended Problem Detail WebFlux support</description>
@@ -17,5 +17,25 @@
         <module>autoconfigure</module>
         <module>starter</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.sbracely</groupId>
+                <artifactId>extended-problem-detail-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sbracely</groupId>
+                <artifactId>extended-problem-detail-webflux-autoconfigure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sbracely</groupId>
+                <artifactId>extended-problem-detail-webflux-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

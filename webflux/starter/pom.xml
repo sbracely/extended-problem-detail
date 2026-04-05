@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.sbracely</groupId>
-        <artifactId>extended-problem-detail-webflux-parent</artifactId>
-        <version>1.0.0</version>
+        <artifactId>extended-problem-detail-webflux</artifactId>
+        <version>1.0.1</version>
     </parent>
 
-    <artifactId>extended-problem-detail-spring-boot-starter-webflux</artifactId>
+    <artifactId>extended-problem-detail-webflux-spring-boot-starter</artifactId>
     <packaging>pom</packaging>
     <name>Extended Problem Detail Starter for WebFlux</name>
     <description>Spring Boot starter combining all dependencies for extended ProblemDetail exception handling in WebFlux
@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.sbracely</groupId>
-            <artifactId>extended-problem-detail-autoconfigure-webflux</artifactId>
+            <artifactId>extended-problem-detail-webflux-autoconfigure</artifactId>
         </dependency>
     </dependencies>
 

@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.sbracely</groupId>
-        <artifactId>extended-problem-detail-webmvc-parent</artifactId>
-        <version>1.0.0</version>
+        <artifactId>extended-problem-detail-webmvc</artifactId>
+        <version>1.0.1</version>
     </parent>
 
-    <artifactId>extended-problem-detail-spring-boot-starter-webmvc</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>extended-problem-detail-webmvc-spring-boot-starter</artifactId>
     <name>Extended Problem Detail Starter for WebMVC</name>
     <description>Spring Boot starter combining all dependencies for extended ProblemDetail exception handling in WebMVC
         applications
@@ -18,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.sbracely</groupId>
-            <artifactId>extended-problem-detail-autoconfigure-webmvc</artifactId>
+            <artifactId>extended-problem-detail-webmvc-autoconfigure</artifactId>
         </dependency>
     </dependencies>
 

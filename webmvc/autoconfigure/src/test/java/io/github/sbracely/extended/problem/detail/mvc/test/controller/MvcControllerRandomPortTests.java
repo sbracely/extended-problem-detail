@@ -1,6 +1,6 @@
 package io.github.sbracely.extended.problem.detail.mvc.test.controller;
 
-import io.github.sbracely.extended.problem.detail.core.response.ExtendedProblemDetail;
+import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import io.github.sbracely.extended.problem.detail.mvc.controller.MvcProblemDetailController;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
