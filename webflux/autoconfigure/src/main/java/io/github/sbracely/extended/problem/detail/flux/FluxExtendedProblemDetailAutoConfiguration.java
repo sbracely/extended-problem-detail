@@ -1,7 +1,6 @@
 package io.github.sbracely.extended.problem.detail.flux;
 
 import io.github.sbracely.extended.problem.detail.core.logging.ExtendedProblemDetailLog;
-import io.github.sbracely.extended.problem.detail.core.response.ExtendedProblemDetail;
 import io.github.sbracely.extended.problem.detail.flux.handler.FluxExtendedProblemDetailExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

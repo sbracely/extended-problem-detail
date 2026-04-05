@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -10,7 +10,9 @@
 
     <artifactId>extended-problem-detail-autoconfigure-webmvc</artifactId>
     <name>Extended Problem Detail AutoConfiguration for WebMVC</name>
-    <description>Spring Boot auto-configuration module providing extended ProblemDetail exception handling for Spring WebMVC applications</description>
+    <description>Spring Boot auto-configuration module providing extended ProblemDetail exception handling for Spring
+        WebMVC applications
+    </description>
 
     <dependencies>
         <!-- Core module -->
@@ -18,7 +20,7 @@
             <groupId>io.github.sbracely</groupId>
             <artifactId>extended-problem-detail-common</artifactId>
         </dependency>
-        
+
         <!-- Compile dependencies - provided by starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -26,7 +28,7 @@
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
-        
+
         <!-- Validation API -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -34,14 +36,14 @@
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
-        
+
         <!-- Configuration processor for @ConfigurationProperties -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,7 +55,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-restclient-test</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation-test</artifactId>

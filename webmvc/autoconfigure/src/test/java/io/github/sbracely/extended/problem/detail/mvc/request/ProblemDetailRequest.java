@@ -1,8 +1,8 @@
 package io.github.sbracely.extended.problem.detail.mvc.request;
 
+import io.github.sbracely.extended.problem.detail.mvc.valid.annocation.ConfirmPassword;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import io.github.sbracely.extended.problem.detail.mvc.valid.annocation.ConfirmPassword;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 

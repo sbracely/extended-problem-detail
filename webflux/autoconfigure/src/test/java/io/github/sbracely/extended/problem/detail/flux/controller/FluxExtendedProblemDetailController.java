@@ -5,9 +5,9 @@ import io.github.sbracely.extended.problem.detail.core.response.ExtendedProblemD
 import io.github.sbracely.extended.problem.detail.flux.config.MethodValidationConfiguration;
 import io.github.sbracely.extended.problem.detail.flux.exception.ExtendedErrorResponseException;
 import io.github.sbracely.extended.problem.detail.flux.request.ProblemDetailRequest;
+import io.github.sbracely.extended.problem.detail.flux.service.ProblemDetailService;
 import io.github.sbracely.extended.problem.detail.flux.valid.annocation.CheckFilePart;
 import io.github.sbracely.extended.problem.detail.flux.valid.annocation.CheckPassword;
-import io.github.sbracely.extended.problem.detail.flux.service.ProblemDetailService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.assertj.core.util.Lists;

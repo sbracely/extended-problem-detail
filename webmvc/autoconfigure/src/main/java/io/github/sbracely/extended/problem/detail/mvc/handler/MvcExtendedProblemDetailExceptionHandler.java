@@ -53,10 +53,14 @@ import java.util.List;
 @RestControllerAdvice
 public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler {
 
-    /** Logger for this exception handler. */
+    /**
+     * Logger for this exception handler.
+     */
     protected final Log logger = LogFactory.getLog(getClass());
 
-    /** Log configuration for Extended Problem Detail exception handling. */
+    /**
+     * Log configuration for Extended Problem Detail exception handling.
+     */
     protected final ExtendedProblemDetailLog extendedProblemDetailLog;
 
     /**
@@ -324,10 +328,10 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * errors are converted to Error objects.
      * </p>
      *
-     * @param ex            the HandlerMethodValidationException being processed
-     * @param pathVariable  the PathVariable annotation
-     * @param result        the parameter validation result
-     * @param errorList     the list to populate with errors
+     * @param ex           the HandlerMethodValidationException being processed
+     * @param pathVariable the PathVariable annotation
+     * @param result       the parameter validation result
+     * @param errorList    the list to populate with errors
      */
     protected void resolvePathVariable(HandlerMethodValidationException ex, PathVariable pathVariable, ParameterValidationResult result, List<Error> errorList) {
         addParameterErrors(result, Error.Type.PARAMETER,
@@ -341,10 +345,10 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * errors are converted to Error objects.
      * </p>
      *
-     * @param ex           the HandlerMethodValidationException being processed
-     * @param requestBody  the RequestBody annotation
-     * @param errors       the parameter errors
-     * @param errorList    the list to populate with errors
+     * @param ex          the HandlerMethodValidationException being processed
+     * @param requestBody the RequestBody annotation
+     * @param errors      the parameter errors
+     * @param errorList   the list to populate with errors
      */
     protected void resolveRequestBody(HandlerMethodValidationException ex, RequestBody requestBody, ParameterErrors errors, List<Error> errorList) {
         errors.getAllErrors().stream()
@@ -359,10 +363,10 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * results are converted to Error objects.
      * </p>
      *
-     * @param ex           the HandlerMethodValidationException being processed
-     * @param requestBody  the RequestBody annotation
-     * @param result       the parameter validation result
-     * @param errorList    the list to populate with errors
+     * @param ex          the HandlerMethodValidationException being processed
+     * @param requestBody the RequestBody annotation
+     * @param result      the parameter validation result
+     * @param errorList   the list to populate with errors
      */
     protected void resolveRequestBodyValidationResult(HandlerMethodValidationException ex, RequestBody requestBody, ParameterValidationResult result, List<Error> errorList) {
         addParameterErrors(result, Error.Type.PARAMETER, null, errorList);
@@ -375,10 +379,10 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * errors are converted to Error objects.
      * </p>
      *
-     * @param ex             the HandlerMethodValidationException being processed
-     * @param requestHeader  the RequestHeader annotation
-     * @param result         the parameter validation result
-     * @param errorList      the list to populate with errors
+     * @param ex            the HandlerMethodValidationException being processed
+     * @param requestHeader the RequestHeader annotation
+     * @param result        the parameter validation result
+     * @param errorList     the list to populate with errors
      */
     protected void resolveRequestHeader(HandlerMethodValidationException ex, RequestHeader requestHeader, ParameterValidationResult result, List<Error> errorList) {
         addParameterErrors(result, Error.Type.HEADER,
@@ -392,10 +396,10 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * errors are converted to Error objects.
      * </p>
      *
-     * @param ex            the HandlerMethodValidationException being processed
-     * @param requestParam  the RequestParam annotation (may be null)
-     * @param result        the parameter validation result
-     * @param errorList     the list to populate with errors
+     * @param ex           the HandlerMethodValidationException being processed
+     * @param requestParam the RequestParam annotation (may be null)
+     * @param result       the parameter validation result
+     * @param errorList    the list to populate with errors
      */
     protected void resolveRequestParam(HandlerMethodValidationException ex, @Nullable RequestParam requestParam, ParameterValidationResult result, List<Error> errorList) {
         addParameterErrors(result, Error.Type.PARAMETER,
@@ -409,10 +413,10 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * errors are converted to Error objects.
      * </p>
      *
-     * @param ex           the HandlerMethodValidationException being processed
-     * @param requestPart  the RequestPart annotation
-     * @param errors       the parameter errors
-     * @param errorList    the list to populate with errors
+     * @param ex          the HandlerMethodValidationException being processed
+     * @param requestPart the RequestPart annotation
+     * @param errors      the parameter errors
+     * @param errorList   the list to populate with errors
      */
     protected void resolveRequestPart(HandlerMethodValidationException ex, RequestPart requestPart, ParameterErrors errors, List<Error> errorList) {
         errors.getAllErrors().stream()
@@ -427,9 +431,9 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * are handled during error processing.
      * </p>
      *
-     * @param ex         the HandlerMethodValidationException being processed
-     * @param result     the parameter validation result
-     * @param errorList  the list to populate with errors
+     * @param ex        the HandlerMethodValidationException being processed
+     * @param result    the parameter validation result
+     * @param errorList the list to populate with errors
      */
     protected void resolveOther(HandlerMethodValidationException ex, ParameterValidationResult result, List<Error> errorList) {
         result.getResolvableErrors().forEach(error ->

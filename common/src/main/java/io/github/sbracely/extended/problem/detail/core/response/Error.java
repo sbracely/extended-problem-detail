@@ -28,13 +28,21 @@ public record Error(@Nullable Type type, @Nullable String target, @Nullable Stri
      * </ul>
      */
     public enum Type {
-        /** Error from request parameter or request body field. */
+        /**
+         * Error from request parameter or request body field.
+         */
         PARAMETER,
-        /** Error from cookie value. */
+        /**
+         * Error from cookie value.
+         */
         COOKIE,
-        /** Error from request header. */
+        /**
+         * Error from request header.
+         */
         HEADER,
-        /** Error from business logic. */
+        /**
+         * Error from business logic.
+         */
         BUSINESS,
     }
 }

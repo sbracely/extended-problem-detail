@@ -1,8 +1,8 @@
 package io.github.sbracely.extended.problem.detail.mvc.valid.annocation;
 
+import io.github.sbracely.extended.problem.detail.mvc.valid.validator.ConfirmPasswordValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import io.github.sbracely.extended.problem.detail.mvc.valid.validator.ConfirmPasswordValidator;
 
 import java.lang.annotation.*;
 

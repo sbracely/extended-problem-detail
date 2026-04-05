@@ -22,7 +22,6 @@ import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.boot.webmvc.actuate.endpoint.web.AbstractWebMvcEndpointHandlerMapping;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpMethod;
@@ -31,6 +30,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.mock.web.MockAsyncContext;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -61,9 +61,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpHeaders.*;
@@ -78,14 +76,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class MvcControllerTests {
 
     private static final Logger logger = LoggerFactory.getLogger(MvcControllerTests.class);
-
+    private static final String BASE_PATH = "/mvc-extended-problem-detail";
     @Autowired
     private MockMvcTester mockMvcTester;
-
     @MockitoSpyBean
     private ExtendedProblemDetailLog extendedProblemDetailLog;
-
-    private static final String BASE_PATH = "/mvc-extended-problem-detail";
 
     /**
      * @see HttpRequestMethodNotSupportedException
@@ -667,32 +662,6 @@ class MvcControllerTests {
     }
 
     /**
-     * @see NoHandlerFoundException
-     */
-    @Nested
-    @TestPropertySource(properties = "spring.web.resources.add-mappings=false")
-    class NoHandlerFoundExceptionTest {
-        @Test
-        void noHandlerFoundException() {
-            String uri = BASE_PATH + "/no-handler-found-exception";
-            MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
-            assertThat(result)
-                    .hasStatus(NOT_FOUND)
-                    .hasContentType(APPLICATION_PROBLEM_JSON);
-            ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                    .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
-            assertThat(extendedProblemDetail.getType()).isNull();
-            assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
-            assertThat(extendedProblemDetail.getStatus()).isEqualTo(NOT_FOUND.value());
-            assertThat(extendedProblemDetail.getDetail()).isEqualTo("No endpoint %s %s.".formatted(GET.name(), uri));
-            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-            assertThat(extendedProblemDetail.getProperties()).isNull();
-            assertThat(extendedProblemDetail.getErrors()).isNull();
-        }
-    }
-
-    /**
      * @see NoResourceFoundException
      */
     @Test
@@ -813,34 +782,6 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
-    }
-
-    /**
-     * @see AbstractWebMvcEndpointHandlerMapping.InvalidEndpointBadRequestException
-     * @see DemoEndpoint#hello(String, String, String)
-     */
-    @Nested
-    @TestPropertySource(properties = "management.endpoints.web.exposure.include=demo")
-    class InvalidEndpointBadRequestExceptionTests {
-        private static final String BASE_PATH = "/actuator";
-
-        @Test
-        void invalidEndpointBadRequestException() {
-            String uri = BASE_PATH + "/demo/name";
-            MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
-            assertThat(result)
-                    .hasStatus(BAD_REQUEST)
-                    .hasContentType(APPLICATION_PROBLEM_JSON);
-            ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                    .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
-            assertThat(extendedProblemDetail.getDetail()).containsOnlyOnce("Missing parameters: ")
-                    .contains("param1", "param2");
-            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-            assertThat(extendedProblemDetail.getErrors()).isNull();
-        }
     }
 
     /**
@@ -1264,5 +1205,59 @@ class MvcControllerTests {
                 new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
                 new Error(Error.Type.PARAMETER, null, "Name is not valid")
         );
+    }
+
+    /**
+     * @see NoHandlerFoundException
+     */
+    @Nested
+    @TestPropertySource(properties = "spring.web.resources.add-mappings=false")
+    class NoHandlerFoundExceptionTest {
+        @Test
+        void noHandlerFoundException() {
+            String uri = BASE_PATH + "/no-handler-found-exception";
+            MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+            assertThat(result)
+                    .hasStatus(NOT_FOUND)
+                    .hasContentType(APPLICATION_PROBLEM_JSON);
+            ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                    .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            assertThat(extendedProblemDetail.getType()).isNull();
+            assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
+            assertThat(extendedProblemDetail.getStatus()).isEqualTo(NOT_FOUND.value());
+            assertThat(extendedProblemDetail.getDetail()).isEqualTo("No endpoint %s %s.".formatted(GET.name(), uri));
+            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(extendedProblemDetail.getProperties()).isNull();
+            assertThat(extendedProblemDetail.getErrors()).isNull();
+        }
+    }
+
+    /**
+     * @see AbstractWebMvcEndpointHandlerMapping.InvalidEndpointBadRequestException
+     * @see DemoEndpoint#hello(String, String, String)
+     */
+    @Nested
+    @TestPropertySource(properties = "management.endpoints.web.exposure.include=demo")
+    class InvalidEndpointBadRequestExceptionTests {
+        private static final String BASE_PATH = "/actuator";
+
+        @Test
+        void invalidEndpointBadRequestException() {
+            String uri = BASE_PATH + "/demo/name";
+            MvcTestResult result = mockMvcTester.get().uri(uri).exchange();
+            assertThat(result)
+                    .hasStatus(BAD_REQUEST)
+                    .hasContentType(APPLICATION_PROBLEM_JSON);
+            ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                    .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            assertThat(extendedProblemDetail.getDetail()).containsOnlyOnce("Missing parameters: ")
+                    .contains("param1", "param2");
+            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+            assertThat(extendedProblemDetail.getErrors()).isNull();
+        }
     }
 }

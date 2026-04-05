@@ -1,6 +1,7 @@
 # Extended Problem Detail
 
-A Spring Boot Starter that provides enhanced ProblemDetail exception handling with field-level error information, following [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) (Problem Details for HTTP APIs).
+A Spring Boot Starter that provides enhanced ProblemDetail exception handling with field-level error information,
+following [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) (Problem Details for HTTP APIs).
 
 ## Features
 
@@ -12,13 +13,13 @@ A Spring Boot Starter that provides enhanced ProblemDetail exception handling wi
 
 ## Modules
 
-| Module | Description |
-|--------|-------------|
-| `core` | Core module containing response classes and validation error handler |
-| `autoconfigure-webmvc` | Auto-configuration for Spring WebMVC applications |
-| `autoconfigure-webflux` | Auto-configuration for Spring WebFlux applications |
-| `spring-boot-starter-webmvc` | Starter for WebMVC applications (includes all dependencies) |
-| `spring-boot-starter-webflux` | Starter for WebFlux applications (includes all dependencies) |
+| Module                        | Description                                                          |
+|-------------------------------|----------------------------------------------------------------------|
+| `core`                        | Core module containing response classes and validation error handler |
+| `autoconfigure-webmvc`        | Auto-configuration for Spring WebMVC applications                    |
+| `autoconfigure-webflux`       | Auto-configuration for Spring WebFlux applications                   |
+| `spring-boot-starter-webmvc`  | Starter for WebMVC applications (includes all dependencies)          |
+| `spring-boot-starter-webflux` | Starter for WebFlux applications (includes all dependencies)         |
 
 ## Installation
 
@@ -27,6 +28,7 @@ A Spring Boot Starter that provides enhanced ProblemDetail exception handling wi
 Add the following dependency to your `pom.xml`:
 
 ```xml
+
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-spring-boot-starter-webmvc</artifactId>
@@ -39,6 +41,7 @@ Add the following dependency to your `pom.xml`:
 Add the following dependency to your `pom.xml`:
 
 ```xml
+
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-spring-boot-starter-webflux</artifactId>
@@ -68,7 +71,8 @@ extended.problem-detail.print-stack-trace=false
 
 ## Usage
 
-Once the starter is added to your project, it automatically handles validation exceptions and returns extended problem detail responses.
+Once the starter is added to your project, it automatically handles validation exceptions and returns extended problem
+detail responses.
 
 ### Example Response
 
@@ -100,11 +104,11 @@ When a validation error occurs, the response will include detailed error informa
 
 The `errors` array contains objects with the following properties:
 
-| Field | Description |
-|-------|-------------|
-| `type` | Error source type: `PARAMETER`, `COOKIE`, `HEADER`, or `BUSINESS` |
-| `target` | The field name or resource that caused the error |
-| `message` | Human-readable error message |
+| Field     | Description                                                       |
+|-----------|-------------------------------------------------------------------|
+| `type`    | Error source type: `PARAMETER`, `COOKIE`, `HEADER`, or `BUSINESS` |
+| `target`  | The field name or resource that caused the error                  |
+| `message` | Human-readable error message                                      |
 
 ### Supported Exceptions
 

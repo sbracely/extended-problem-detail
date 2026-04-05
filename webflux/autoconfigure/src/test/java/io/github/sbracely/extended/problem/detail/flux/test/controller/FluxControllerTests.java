@@ -14,26 +14,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.validation.method.MethodValidationException;
 import org.springframework.validation.method.ParameterErrors;
 import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.ErrorResponseException;
+import org.springframework.web.accept.InvalidApiVersionException;
+import org.springframework.web.accept.MissingApiVersionException;
+import org.springframework.web.accept.NotAcceptableApiVersionException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.*;
-import org.springframework.web.accept.InvalidApiVersionException;
-import org.springframework.web.accept.MissingApiVersionException;
-import org.springframework.web.accept.NotAcceptableApiVersionException;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -41,9 +41,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpHeaders.ACCEPT;
@@ -57,14 +55,11 @@ import static org.springframework.http.MediaType.*;
 class FluxControllerTests {
 
     private static final Logger logger = LoggerFactory.getLogger(FluxControllerTests.class);
-
+    private static final String BASE_PATH = "/flux-extended-problem-detail";
     @Autowired
     private WebTestClient webTestClient;
-
     @MockitoSpyBean
     private ExtendedProblemDetailLog extendedProblemDetailLog;
-
-    private static final String BASE_PATH = "/flux-extended-problem-detail";
 
     /**
      * @see MethodNotAllowedException
@@ -609,108 +604,6 @@ class FluxControllerTests {
     }
 
     /**
-     * {@link InvalidApiVersionException}
-     * {@link MissingApiVersionException}
-     * {@link NotAcceptableApiVersionException}
-     */
-    @Nested
-    @TestPropertySource(properties = {
-            "spring.webflux.apiversion.use.header=API-Version",
-            "spring.webflux.apiversion.supported=1,2",
-    })
-    @AutoConfigureWebTestClient(timeout = "PT10M")
-    @Import(ApiVersionTests.NotAcceptableApiVersionController.class)
-    class ApiVersionTests {
-
-        /**
-         * @see InvalidApiVersionException
-         * @see FluxExtendedProblemDetailController#invalidApiVersionException()
-         */
-        @Test
-        void invalidApiVersionException() {
-            String uri = BASE_PATH + "/invalid-api-version-exception";
-            ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
-                    .header("API-Version", "3")
-                    .exchange()
-                    .expectStatus().isEqualTo(BAD_REQUEST)
-                    .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-                    .expectBody(ExtendedProblemDetail.class)
-                    .returnResult().getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
-            assertThat(extendedProblemDetail).isNotNull();
-            assertThat(extendedProblemDetail.getType()).isNull();
-            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-            assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid API version: '3.0.0'.");
-            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-            assertThat(extendedProblemDetail.getProperties()).isNull();
-            assertThat(extendedProblemDetail.getErrors()).isNull();
-        }
-
-        /**
-         * @see MissingApiVersionException
-         * @see FluxExtendedProblemDetailController#missingApiVersionException()
-         */
-        @Test
-        void missingApiVersionException() {
-            String uri = BASE_PATH + "/missing-api-version-exception";
-            EntityExchangeResult<ExtendedProblemDetail> result = webTestClient.get()
-                    .uri(uri)
-                    .exchange()
-                    .expectStatus()
-                    .isEqualTo(BAD_REQUEST)
-                    .expectHeader()
-                    .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                    .expectBody(ExtendedProblemDetail.class)
-                    .returnResult();
-            ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
-            assertThat(extendedProblemDetail).isNotNull();
-            assertThat(extendedProblemDetail.getDetail()).isEqualTo("API version is required.");
-            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-        }
-
-        /**
-         * {@link NotAcceptableApiVersionException}
-         */
-        @RestController
-        static class NotAcceptableApiVersionController {
-            @GetMapping(value = "/not-acceptable-api-version", version = "1")
-            public Mono<Void> notAcceptableApiVersion() {
-                logger.info("response status exception not acceptable api version");
-                return Mono.empty();
-            }
-        }
-
-        /**
-         * @see NotAcceptableApiVersionException
-         * @see NotAcceptableApiVersionController#notAcceptableApiVersion()
-         */
-        @Test
-        void notAcceptableApiVersionException() {
-            String uri = "/not-acceptable-api-version";
-            ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
-                    .header("API-Version", "2")
-                    .exchange()
-                    .expectStatus().isEqualTo(BAD_REQUEST)
-                    .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
-                    .expectBody(ExtendedProblemDetail.class)
-                    .returnResult().getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
-            assertThat(extendedProblemDetail).isNotNull();
-            assertThat(extendedProblemDetail.getType()).isNull();
-            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
-            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
-            assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid API version: '2.0.0'.");
-            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
-            assertThat(extendedProblemDetail.getProperties()).isNull();
-            assertThat(extendedProblemDetail.getErrors()).isNull();
-        }
-    }
-
-    /**
      * @see NoResourceFoundException
      */
     @Test
@@ -844,5 +737,107 @@ class FluxControllerTests {
                 new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
                 new Error(Error.Type.PARAMETER, null, "Name is not valid")
         );
+    }
+
+    /**
+     * {@link InvalidApiVersionException}
+     * {@link MissingApiVersionException}
+     * {@link NotAcceptableApiVersionException}
+     */
+    @Nested
+    @TestPropertySource(properties = {
+            "spring.webflux.apiversion.use.header=API-Version",
+            "spring.webflux.apiversion.supported=1,2",
+    })
+    @AutoConfigureWebTestClient(timeout = "PT10M")
+    @Import(ApiVersionTests.NotAcceptableApiVersionController.class)
+    class ApiVersionTests {
+
+        /**
+         * @see InvalidApiVersionException
+         * @see FluxExtendedProblemDetailController#invalidApiVersionException()
+         */
+        @Test
+        void invalidApiVersionException() {
+            String uri = BASE_PATH + "/invalid-api-version-exception";
+            ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                    .header("API-Version", "3")
+                    .exchange()
+                    .expectStatus().isEqualTo(BAD_REQUEST)
+                    .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                    .expectBody(ExtendedProblemDetail.class)
+                    .returnResult().getResponseBody();
+            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            assertThat(extendedProblemDetail).isNotNull();
+            assertThat(extendedProblemDetail.getType()).isNull();
+            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+            assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid API version: '3.0.0'.");
+            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(extendedProblemDetail.getProperties()).isNull();
+            assertThat(extendedProblemDetail.getErrors()).isNull();
+        }
+
+        /**
+         * @see MissingApiVersionException
+         * @see FluxExtendedProblemDetailController#missingApiVersionException()
+         */
+        @Test
+        void missingApiVersionException() {
+            String uri = BASE_PATH + "/missing-api-version-exception";
+            EntityExchangeResult<ExtendedProblemDetail> result = webTestClient.get()
+                    .uri(uri)
+                    .exchange()
+                    .expectStatus()
+                    .isEqualTo(BAD_REQUEST)
+                    .expectHeader()
+                    .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                    .expectBody(ExtendedProblemDetail.class)
+                    .returnResult();
+            ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
+            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            assertThat(extendedProblemDetail).isNotNull();
+            assertThat(extendedProblemDetail.getDetail()).isEqualTo("API version is required.");
+            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+        }
+
+        /**
+         * @see NotAcceptableApiVersionException
+         * @see NotAcceptableApiVersionController#notAcceptableApiVersion()
+         */
+        @Test
+        void notAcceptableApiVersionException() {
+            String uri = "/not-acceptable-api-version";
+            ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
+                    .header("API-Version", "2")
+                    .exchange()
+                    .expectStatus().isEqualTo(BAD_REQUEST)
+                    .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
+                    .expectBody(ExtendedProblemDetail.class)
+                    .returnResult().getResponseBody();
+            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            assertThat(extendedProblemDetail).isNotNull();
+            assertThat(extendedProblemDetail.getType()).isNull();
+            assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+            assertThat(extendedProblemDetail.getStatus()).isEqualTo(BAD_REQUEST.value());
+            assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid API version: '2.0.0'.");
+            assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+            assertThat(extendedProblemDetail.getProperties()).isNull();
+            assertThat(extendedProblemDetail.getErrors()).isNull();
+        }
+
+        /**
+         * {@link NotAcceptableApiVersionException}
+         */
+        @RestController
+        static class NotAcceptableApiVersionController {
+            @GetMapping(value = "/not-acceptable-api-version", version = "1")
+            public Mono<Void> notAcceptableApiVersion() {
+                logger.info("response status exception not acceptable api version");
+                return Mono.empty();
+            }
+        }
     }
 }

@@ -1,11 +1,11 @@
 package io.github.sbracely.extended.problem.detail.flux.test.properties;
 
-import io.github.sbracely.extended.problem.detail.flux.FluxExtendedProblemDetailProperties;
 import io.github.sbracely.extended.problem.detail.flux.FluxApplicationTest;
+import io.github.sbracely.extended.problem.detail.flux.FluxExtendedProblemDetailProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.logging.LogLevel;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;

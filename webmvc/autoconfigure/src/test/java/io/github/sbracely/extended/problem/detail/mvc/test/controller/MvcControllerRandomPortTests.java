@@ -45,11 +45,40 @@ import static org.springframework.http.HttpStatus.CONTENT_TOO_LARGE;
 class MvcControllerRandomPortTests {
 
     private static final Logger logger = LoggerFactory.getLogger(MvcControllerRandomPortTests.class);
-
+    private static final String BASE_PATH = "/mvc-extended-problem-detail";
     @LocalServerPort
     private int port;
 
-    private static final String BASE_PATH = "/mvc-extended-problem-detail";
+    /**
+     * @see AsyncRequestNotUsableException
+     * @see MvcProblemDetailController#asyncRequestNotUsableException()
+     */
+    @Test
+    void asyncRequestNotUsableException() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(Duration.ofMillis(1));
+
+        RestClient restClient = RestClient.builder()
+                .requestFactory(factory)
+                .baseUrl("http://localhost:" + port)
+                .build();
+
+        try {
+            restClient.get()
+                    .uri(BASE_PATH + "/async-request-not-usable-exception")
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (Exception e) {
+            assertThat(e).hasMessageContaining("Read timed out");
+        }
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            logger.error("Thread sleep interrupted", e);
+            Thread.currentThread().interrupt();
+        }
+    }
 
     /**
      * @see MaxUploadSizeExceededException
@@ -151,17 +180,6 @@ class MvcControllerRandomPortTests {
         }
 
         /**
-         * {@link NotAcceptableApiVersionException}
-         */
-        @RestController
-        static class NotAcceptableApiVersionController {
-            @GetMapping(path = "/not-acceptable-api-version", version = "1")
-            void notAcceptableApiVersion() {
-                logger.info("notAcceptableApiVersion");
-            }
-        }
-
-        /**
          * @see NotAcceptableApiVersionException
          * @see NotAcceptableApiVersionController#notAcceptableApiVersion()
          */
@@ -217,36 +235,16 @@ class MvcControllerRandomPortTests {
             assertThat(extendedProblemDetail.getProperties()).isNull();
             assertThat(extendedProblemDetail.getErrors()).isNull();
         }
-    }
 
-    /**
-     * @see AsyncRequestNotUsableException
-     * @see MvcProblemDetailController#asyncRequestNotUsableException()
-     */
-    @Test
-    void asyncRequestNotUsableException() {
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setReadTimeout(Duration.ofMillis(1));
-
-        RestClient restClient = RestClient.builder()
-                .requestFactory(factory)
-                .baseUrl("http://localhost:" + port)
-                .build();
-
-        try {
-            restClient.get()
-                    .uri(BASE_PATH + "/async-request-not-usable-exception")
-                    .retrieve()
-                    .toBodilessEntity();
-        } catch (Exception e) {
-            assertThat(e).hasMessageContaining("Read timed out");
-        }
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            logger.error("Thread sleep interrupted", e);
-            Thread.currentThread().interrupt();
+        /**
+         * {@link NotAcceptableApiVersionException}
+         */
+        @RestController
+        static class NotAcceptableApiVersionController {
+            @GetMapping(path = "/not-acceptable-api-version", version = "1")
+            void notAcceptableApiVersion() {
+                logger.info("notAcceptableApiVersion");
+            }
         }
     }
 }

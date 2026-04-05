@@ -40,12 +40,6 @@ import org.springframework.boot.logging.LogLevel;
 public class ExtendedProblemDetailProperties {
 
     /**
-     * Creates a new instance with default property values.
-     */
-    public ExtendedProblemDetailProperties() {
-    }
-
-    /**
      * Extended problem detail feature enabled status.
      * <p>
      * When set to {@code true}, enables extended problem detail exception handling functionality;
@@ -53,7 +47,6 @@ public class ExtendedProblemDetailProperties {
      * </p>
      */
     private boolean enabled = true;
-
     /**
      * Log level for validation exception handling.
      * <p>
@@ -63,7 +56,6 @@ public class ExtendedProblemDetailProperties {
      * </p>
      */
     private LogLevel logLevel = LogLevel.DEBUG;
-
     /**
      * Whether to print exception stack trace in logs.
      * <p>
@@ -73,6 +65,12 @@ public class ExtendedProblemDetailProperties {
      * </p>
      */
     private boolean printStackTrace = false;
+
+    /**
+     * Creates a new instance with default property values.
+     */
+    public ExtendedProblemDetailProperties() {
+    }
 
     /**
      * Gets the enabled status of the extended problem detail feature.

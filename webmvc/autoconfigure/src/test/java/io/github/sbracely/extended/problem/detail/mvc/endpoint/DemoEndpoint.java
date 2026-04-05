@@ -15,7 +15,7 @@ public class DemoEndpoint {
 
     @ReadOperation
     public String hello(@Selector String name, String param1, String param2) {
-        return "hello " + name + ", param1: " + param1 +", param2: " + param2;
+        return "hello " + name + ", param1: " + param1 + ", param2: " + param2;
     }
 
     @WriteOperation
