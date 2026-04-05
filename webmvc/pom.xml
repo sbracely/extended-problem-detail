@@ -31,11 +31,6 @@
                 <artifactId>extended-problem-detail-webmvc-autoconfigure</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.github.sbracely</groupId>
-                <artifactId>extended-problem-detail-webmvc-spring-boot-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

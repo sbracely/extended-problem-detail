@@ -30,11 +30,6 @@
                 <artifactId>extended-problem-detail-webflux-autoconfigure</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.github.sbracely</groupId>
-                <artifactId>extended-problem-detail-webflux-spring-boot-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
