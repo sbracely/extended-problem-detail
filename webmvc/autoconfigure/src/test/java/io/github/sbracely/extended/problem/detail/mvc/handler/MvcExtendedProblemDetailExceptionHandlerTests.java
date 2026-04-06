@@ -155,8 +155,8 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.handleHandlerMethodValidationException(ex, new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
 
-            verify(mockLogger).debug(eq("handleHandlerMethodValidationException"), (Throwable) isNull());
-            verify(mockLogger).debug(eq("resolveRequestParam"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("handleHandlerMethodValidationException \\[exception#[0-9a-f]+]"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestParam"), (Throwable) isNull());
         }
     }
 
@@ -539,7 +539,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveCookieValue"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveCookieValue"), (Throwable) isNull());
         }
 
         @Test
@@ -561,7 +561,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveMatrixVariable"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveMatrixVariable"), (Throwable) isNull());
         }
 
         @Test
@@ -588,7 +588,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveModelAttribute"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveModelAttribute"), (Throwable) isNull());
         }
 
         @Test
@@ -610,7 +610,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolvePathVariable"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolvePathVariable"), (Throwable) isNull());
         }
 
         @Test
@@ -637,7 +637,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestBody"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestBody"), (Throwable) isNull());
         }
 
         @Test
@@ -662,7 +662,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestBodyValidationResult"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestBodyValidationResult"), (Throwable) isNull());
         }
 
         @Test
@@ -684,7 +684,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestHeader"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestHeader"), (Throwable) isNull());
         }
 
         @Test
@@ -704,7 +704,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestParam"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestParam"), (Throwable) isNull());
         }
 
         @Test
@@ -731,7 +731,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestPart"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestPart"), (Throwable) isNull());
         }
 
         @Test
@@ -752,7 +752,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveOther"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveOther"), (Throwable) isNull());
         }
     }
 
@@ -985,16 +985,15 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
         }
 
         @Test
-        void shouldNotLogExceptionWhenNullEvenIfPrintStackTraceEnabled() {
+        void shouldLogCorrelatedMessageWithoutStackTraceEvenIfPrintStackTraceEnabled() {
             MvcExtendedProblemDetailExceptionHandlerWithMockLogger h = handlerWithMockLogger(LogLevel.DEBUG, true);
-            // In MVC, resolveCookieValue passes `ex` (not null) to log() — so with printStackTrace=true,
-            // the exception IS logged. Verify this behavior.
+            // logCorrelated always logs a single-arg message (no Throwable), regardless of printStackTrace setting.
             HandlerMethodValidationException ex = buildExceptionVisiting(visitor ->
                     visitor.cookieValue(mock(CookieValue.class), buildParameterValidationResult("error")));
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveCookieValue"), eq(ex));
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveCookieValue"), (Throwable) isNull());
         }
     }
 

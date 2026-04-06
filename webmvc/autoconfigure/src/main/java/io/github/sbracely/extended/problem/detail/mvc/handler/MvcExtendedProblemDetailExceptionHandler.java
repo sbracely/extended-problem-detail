@@ -1,5 +1,6 @@
 package io.github.sbracely.extended.problem.detail.mvc.handler;
 
+import io.github.sbracely.extended.problem.detail.common.handler.ExtendedProblemDetailErrorResolver;
 import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
 import io.github.sbracely.extended.problem.detail.common.response.Error;
 import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
@@ -7,17 +8,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.method.MethodValidationException;
-import org.springframework.validation.method.ParameterErrors;
-import org.springframework.validation.method.ParameterValidationResult;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -26,7 +22,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
@@ -38,7 +33,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,14 +53,16 @@ import java.util.List;
  * </ul>
  * <p>
  * To customize error resolving for specific parameter types, extend this class and override
- * the corresponding resolveXxx methods.
+ * the corresponding resolveXxx methods defined in {@link ExtendedProblemDetailErrorResolver}.
  * </p>
  *
  * @see ResponseEntityExceptionHandler
+ * @see ExtendedProblemDetailErrorResolver
  * @since 1.0.0
  */
 @RestControllerAdvice
-public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler {
+public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler
+        implements ExtendedProblemDetailErrorResolver {
 
     /**
      * Logger for this exception handler.
@@ -85,6 +81,16 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      */
     public MvcExtendedProblemDetailExceptionHandler(ExtendedProblemDetailLog extendedProblemDetailLog) {
         this.extendedProblemDetailLog = extendedProblemDetailLog;
+    }
+
+    @Override
+    public Log getLog() {
+        return logger;
+    }
+
+    @Override
+    public ExtendedProblemDetailLog getExtendedProblemDetailLog() {
+        return extendedProblemDetailLog;
     }
 
     @Override
@@ -151,6 +157,20 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
     }
 
     /**
+     * Resolves errors from {@link MethodArgumentNotValidException}.
+     * <p>
+     * This method is specific to WebMVC and resolves errors for
+     * {@code @Valid} annotated method arguments.
+     * </p>
+     *
+     * @param ex the MethodArgumentNotValidException to resolve
+     * @return list of Error objects representing all errors
+     */
+    protected List<Error> resolveMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return resolveBindingResult(ex.getBindingResult());
+    }
+
+    /**
      * Handles handler method validation exceptions using Visitor pattern.
      * <p>
      * This method processes validation results for various parameter annotations by visiting
@@ -165,7 +185,7 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      */
     @Override
     public @Nullable ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        extendedProblemDetailLog.log(logger, ex, "handleHandlerMethodValidationException");
+        extendedProblemDetailLog.log(logger, ex, "handleHandlerMethodValidationException [exception#{}]", Integer.toHexString(System.identityHashCode(ex)));
         List<Error> errorList = resolveHandlerMethodValidationException(ex);
         ExtendedProblemDetail extendedProblemDetail = ExtendedProblemDetail.from(ex.getBody(), errorList);
         return handleExceptionInternal(ex, extendedProblemDetail, headers, status, request);
@@ -213,6 +233,17 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
             return handleExceptionInternal(ex, extendedProblemDetail, headers, status, request);
         }
         return handleExceptionInternal(ex, null, headers, status, request);
+    }
+
+    /**
+     * Resolves errors from {@link WebExchangeBindException}.
+     *
+     * @param ex the WebExchangeBindException to resolve
+     * @return list of Error objects representing all errors
+     */
+    protected List<Error> resolveWebExchangeBindException(WebExchangeBindException ex) {
+        extendedProblemDetailLog.log(logger, ex, "resolveWebExchangeBindException");
+        return resolveBindingResult(ex.getBindingResult());
     }
 
     @Override
@@ -285,349 +316,5 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
             AsyncRequestNotUsableException ex, WebRequest request) {
         extendedProblemDetailLog.log(logger, ex, "handleAsyncRequestNotUsableException");
         return null;
-    }
-
-
-    // ==================== Error Resolving Methods ====================
-
-    /**
-     * Resolves errors from {@link MethodArgumentNotValidException}.
-     * <p>
-     * This method is specific to WebMVC and resolves errors for
-     * {@code @Valid} annotated method arguments.
-     * </p>
-     *
-     * @param ex the MethodArgumentNotValidException to resolve
-     * @return list of Error objects representing all errors
-     */
-    protected List<Error> resolveMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return resolveBindingResult(ex.getBindingResult());
-    }
-
-    /**
-     * Resolves errors from {@link WebExchangeBindException}.
-     *
-     * @param ex the WebExchangeBindException to resolve
-     * @return list of Error objects representing all errors
-     */
-    protected List<Error> resolveWebExchangeBindException(WebExchangeBindException ex) {
-        extendedProblemDetailLog.log(logger, ex, "resolveWebExchangeBindException");
-        return resolveBindingResult(ex.getBindingResult());
-    }
-
-    /**
-     * Resolves errors from {@link HandlerMethodValidationException} using the Visitor pattern.
-     *
-     * @param ex the HandlerMethodValidationException to resolve
-     * @return list of Error objects representing all errors
-     */
-    protected List<Error> resolveHandlerMethodValidationException(HandlerMethodValidationException ex) {
-        List<Error> errorList = new ArrayList<>();
-        ex.visitResults(new HandlerMethodValidationException.Visitor() {
-
-            @Override
-            public void cookieValue(CookieValue cookieValue, ParameterValidationResult result) {
-                resolveCookieValue(ex, cookieValue, result, errorList);
-            }
-
-            @Override
-            public void matrixVariable(MatrixVariable matrixVariable, ParameterValidationResult result) {
-                resolveMatrixVariable(ex, matrixVariable, result, errorList);
-            }
-
-            @Override
-            public void modelAttribute(@Nullable ModelAttribute modelAttribute, ParameterErrors errors) {
-                resolveModelAttribute(ex, modelAttribute, errors, errorList);
-            }
-
-            @Override
-            public void pathVariable(PathVariable pathVariable, ParameterValidationResult result) {
-                resolvePathVariable(ex, pathVariable, result, errorList);
-            }
-
-            @Override
-            public void requestBody(RequestBody requestBody, ParameterErrors errors) {
-                resolveRequestBody(ex, requestBody, errors, errorList);
-            }
-
-            @Override
-            public void requestBodyValidationResult(RequestBody requestBody, ParameterValidationResult result) {
-                resolveRequestBodyValidationResult(ex, requestBody, result, errorList);
-            }
-
-            @Override
-            public void requestHeader(RequestHeader requestHeader, ParameterValidationResult result) {
-                resolveRequestHeader(ex, requestHeader, result, errorList);
-            }
-
-            @Override
-            public void requestParam(@Nullable RequestParam requestParam, ParameterValidationResult result) {
-                resolveRequestParam(ex, requestParam, result, errorList);
-            }
-
-            @Override
-            public void requestPart(RequestPart requestPart, ParameterErrors errors) {
-                resolveRequestPart(ex, requestPart, errors, errorList);
-            }
-
-            @Override
-            public void other(ParameterValidationResult result) {
-                resolveOther(ex, result, errorList);
-            }
-        });
-        return errorList;
-    }
-
-    /**
-     * Resolves errors from cookie value parameter.
-     * <p>
-     * Override this method to customize how {@code @CookieValue} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex          the HandlerMethodValidationException being processed
-     * @param cookieValue the CookieValue annotation
-     * @param result      the parameter validation result
-     * @param errorList   the list to populate with errors
-     */
-    protected void resolveCookieValue(HandlerMethodValidationException ex, CookieValue cookieValue, ParameterValidationResult result, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveCookieValue");
-        addParameterErrors(result, Error.Type.COOKIE,
-                result.getMethodParameter().getParameterName(), errorList);
-    }
-
-    /**
-     * Resolves errors from matrix variable parameter.
-     * <p>
-     * Override this method to customize how {@code @MatrixVariable} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex             the HandlerMethodValidationException being processed
-     * @param matrixVariable the MatrixVariable annotation
-     * @param result         the parameter validation result
-     * @param errorList      the list to populate with errors
-     */
-    protected void resolveMatrixVariable(HandlerMethodValidationException ex, MatrixVariable matrixVariable, ParameterValidationResult result, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveMatrixVariable");
-        addParameterErrors(result, Error.Type.PARAMETER,
-                result.getMethodParameter().getParameterName(), errorList);
-    }
-
-    /**
-     * Resolves errors from model attribute parameter.
-     * <p>
-     * Override this method to customize how {@code @ModelAttribute} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex             the HandlerMethodValidationException being processed
-     * @param modelAttribute the ModelAttribute annotation (may be null)
-     * @param errors         the parameter errors
-     * @param errorList      the list to populate with errors
-     */
-    protected void resolveModelAttribute(HandlerMethodValidationException ex, @Nullable ModelAttribute modelAttribute, ParameterErrors errors, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveModelAttribute");
-        errors.getAllErrors().stream()
-                .map(this::objectErrorToError)
-                .forEach(errorList::add);
-    }
-
-    /**
-     * Resolves errors from path variable parameter.
-     * <p>
-     * Override this method to customize how {@code @PathVariable} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex           the HandlerMethodValidationException being processed
-     * @param pathVariable the PathVariable annotation
-     * @param result       the parameter validation result
-     * @param errorList    the list to populate with errors
-     */
-    protected void resolvePathVariable(HandlerMethodValidationException ex, PathVariable pathVariable, ParameterValidationResult result, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolvePathVariable");
-        addParameterErrors(result, Error.Type.PARAMETER,
-                result.getMethodParameter().getParameterName(), errorList);
-    }
-
-    /**
-     * Resolves errors from request body parameter (ParameterErrors variant).
-     * <p>
-     * Override this method to customize how {@code @RequestBody} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex          the HandlerMethodValidationException being processed
-     * @param requestBody the RequestBody annotation
-     * @param errors      the parameter errors
-     * @param errorList   the list to populate with errors
-     */
-    protected void resolveRequestBody(HandlerMethodValidationException ex, RequestBody requestBody, ParameterErrors errors, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveRequestBody");
-        errors.getAllErrors().stream()
-                .map(this::objectErrorToError)
-                .forEach(errorList::add);
-    }
-
-    /**
-     * Resolves errors from request body parameter (ParameterValidationResult variant).
-     * <p>
-     * Override this method to customize how {@code @RequestBody} validation
-     * results are converted to Error objects.
-     * </p>
-     *
-     * @param ex          the HandlerMethodValidationException being processed
-     * @param requestBody the RequestBody annotation
-     * @param result      the parameter validation result
-     * @param errorList   the list to populate with errors
-     */
-    protected void resolveRequestBodyValidationResult(HandlerMethodValidationException ex, RequestBody requestBody, ParameterValidationResult result, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveRequestBodyValidationResult");
-        addParameterErrors(result, Error.Type.PARAMETER, null, errorList);
-    }
-
-    /**
-     * Resolves errors from request header parameter.
-     * <p>
-     * Override this method to customize how {@code @RequestHeader} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex            the HandlerMethodValidationException being processed
-     * @param requestHeader the RequestHeader annotation
-     * @param result        the parameter validation result
-     * @param errorList     the list to populate with errors
-     */
-    protected void resolveRequestHeader(HandlerMethodValidationException ex, RequestHeader requestHeader, ParameterValidationResult result, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveRequestHeader");
-        addParameterErrors(result, Error.Type.HEADER,
-                result.getMethodParameter().getParameterName(), errorList);
-    }
-
-    /**
-     * Resolves errors from request parameter.
-     * <p>
-     * Override this method to customize how {@code @RequestParam} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex           the HandlerMethodValidationException being processed
-     * @param requestParam the RequestParam annotation (may be null)
-     * @param result       the parameter validation result
-     * @param errorList    the list to populate with errors
-     */
-    protected void resolveRequestParam(HandlerMethodValidationException ex, @Nullable RequestParam requestParam, ParameterValidationResult result, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveRequestParam");
-        addParameterErrors(result, Error.Type.PARAMETER,
-                result.getMethodParameter().getParameterName(), errorList);
-    }
-
-    /**
-     * Resolves errors from request part parameter.
-     * <p>
-     * Override this method to customize how {@code @RequestPart} parameter
-     * errors are converted to Error objects.
-     * </p>
-     *
-     * @param ex          the HandlerMethodValidationException being processed
-     * @param requestPart the RequestPart annotation
-     * @param errors      the parameter errors
-     * @param errorList   the list to populate with errors
-     */
-    protected void resolveRequestPart(HandlerMethodValidationException ex, RequestPart requestPart, ParameterErrors errors, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveRequestPart");
-        errors.getAllErrors().stream()
-                .map(this::objectErrorToError)
-                .forEach(errorList::add);
-    }
-
-    /**
-     * Resolves errors from other parameter types.
-     * <p>
-     * Override this method to customize how unsupported parameter types
-     * are handled during error processing.
-     * </p>
-     *
-     * @param ex        the HandlerMethodValidationException being processed
-     * @param result    the parameter validation result
-     * @param errorList the list to populate with errors
-     */
-    protected void resolveOther(HandlerMethodValidationException ex, ParameterValidationResult result, List<Error> errorList) {
-        extendedProblemDetailLog.log(logger, ex, "resolveOther");
-    }
-
-    /**
-     * Adds parameter errors to the error list.
-     *
-     * @param result        the parameter validation result
-     * @param errorType     the error type
-     * @param parameterName the parameter name
-     * @param errorList     the list to populate with errors
-     */
-    protected void addParameterErrors(ParameterValidationResult result, Error.Type errorType,
-                                      @Nullable String parameterName, List<Error> errorList) {
-        result.getResolvableErrors().stream()
-                .map(MessageSourceResolvable::getDefaultMessage)
-                .map(defaultMessage -> new Error(errorType, parameterName, defaultMessage))
-                .forEach(errorList::add);
-    }
-
-    /**
-     * Resolves errors from {@link MethodValidationException}.
-     *
-     * @param ex the MethodValidationException to resolve
-     * @return list of Error objects representing all errors
-     */
-    protected List<Error> resolveMethodValidationException(MethodValidationException ex) {
-        List<Error> errors = new ArrayList<>();
-        ex.getParameterValidationResults().forEach(parameterValidationResult -> {
-            if (parameterValidationResult instanceof ParameterErrors parameterErrors) {
-                parameterErrors.getAllErrors().stream()
-                        .map(this::objectErrorToError)
-                        .forEach(errors::add);
-            } else {
-                String parameterName = parameterValidationResult.getMethodParameter().getParameterName();
-                parameterValidationResult.getResolvableErrors().stream()
-                        .map(messageSourceResolvable -> new Error(
-                                Error.Type.PARAMETER,
-                                parameterName,
-                                messageSourceResolvable.getDefaultMessage()))
-                        .forEach(errors::add);
-            }
-        });
-        ex.getCrossParameterValidationResults().stream()
-                .map(parameterValidationResult -> new Error(
-                        Error.Type.PARAMETER,
-                        null,
-                        parameterValidationResult.getDefaultMessage()))
-                .forEach(errors::add);
-        return errors;
-    }
-
-    /**
-     * Converts a {@link BindingResult} to a list of {@link Error} objects.
-     *
-     * @param bindingResult the BindingResult to convert
-     * @return list of Error objects representing all errors
-     */
-    protected List<Error> resolveBindingResult(BindingResult bindingResult) {
-        return bindingResult.getAllErrors().stream()
-                .map(this::objectErrorToError)
-                .toList();
-    }
-
-    /**
-     * Converts an {@link ObjectError} to an {@link Error} object.
-     *
-     * @param objectError the ObjectError to convert
-     * @return Error object with field and message information
-     */
-    protected Error objectErrorToError(ObjectError objectError) {
-        String target = null;
-        if (objectError instanceof FieldError fieldError) {
-            target = fieldError.getField();
-        }
-        return new Error(Error.Type.PARAMETER, target, objectError.getDefaultMessage());
     }
 }

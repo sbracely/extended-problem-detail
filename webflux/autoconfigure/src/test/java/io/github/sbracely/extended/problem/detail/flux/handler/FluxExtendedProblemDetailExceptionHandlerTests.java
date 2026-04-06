@@ -43,6 +43,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.*;
 
 /**
@@ -162,8 +163,8 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.handleHandlerMethodValidationException(ex, new HttpHeaders(), HttpStatus.BAD_REQUEST, exchange);
 
-            verify(mockLogger).debug(eq("handleHandlerMethodValidationException"), (Throwable) isNull());
-            verify(mockLogger).debug(eq("resolveRequestParam"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("handleHandlerMethodValidationException \\[exception#[0-9a-f]+]"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestParam"), (Throwable) isNull());
         }
     }
 
@@ -464,7 +465,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveCookieValue"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveCookieValue"), (Throwable) isNull());
         }
 
         @Test
@@ -486,7 +487,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveMatrixVariable"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveMatrixVariable"), (Throwable) isNull());
         }
 
         @Test
@@ -513,7 +514,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveModelAttribute"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveModelAttribute"), (Throwable) isNull());
         }
 
         @Test
@@ -535,7 +536,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolvePathVariable"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolvePathVariable"), (Throwable) isNull());
         }
 
         @Test
@@ -562,7 +563,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestBody"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestBody"), (Throwable) isNull());
         }
 
         @Test
@@ -587,7 +588,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestBodyValidationResult"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestBodyValidationResult"), (Throwable) isNull());
         }
 
         @Test
@@ -609,7 +610,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestHeader"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestHeader"), (Throwable) isNull());
         }
 
         @Test
@@ -629,7 +630,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestParam"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestParam"), (Throwable) isNull());
         }
 
         @Test
@@ -656,7 +657,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveRequestPart"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveRequestPart"), (Throwable) isNull());
         }
 
         @Test
@@ -677,7 +678,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             h.resolveHandlerMethodValidationException(ex);
 
-            verify(mockLogger).debug(eq("resolveOther"), (Throwable) isNull());
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveOther"), (Throwable) isNull());
         }
     }
 
@@ -854,16 +855,16 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
         }
 
         @Test
-        void shouldLogExceptionWhenPrintStackTraceEnabledAndExceptionIsNotNull() {
+        void shouldLogCorrelatedMessageWithoutStackTraceEvenIfPrintStackTraceEnabled() {
             FluxExtendedProblemDetailExceptionHandlerWithMockLogger h = handlerWithMockLogger(LogLevel.DEBUG, true);
-            // resolveCookieValue calls log(logger, ex, "resolveCookieValue") — ex is not null
+            // logCorrelated always logs a single-arg message (no Throwable), regardless of printStackTrace setting.
             HandlerMethodValidationException ex = buildExceptionVisiting(visitor ->
                     visitor.cookieValue(mock(CookieValue.class), buildParameterValidationResult("error")));
 
             h.resolveHandlerMethodValidationException(ex);
 
-            // printStackTrace=true and ex is not null → exception IS logged
-            verify(mockLogger).debug(eq("resolveCookieValue"), eq(ex));
+            // logCorrelated uses single-arg debug(String) — no Throwable, even with printStackTrace=true
+            verify(mockLogger).debug(matches("\\[exception#[0-9a-f]+] resolveCookieValue"), (Throwable) isNull());
         }
     }
 

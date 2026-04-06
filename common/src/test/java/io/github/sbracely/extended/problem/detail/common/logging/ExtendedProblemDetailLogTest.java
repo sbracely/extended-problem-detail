@@ -20,7 +20,7 @@ class ExtendedProblemDetailLogTest {
     private Log logger;
 
     @Test
-    void shouldLogDebugWithStackTrace() {
+    void shouldLogStackTraceDebugWith() {
         ExtendedProblemDetailLog log = new ExtendedProblemDetailLog(LogLevel.DEBUG, true);
         Exception exception = new RuntimeException("test error");
 
@@ -30,7 +30,7 @@ class ExtendedProblemDetailLogTest {
     }
 
     @Test
-    void shouldLogDebugWithoutStackTrace() {
+    void shouldLogStackTraceDebugWithout() {
         ExtendedProblemDetailLog log = new ExtendedProblemDetailLog(LogLevel.DEBUG, false);
         Exception exception = new RuntimeException("test error");
 
@@ -95,7 +95,7 @@ class ExtendedProblemDetailLogTest {
     }
 
     @Test
-    void shouldLogTraceLevel() {
+    void shouldLogLevel() {
         ExtendedProblemDetailLog log = new ExtendedProblemDetailLog(LogLevel.TRACE, false);
 
         log.log(logger, null, "Trace message");
