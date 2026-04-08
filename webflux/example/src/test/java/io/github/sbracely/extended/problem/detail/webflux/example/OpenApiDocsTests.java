@@ -10,7 +10,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@AutoConfigureWebTestClient(timeout = "PT10M")
+@AutoConfigureWebTestClient(timeout = "PT1M")
 class OpenApiDocsTests {
 
     @Autowired

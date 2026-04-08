@@ -257,6 +257,8 @@ All available override points:
 | `extended-problem-detail-webmvc-spring-boot-starter`  | WebMVC starter (use this in your project)  |
 | `extended-problem-detail-webflux-spring-boot-starter` | WebFlux starter (use this in your project) |
 
+The root, `webmvc`, and `webflux` POMs are reactor-only aggregators and are not published to Maven Central.
+
 ## Related Links
 
 - [RFC 9457 - Problem Details for HTTP APIs](https://datatracker.ietf.org/doc/html/rfc9457)

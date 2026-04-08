@@ -44,7 +44,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.*;
 
 @SpringBootTest
-@AutoConfigureWebTestClient(timeout = "PT10M")
+@AutoConfigureWebTestClient(timeout = "PT1M")
 class WebfluxControllerTests {
 
     private static final Logger logger = LoggerFactory.getLogger(WebfluxControllerTests.class);
@@ -740,7 +740,7 @@ class WebfluxControllerTests {
             "spring.webflux.apiversion.use.header=API-Version",
             "spring.webflux.apiversion.supported=1,2",
     })
-    @AutoConfigureWebTestClient(timeout = "PT10M")
+    @AutoConfigureWebTestClient(timeout = "PT1M")
     @Import(ApiVersionTests.NotAcceptableApiVersionController.class)
     class ApiVersionTests {
 
