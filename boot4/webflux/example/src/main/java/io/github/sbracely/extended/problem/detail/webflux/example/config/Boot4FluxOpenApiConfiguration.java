@@ -35,7 +35,7 @@ public class Boot4FluxOpenApiConfiguration {
                 .info(new Info()
                         .title("Extended Problem Detail WebFlux Example API")
                         .description("Example Spring WebFlux endpoints that demonstrate Extended Problem Detail responses.")
-                        .version("1.0.1"))
+                        .version("1.1.0"))
                 .servers(List.of(new Server()
                         .url("/")
                         .description("Relative server URL")))

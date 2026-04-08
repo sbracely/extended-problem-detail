@@ -50,7 +50,7 @@ public class Boot4MvcOpenApiConfiguration {
      * </p>
      * <ul>
      *     <li><b>Info</b> – title {@code "Extended Problem Detail WebMVC Example API"}, a short
-     *         description of the application's purpose, and version {@code 1.0.1}.</li>
+     *         description of the application's purpose, and version {@code 1.1.0}.</li>
      *     <li><b>Servers</b> – a single relative server entry with URL {@code "/"} so that the
      *         Swagger UI "Try it out" feature works regardless of the host the application is
      *         deployed on.</li>
@@ -79,7 +79,7 @@ public class Boot4MvcOpenApiConfiguration {
                 .info(new Info()
                         .title("Extended Problem Detail WebMVC Example API")
                         .description("Example Spring WebMVC endpoints that demonstrate Extended Problem Detail responses.")
-                        .version("1.0.1"))
+                        .version("1.1.0"))
                 .servers(List.of(new Server()
                         .url("/")
                         .description("Relative server URL")))

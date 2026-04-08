@@ -18,7 +18,7 @@ Choose the starter that matches both your Spring Boot major version and web stac
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot3-webmvc-spring-boot-starter</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -29,7 +29,7 @@ Choose the starter that matches both your Spring Boot major version and web stac
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot3-webflux-spring-boot-starter</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -40,7 +40,7 @@ Choose the starter that matches both your Spring Boot major version and web stac
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot4-webmvc-spring-boot-starter</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -51,7 +51,7 @@ Choose the starter that matches both your Spring Boot major version and web stac
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot4-webflux-spring-boot-starter</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 

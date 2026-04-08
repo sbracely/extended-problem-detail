@@ -36,7 +36,7 @@ import java.util.List;
  * specific annotation types.
  * </p>
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 public interface Boot4CommonExtendedProblemDetailErrorResolver {
 

@@ -13,7 +13,7 @@
 
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-common</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <name>Extended Problem Detail Common</name>
     <description>Shared ProblemDetail response model used by all Extended Problem Detail Boot 3 and Boot 4 modules</description>
     <url>https://github.com/sbracely/extended-problem-detail</url>
