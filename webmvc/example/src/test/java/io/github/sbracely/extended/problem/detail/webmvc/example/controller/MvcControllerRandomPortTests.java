@@ -112,7 +112,7 @@ class MvcControllerRandomPortTests {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-            String uri = BASE_PATH + "/max-upload-size-exceeded";
+            String uri = BASE_PATH + "/max-upload-size-exceeded-exception";
             ResponseEntity<ExtendedProblemDetail> response = testRestTemplate.postForEntity(
                     "http://localhost:" + port + uri,
                     new HttpEntity<>(body, headers),

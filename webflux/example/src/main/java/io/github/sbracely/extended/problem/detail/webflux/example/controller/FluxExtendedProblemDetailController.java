@@ -112,6 +112,7 @@ public class FluxExtendedProblemDetailController {
 
     /**
      * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#matrixVariable(MatrixVariable, ParameterValidationResult)
      */
     @GetMapping("/handler-method-validation-exception-matrix/{id}")
     public Mono<Void> handlerMethodValidationExceptionMatrix(@PathVariable String id,
@@ -122,6 +123,7 @@ public class FluxExtendedProblemDetailController {
 
     /**
      * @see HandlerMethodValidationException
+     * @see HandlerMethodValidationException.Visitor#modelAttribute(ModelAttribute, ParameterErrors)
      */
     @GetMapping("/handler-method-validation-exception-model-attribute")
     public Mono<Void> handlerMethodValidationExceptionModelAttribute(@CheckPassword(message = "Password cannot be empty") ProblemDetailRequest problemDetailRequest) {

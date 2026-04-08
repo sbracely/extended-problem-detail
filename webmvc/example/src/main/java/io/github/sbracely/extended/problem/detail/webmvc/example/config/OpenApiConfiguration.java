@@ -69,7 +69,7 @@ public class OpenApiConfiguration {
                 responses.addApiResponse(errorResponseSpec.statusCode(),
                         response(errorResponseSpec.description(), errorResponseSpec.example()));
                 operation.setDescription(testGuidance(errorResponseSpec.trigger(),
-                        "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java"));
+                        testPath(operation.getOperationId())));
             }));
         };
     }
@@ -257,6 +257,12 @@ public class OpenApiConfiguration {
                                     "Invalid request parameters.",
                                     "/mvc-extended-problem-detail/unsatisfied-servlet-request-parameter-exception"),
                             "GET /mvc-extended-problem-detail/unsatisfied-servlet-request-parameter-exception?type=1");
+            case "unsatisfiedRequestParameterException" ->
+                    new ErrorResponseSpec("400", "400 invalid request parameters error",
+                            problemExample("Invalid request parameters", "Bad Request", 400,
+                                    "Invalid request parameters.",
+                                    "/mvc-extended-problem-detail/unsatisfied-request-parameter-exception"),
+                            "GET /mvc-extended-problem-detail/unsatisfied-request-parameter-exception?type=1");
             case "missingRequestHeaderException" ->
                     new ErrorResponseSpec("400", "400 missing request header error",
                             problemExample("Missing request header", "Bad Request", 400,
@@ -295,11 +301,17 @@ public class OpenApiConfiguration {
                             problemExample("Payload too large", "Content Too Large", 413, "payload too large",
                                     "/mvc-extended-problem-detail/payload-too-large-exception"),
                             "POST multipart/form-data /mvc-extended-problem-detail/payload-too-large-exception with file");
-            case "contentTooLargeException", "maxUploadSizeExceededException" ->
+            case "contentTooLargeException" ->
                     new ErrorResponseSpec("413", "413 content too large error",
                             problemExample("Content too large", "Content Too Large", 413, null,
                                     "/mvc-extended-problem-detail/content-too-large-exception"),
                             "POST multipart/form-data /mvc-extended-problem-detail/content-too-large-exception with file");
+            case "maxUploadSizeExceededException" ->
+                    new ErrorResponseSpec("413", "413 max upload size exceeded error",
+                            problemExample("Maximum upload size exceeded", "Content Too Large", 413,
+                                    "Maximum upload size exceeded",
+                                    "/mvc-extended-problem-detail/max-upload-size-exceeded-exception"),
+                            "POST multipart/form-data /mvc-extended-problem-detail/max-upload-size-exceeded-exception with a file larger than 1 byte");
             case "asyncRequestTimeoutException" ->
                     new ErrorResponseSpec("503", "503 async timeout error",
                             problemExample("Async timeout", "Service Unavailable", 503, null,
@@ -322,14 +334,56 @@ public class OpenApiConfiguration {
                                     "Required path variable 'id' is not present.",
                                     "/mvc-extended-problem-detail/missing-path-variable-exception"),
                             "DELETE /mvc-extended-problem-detail/missing-path-variable-exception");
-            case "serverErrorException", "conversionNotSupportedException" ->
+            case "serverErrorException" ->
                     new ErrorResponseSpec("500", "500 server error", serverProblemDetailExample(),
                             "GET /mvc-extended-problem-detail/server-error-exception");
+            case "conversionNotSupportedException" ->
+                    new ErrorResponseSpec("500", "500 conversion not supported error",
+                            problemExample("Conversion not supported", "Internal Server Error", 500,
+                                    "Failed to convert value of type 'java.lang.String' to required type 'io.github.sbracely.extended.problem.detail.webmvc.example.request.ProblemDetailRequest'.",
+                                    "/mvc-extended-problem-detail/conversion-not-supported-exception"),
+                            "GET /mvc-extended-problem-detail/conversion-not-supported-exception?data=test-value");
+            case "methodArgumentConversionNotSupportedException" ->
+                    new ErrorResponseSpec("500", "500 method argument conversion not supported error",
+                            problemExample("Method argument conversion not supported", "Internal Server Error", 500,
+                                    "Failed to convert value of type 'java.lang.String' to required type 'io.github.sbracely.extended.problem.detail.webmvc.example.request.ProblemDetailRequest'.",
+                                    "/mvc-extended-problem-detail/method-argument-conversion-not-supported-exception"),
+                            "GET /mvc-extended-problem-detail/method-argument-conversion-not-supported-exception?error=test-value");
+            case "typeMismatchException" ->
+                    new ErrorResponseSpec("400", "400 type mismatch error",
+                            problemExample("Type mismatch", "Bad Request", 400,
+                                    "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'.",
+                                    "/mvc-extended-problem-detail/type-mismatch-exception"),
+                            "GET /mvc-extended-problem-detail/type-mismatch-exception?integer=a");
+            case "methodArgumentTypeMismatchException" ->
+                    new ErrorResponseSpec("400", "400 method argument type mismatch error",
+                            problemExample("Method argument type mismatch", "Bad Request", 400,
+                                    "Failed to convert value 'a' to required type 'java.lang.Integer'.",
+                                    "/mvc-extended-problem-detail/method-argument-type-mismatch-exception"),
+                            "GET /mvc-extended-problem-detail/method-argument-type-mismatch-exception?integer=a");
+            case "httpMessageNotReadableException" ->
+                    new ErrorResponseSpec("400", "400 message not readable error",
+                            problemExample("Message not readable", "Bad Request", 400,
+                                    "Failed to read request",
+                                    "/mvc-extended-problem-detail/http-message-not-readable-exception"),
+                            "POST /mvc-extended-problem-detail/http-message-not-readable-exception with malformed application/json body");
+            case "invalidApiVersionException" ->
+                    new ErrorResponseSpec("400", "400 invalid API version error",
+                            problemExample("Invalid API version", "Bad Request", 400,
+                                    "Invalid API version: '3.0.0'.",
+                                    "/mvc-extended-problem-detail/invalid-api-version-exception"),
+                            "GET /mvc-extended-problem-detail/invalid-api-version-exception with header API-Version: 3");
+            case "missingApiVersionException" ->
+                    new ErrorResponseSpec("400", "400 missing API version error",
+                            problemExample("Missing API version", "Bad Request", 400,
+                                    "API version is required.",
+                                    "/mvc-extended-problem-detail/missing-api-version-exception"),
+                            "GET /mvc-extended-problem-detail/missing-api-version-exception without API-Version header");
             case "methodArgumentNotValidException", "handlerMethodValidationExceptionCookieValue",
-                  "handlerMethodValidationExceptionMatrixVariable", "handlerMethodValidationExceptionModelAttribute",
-                  "handlerMethodValidationExceptionPathVariable", "handlerMethodValidationExceptionRequestBody",
-                  "handlerMethodValidationExceptionRequestBodyValidationResult", "handlerMethodValidationExceptionRequestHeader",
-                  "handlerMethodValidationExceptionRequestParam", "handlerMethodValidationExceptionRequestPart",
+                   "handlerMethodValidationExceptionMatrixVariable", "handlerMethodValidationExceptionModelAttribute",
+                   "handlerMethodValidationExceptionPathVariable", "handlerMethodValidationExceptionRequestBody",
+                   "handlerMethodValidationExceptionRequestBodyValidationResult", "handlerMethodValidationExceptionRequestHeader",
+                   "handlerMethodValidationExceptionRequestParam", "handlerMethodValidationExceptionRequestPart",
                   "handlerMethodValidationExceptionOther", "webExchangeBindException", "methodValidationException" ->
                     validationResponseSpec(operationId);
             default -> new ErrorResponseSpec("400", "400 bad request error", genericBadRequestProblemDetailExample(),
@@ -454,6 +508,16 @@ public class OpenApiConfiguration {
         }
         payload.put("message", message);
         return payload;
+    }
+
+    private static String testPath(String operationId) {
+        return switch (operationId) {
+            case "asyncRequestNotUsableException", "maxUploadSizeExceededException",
+                 "invalidApiVersionException", "missingApiVersionException" ->
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerRandomPortTests.java";
+            default ->
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java";
+        };
     }
 
     private static String testGuidance(String trigger, String testPath) {

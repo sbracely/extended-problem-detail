@@ -1134,6 +1134,7 @@ class MvcControllerTests {
     /**
      * @see HttpMessageNotWritableException
      * @see MvcProblemDetailController#httpMessageNotWritableException()
+     * @see ProblemDetailResponseSerializer
      */
     @Test
     void httpMessageNotWritableException() {

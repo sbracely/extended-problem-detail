@@ -69,7 +69,7 @@ public class OpenApiConfiguration {
                 responses.addApiResponse(errorResponseSpec.statusCode(),
                         response(errorResponseSpec.description(), errorResponseSpec.example()));
                 operation.setDescription(testGuidance(errorResponseSpec.trigger(),
-                        "src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/WebfluxControllerTests.java"));
+                        "src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java"));
             }));
         };
     }
@@ -194,7 +194,7 @@ public class OpenApiConfiguration {
         return switch (operationId) {
             case "methodNotAllowedException" ->
                     new ErrorResponseSpec("405", "405 method not allowed error", methodNotAllowedProblemDetailExample(),
-                            "POST /flux-extended-problem-detail/method-not-allowed-exception");
+                            "DELETE /flux-extended-problem-detail/method-not-allowed-exception");
             case "notAcceptableStatusException" ->
                     new ErrorResponseSpec("406", "406 not acceptable error", notAcceptableProblemDetailExample(),
                             "GET /flux-extended-problem-detail/not-acceptable-status-exception");
@@ -220,6 +220,12 @@ public class OpenApiConfiguration {
             case "missingRequestValueException" ->
                     new ErrorResponseSpec("400", "400 missing request value error", genericBadRequestProblemDetailExample(),
                             "GET /flux-extended-problem-detail/missing-request-value-exception without id");
+            case "unsatisfiedRequestParameterException" ->
+                    new ErrorResponseSpec("400", "400 invalid request parameters error",
+                            problemExample("Invalid request parameters", "Bad Request", 400,
+                                    "Invalid request parameters.",
+                                    "/flux-extended-problem-detail/unsatisfied-request-parameter-exception"),
+                            "GET /flux-extended-problem-detail/unsatisfied-request-parameter-exception");
             case "contentTooLargeException" ->
                     new ErrorResponseSpec("413", "413 content too large error",
                             problemExample("Content too large", "Content Too Large", 413, null,

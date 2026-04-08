@@ -38,7 +38,7 @@ class OpenApiDocsTests {
                 .contains("\"value\":{\"title\":\"Bad Request\",\"status\":400")
                 .contains("\"target\":\"name\"")
                 .contains("\"message\":\"Name length must be between 6-10\"")
-                .contains("WebfluxControllerTests.java")
+                .contains("FluxControllerTests.java")
                 .doesNotContain("\"responseStatusException\":{\"description\":\"OK\"")
                 .doesNotContain("\"notAcceptableStatusException\":{\"description\":\"OK\"");
     }
@@ -66,7 +66,7 @@ class OpenApiDocsTests {
                 .contains("detail: Invalid request content.")
                 .contains("target: name")
                 .contains("message: Name length must be between 6-10")
-                .contains("WebfluxControllerTests.java")
+                .contains("FluxControllerTests.java")
                 .doesNotContain("\"200\":");
     }
 
