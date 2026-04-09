@@ -33,8 +33,8 @@ public class MvcOpenApiConfiguration {
     OpenAPI webMvcExampleOpenApi() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Extended Problem Detail WebMVC Example API")
-                        .description("Example Spring WebMVC endpoints that demonstrate Extended Problem Detail responses.")
+                        .title("Extended Problem Detail Boot 3 WebMVC Example API")
+                        .description("Example Spring Boot 3 WebMVC endpoints that demonstrate Extended Problem Detail responses.")
                         .version("1.1.0"))
                 .servers(List.of(new Server()
                         .url("/")

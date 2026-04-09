@@ -33,8 +33,8 @@ public class FluxOpenApiConfiguration {
     OpenAPI webFluxExampleOpenApi() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Extended Problem Detail WebFlux Example API")
-                        .description("Example Spring WebFlux endpoints that demonstrate Extended Problem Detail responses.")
+                        .title("Extended Problem Detail Boot 3 WebFlux Example API")
+                        .description("Example Spring Boot 3 WebFlux endpoints that demonstrate Extended Problem Detail responses.")
                         .version("1.1.0"))
                 .servers(List.of(new Server()
                         .url("/")
