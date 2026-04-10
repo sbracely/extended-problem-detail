@@ -1,7 +1,10 @@
 package io.github.sbracely.extended.problem.detail.common.properties;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.logging.LogLevel;
+
+import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,5 +69,12 @@ class ExtendedProblemDetailPropertiesTest {
             properties.getLogging().setAtLevel(level);
             assertThat(properties.getLogging().getAtLevel()).isEqualTo(level);
         }
+    }
+
+    @Test
+    void shouldMarkLoggingAsNestedConfigurationProperty() throws NoSuchFieldException {
+        Field loggingField = ExtendedProblemDetailProperties.class.getDeclaredField("logging");
+
+        assertThat(loggingField.isAnnotationPresent(NestedConfigurationProperty.class)).isTrue();
     }
 }
