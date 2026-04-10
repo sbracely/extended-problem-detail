@@ -28,15 +28,18 @@ import org.springframework.web.accept.MissingApiVersionException;
 import org.springframework.web.accept.NotAcceptableApiVersionException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONTENT_TOO_LARGE;
 
@@ -63,22 +66,13 @@ class MvcControllerRandomPortTests {
                 .requestFactory(factory)
                 .baseUrl("http://localhost:" + port)
                 .build();
-
-        try {
-            restClient.get()
-                    .uri(BASE_PATH + "/async-request-not-usable-exception")
-                    .retrieve()
-                    .toBodilessEntity();
-        } catch (Exception e) {
-            assertThat(e).hasMessageContaining("Read timed out");
-        }
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            logger.error("Thread sleep interrupted", e);
-            Thread.currentThread().interrupt();
-        }
+        assertThatThrownBy(() -> restClient.get()
+                .uri(BASE_PATH + "/async-request-not-usable-exception")
+                .retrieve()
+                .toBodilessEntity())
+                .isExactlyInstanceOf(ResourceAccessException.class)
+                .hasCauseInstanceOf(SocketTimeoutException.class)
+                .hasMessageContaining("Read timed out");
     }
 
     /**
