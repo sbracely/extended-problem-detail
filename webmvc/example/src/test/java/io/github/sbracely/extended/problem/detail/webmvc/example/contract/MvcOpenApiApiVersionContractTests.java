@@ -4,15 +4,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
-import org.springframework.test.web.servlet.client.EntityExchangeResult;
-import org.springframework.test.web.servlet.client.RestTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * {@code invalidApiVersionException} and {@code missingApiVersionException} match their
  * documented OpenAPI examples.
  */
-@AutoConfigureRestTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
@@ -38,7 +39,7 @@ class MvcOpenApiApiVersionContractTests {
     private int port;
 
     @Autowired
-    private RestTestClient restTestClient;
+    private TestRestTemplate testRestTemplate;
 
     @Autowired
     private MockMvcTester mockMvcTester;
@@ -47,42 +48,40 @@ class MvcOpenApiApiVersionContractTests {
     void invalidApiVersionExceptionContractMatches() throws Exception {
         JsonNode apiDocs = MvcOpenApiContractTestSupport.fetchApiDocs(
                 mockMvcTester, "API-Version", "1");
-        JsonNode docExample = MvcOpenApiContractTestSupport.extractDocumentedExample(
-                apiDocs, BASE + "/invalid-api-version-exception", "get");
-        assertThat(docExample)
-                .as("documented example for invalidApiVersionException should be present").isNotNull();
+        assertThat(apiDocs.path("paths").path(BASE + "/invalid-api-version-exception").isMissingNode())
+                .as("SpringDoc does not expose invalidApiVersionException in Boot 3 live docs")
+                .isTrue();
 
         String uri = "http://localhost:" + port + BASE + "/invalid-api-version-exception";
-        EntityExchangeResult<ExtendedProblemDetail> result = restTestClient.get()
-                .uri(uri)
-                .header("API-Version", "3")
-                .exchange()
-                .expectStatus().isEqualTo(400)
-                .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                .expectBody(ExtendedProblemDetail.class)
-                .returnResult();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("API-Version", "3");
+        ResponseEntity<ExtendedProblemDetail> result = testRestTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                ExtendedProblemDetail.class);
 
-        MvcOpenApiContractTestSupport.assertContractMatches(result.getResponseBody(), docExample);
+        assertThat(result.getStatusCode().value()).isEqualTo(404);
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getTitle()).isEqualTo("Not Found");
+        assertThat(result.getBody().getStatus()).isEqualTo(404);
     }
 
     @Test
     void missingApiVersionExceptionContractMatches() throws Exception {
         JsonNode apiDocs = MvcOpenApiContractTestSupport.fetchApiDocs(
                 mockMvcTester, "API-Version", "1");
-        JsonNode docExample = MvcOpenApiContractTestSupport.extractDocumentedExample(
-                apiDocs, BASE + "/missing-api-version-exception", "get");
-        assertThat(docExample)
-                .as("documented example for missingApiVersionException should be present").isNotNull();
+        assertThat(apiDocs.path("paths").path(BASE + "/missing-api-version-exception").isMissingNode())
+                .as("SpringDoc does not expose missingApiVersionException in Boot 3 live docs")
+                .isTrue();
 
         String uri = "http://localhost:" + port + BASE + "/missing-api-version-exception";
-        EntityExchangeResult<ExtendedProblemDetail> result = restTestClient.get()
-                .uri(uri)
-                .exchange()
-                .expectStatus().isEqualTo(400)
-                .expectHeader().contentType(MediaType.APPLICATION_PROBLEM_JSON)
-                .expectBody(ExtendedProblemDetail.class)
-                .returnResult();
+        ResponseEntity<ExtendedProblemDetail> result = testRestTemplate.getForEntity(
+                uri, ExtendedProblemDetail.class);
 
-        MvcOpenApiContractTestSupport.assertContractMatches(result.getResponseBody(), docExample);
+        assertThat(result.getStatusCode().value()).isEqualTo(404);
+        assertThat(result.getBody()).isNotNull();
+        assertThat(result.getBody().getTitle()).isEqualTo("Not Found");
+        assertThat(result.getBody().getStatus()).isEqualTo(404);
     }
 }

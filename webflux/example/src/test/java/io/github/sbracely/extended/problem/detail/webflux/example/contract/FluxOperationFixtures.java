@@ -78,13 +78,6 @@ public final class FluxOperationFixtures {
                                 .exchange(),
                         400));
 
-        map.put("contentTooLargeException",
-                new FluxOperationFixture("default",
-                        BASE + "/content-too-large-exception", "post",
-                        client -> client.post().uri(BASE + "/content-too-large-exception")
-                                .bodyValue("x".repeat(1024 * 1024)).exchange(),
-                        413));
-
         map.put("payloadTooLargeException",
                 new FluxOperationFixture("default",
                         BASE + "/payload-too-large-exception", "post",
@@ -200,19 +193,6 @@ public final class FluxOperationFixtures {
                         BASE + "/method-validation-exception", "get",
                         client -> client.get().uri(BASE + "/method-validation-exception").exchange(),
                         500));
-
-        // ── api-version scenario ──────────────────────────────────────────────────────
-        map.put("invalidApiVersionException",
-                new FluxOperationFixture("api-version",
-                        BASE + "/invalid-api-version-exception", "get",
-                        null, // trigger requires api-version properties – see FluxOpenApiApiVersionContractTests
-                        400));
-
-        map.put("missingApiVersionException",
-                new FluxOperationFixture("api-version",
-                        BASE + "/missing-api-version-exception", "get",
-                        null, // trigger requires api-version properties – see FluxOpenApiApiVersionContractTests
-                        400));
 
         return map;
     }

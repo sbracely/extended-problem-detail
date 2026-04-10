@@ -74,7 +74,9 @@ public class MvcOpenApiConfiguration {
                 else {
                     MvcErrorResponseSpec errorResponseSpec = responseSpec(operation.getOperationId());
                     responses.addApiResponse(errorResponseSpec.statusCode(),
-                            response(errorResponseSpec.description(), errorResponseSpec.example()));
+                            "httpMessageNotWritableException".equals(operation.getOperationId())
+                                    ? jsonResponse(errorResponseSpec.description(), errorResponseSpec.example())
+                                    : response(errorResponseSpec.description(), errorResponseSpec.example()));
                     operation.setDescription(testGuidance(errorResponseSpec.trigger(),
                             testPath(operation.getOperationId())));
                 }
@@ -148,6 +150,12 @@ public class MvcOpenApiConfiguration {
                 .content(problemDetailContent(example));
     }
 
+    private static ApiResponse jsonResponse(String description, Example example) {
+        return new ApiResponse()
+                .description(description + ". See the MVC example tests for concrete triggering inputs.")
+                .content(jsonContent(example));
+    }
+
     private static ApiResponse eventStreamResponse(String description, String example) {
         return new ApiResponse()
                 .description(description + ". Normal client-visible behavior is an SSE stream; "
@@ -160,6 +168,12 @@ public class MvcOpenApiConfiguration {
 
     private static Content problemDetailContent(Example example) {
         return new Content().addMediaType(PROBLEM_JSON, new MediaType()
+                .schema(new Schema<>().$ref(EXTENDED_PROBLEM_DETAIL_SCHEMA_REF))
+                .addExamples("example", example));
+    }
+
+    private static Content jsonContent(Example example) {
+        return new Content().addMediaType("application/json", new MediaType()
                 .schema(new Schema<>().$ref(EXTENDED_PROBLEM_DETAIL_SCHEMA_REF))
                 .addExamples("example", example));
     }
@@ -319,17 +333,12 @@ public class MvcOpenApiConfiguration {
                             "GET /mvc-extended-problem-detail/missing-servlet-request-parameter-exception");
             case "payloadTooLargeException" ->
                     new MvcErrorResponseSpec("413", "413 payload too large error",
-                            problemExample("Payload too large", "Content Too Large", 413, "payload too large",
+                            problemExample("Payload too large", "Payload Too Large", 413, "payload too large",
                                     "/mvc-extended-problem-detail/payload-too-large-exception"),
                             "POST multipart/form-data /mvc-extended-problem-detail/payload-too-large-exception with file");
-            case "contentTooLargeException" ->
-                    new MvcErrorResponseSpec("413", "413 content too large error",
-                            problemExample("Content too large", "Content Too Large", 413, null,
-                                    "/mvc-extended-problem-detail/content-too-large-exception"),
-                            "POST multipart/form-data /mvc-extended-problem-detail/content-too-large-exception with file");
             case "maxUploadSizeExceededException" ->
                     new MvcErrorResponseSpec("413", "413 max upload size exceeded error",
-                            problemExample("Maximum upload size exceeded", "Content Too Large", 413,
+                            problemExample("Maximum upload size exceeded", "Payload Too Large", 413,
                                     "Maximum upload size exceeded",
                                     "/mvc-extended-problem-detail/max-upload-size-exceeded-exception"),
                             "POST multipart/form-data /mvc-extended-problem-detail/max-upload-size-exceeded-exception with a file larger than 1 byte");
@@ -534,9 +543,11 @@ public class MvcOpenApiConfiguration {
 
     private static String testPath(String operationId) {
         return switch (operationId) {
-            case "asyncRequestNotUsableException", "maxUploadSizeExceededException",
+            case "asyncRequestNotUsableException",
                  "invalidApiVersionException", "missingApiVersionException" ->
                     "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerRandomPortTests.java";
+            case "maxUploadSizeExceededException" ->
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerMultipartLimitTests.java";
             default ->
                     "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java";
         };

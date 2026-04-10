@@ -234,15 +234,6 @@ public class FluxExtendedProblemDetailController {
     /**
      * @see PayloadTooLargeException
      */
-    @PostMapping("/content-too-large-exception")
-    public Mono<Void> contentTooLargeException(@RequestBody byte[] body) {
-        logger.info("contentTooLargeException, body.length: {}", body.length);
-        return Mono.empty();
-    }
-
-    /**
-     * @see PayloadTooLargeException
-     */
     @PostMapping("/payload-too-large-exception")
     public Mono<Void> payloadTooLargeException(@RequestBody byte[] body) {
         logger.info("payloadTooLargeException, body.length: {}", body.length);

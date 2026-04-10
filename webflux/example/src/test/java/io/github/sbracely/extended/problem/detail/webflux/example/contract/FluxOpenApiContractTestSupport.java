@@ -75,14 +75,25 @@ public final class FluxOpenApiContractTestSupport {
         }
         JsonNode responses = operation.path("responses");
         for (JsonNode response : responses) {
-            JsonNode examples = response.path("content")
-                    .path("application/problem+json")
-                    .path("examples");
-            for (JsonNode exampleNode : examples) {
-                JsonNode value = exampleNode.path("value");
-                if (!value.isMissingNode()) {
-                    return value;
-                }
+            JsonNode content = response.path("content");
+            JsonNode value = firstExampleValue(content.path("application/problem+json"));
+            if (value != null) {
+                return value;
+            }
+            value = firstExampleValue(content.path("application/json"));
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    private static JsonNode firstExampleValue(JsonNode mediaTypeNode) {
+        JsonNode examples = mediaTypeNode.path("examples");
+        for (JsonNode exampleNode : examples) {
+            JsonNode value = exampleNode.path("value");
+            if (!value.isMissingNode()) {
+                return value;
             }
         }
         return null;

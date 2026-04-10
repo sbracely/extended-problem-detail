@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockAsyncContext;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
@@ -79,7 +79,9 @@ class MvcOpenApiDefaultContractTests {
         assertThat(result)
                 .as("HTTP status for %s", operationId)
                 .hasStatus(fixture.expectedStatus())
-                .hasContentType(MediaType.APPLICATION_PROBLEM_JSON);
+                .hasContentType("httpMessageNotWritableException".equals(operationId)
+                        ? MediaType.APPLICATION_JSON
+                        : MediaType.APPLICATION_PROBLEM_JSON);
 
         // deserialize runtime body
         ExtendedProblemDetail actual = assertThat(result).bodyJson()

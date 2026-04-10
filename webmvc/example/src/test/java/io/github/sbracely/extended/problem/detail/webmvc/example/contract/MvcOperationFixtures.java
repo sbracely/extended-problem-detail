@@ -257,14 +257,6 @@ public final class MvcOperationFixtures {
                         mock -> mock.get().uri(BASE + "/not-acceptable-status-exception").exchange(),
                         406));
 
-        map.put("contentTooLargeException",
-                new MvcOperationFixture("default",
-                        BASE + "/content-too-large-exception", "post",
-                        mock -> mock.perform(multipart(BASE + "/content-too-large-exception")
-                                .file(new MockMultipartFile("file", "test.txt", "text/plain",
-                                        "content".getBytes(StandardCharsets.UTF_8)))),
-                        413));
-
         map.put("unsupportedMediaTypeStatusException",
                 new MvcOperationFixture("default",
                         BASE + "/unsupported-media-type-status-exception", "post",
@@ -348,19 +340,6 @@ public final class MvcOperationFixtures {
                         BASE + "/max-upload-size-exceeded-exception", "post",
                         null, // trigger provided by MvcOpenApiMultipartContractTests
                         413));
-
-        // ── api-version scenario ──────────────────────────────────────────────────────
-        map.put("invalidApiVersionException",
-                new MvcOperationFixture("api-version",
-                        BASE + "/invalid-api-version-exception", "get",
-                        null, // trigger requires api-version properties – see MvcOpenApiApiVersionContractTests
-                        400));
-
-        map.put("missingApiVersionException",
-                new MvcOperationFixture("api-version",
-                        BASE + "/missing-api-version-exception", "get",
-                        null, // trigger requires api-version properties – see MvcOpenApiApiVersionContractTests
-                        400));
 
         return map;
     }

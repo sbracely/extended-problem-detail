@@ -229,14 +229,9 @@ public class FluxOpenApiConfiguration {
                                     "Invalid request parameters.",
                                     "/flux-extended-problem-detail/unsatisfied-request-parameter-exception"),
                             "GET /flux-extended-problem-detail/unsatisfied-request-parameter-exception");
-            case "contentTooLargeException" ->
-                    new FluxErrorResponseSpec("413", "413 content too large error",
-                            problemExample("Content too large", "Content Too Large", 413, null,
-                                    "/flux-extended-problem-detail/content-too-large-exception"),
-                            "POST /flux-extended-problem-detail/content-too-large-exception with a 1MB request body");
             case "payloadTooLargeException" ->
                     new FluxErrorResponseSpec("413", "413 content too large error",
-                            problemExample("Content too large", "Content Too Large", 413, null,
+                            problemExample("Content too large", "Payload Too Large", 413, null,
                                     "/flux-extended-problem-detail/payload-too-large-exception"),
                             "POST /flux-extended-problem-detail/payload-too-large-exception with body text");
             case "serverWebInputException" ->

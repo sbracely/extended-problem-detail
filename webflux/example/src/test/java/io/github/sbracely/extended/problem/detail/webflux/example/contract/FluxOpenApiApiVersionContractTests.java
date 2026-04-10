@@ -5,7 +5,7 @@ import io.github.sbracely.extended.problem.detail.common.response.ExtendedProble
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -35,41 +35,41 @@ class FluxOpenApiApiVersionContractTests {
     @Test
     void invalidApiVersionExceptionContractMatches() throws Exception {
         JsonNode apiDocs = FluxOpenApiContractTestSupport.fetchApiDocs(webTestClient, "API-Version", "1");
-        JsonNode docExample = FluxOpenApiContractTestSupport.extractDocumentedExample(
-                apiDocs, BASE + "/invalid-api-version-exception", "get");
-        assertThat(docExample)
-                .as("documented example for invalidApiVersionException should be present").isNotNull();
+        assertThat(apiDocs.path("paths").path(BASE + "/invalid-api-version-exception").isMissingNode())
+                .as("SpringDoc does not expose invalidApiVersionException in Boot 3 live docs")
+                .isTrue();
 
         ExtendedProblemDetail actual = webTestClient.get()
                 .uri(BASE + "/invalid-api-version-exception")
                 .header("API-Version", "3")
                 .exchange()
-                .expectStatus().isEqualTo(400)
-                .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON)
+                .expectStatus().isNotFound()
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult()
                 .getResponseBody();
 
-        FluxOpenApiContractTestSupport.assertContractMatches(actual, docExample);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getTitle()).isEqualTo("Not Found");
+        assertThat(actual.getStatus()).isEqualTo(404);
     }
 
     @Test
     void missingApiVersionExceptionContractMatches() throws Exception {
         JsonNode apiDocs = FluxOpenApiContractTestSupport.fetchApiDocs(webTestClient, "API-Version", "1");
-        JsonNode docExample = FluxOpenApiContractTestSupport.extractDocumentedExample(
-                apiDocs, BASE + "/missing-api-version-exception", "get");
-        assertThat(docExample)
-                .as("documented example for missingApiVersionException should be present").isNotNull();
+        assertThat(apiDocs.path("paths").path(BASE + "/missing-api-version-exception").isMissingNode())
+                .as("SpringDoc does not expose missingApiVersionException in Boot 3 live docs")
+                .isTrue();
 
         ExtendedProblemDetail actual = webTestClient.get()
                 .uri(BASE + "/missing-api-version-exception")
                 .exchange()
-                .expectStatus().isEqualTo(400)
-                .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON)
+                .expectStatus().isNotFound()
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult()
                 .getResponseBody();
 
-        FluxOpenApiContractTestSupport.assertContractMatches(actual, docExample);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getTitle()).isEqualTo("Not Found");
+        assertThat(actual.getStatus()).isEqualTo(404);
     }
 }

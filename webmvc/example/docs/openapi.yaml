@@ -15,6 +15,7 @@ paths:
     put:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: PUT multipart/form-data /mvc-extended-problem-detail/missing-servlet-request-part-exception\
         \ without file part. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: missingServletRequestPartException
@@ -46,10 +47,12 @@ paths:
                     status: 400
                     detail: Required part 'file' is not present.
                     instance: /mvc-extended-problem-detail/missing-servlet-request-part-exception
+      x-scenario: default
   /mvc-extended-problem-detail/http-media-type-not-supported-exception:
     put:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: PUT /mvc-extended-problem-detail/http-media-type-not-supported-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: httpMediaTypeNotSupportedException
@@ -76,10 +79,12 @@ paths:
                     status: 415
                     detail: Content-Type 'null' is not supported.
                     instance: /mvc-extended-problem-detail/http-media-type-not-supported-exception
+      x-scenario: default
   /mvc-extended-problem-detail/http-media-type-not-acceptable-exception:
     put:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: PUT /mvc-extended-problem-detail/http-media-type-not-acceptable-exception\
         \ with Accept: application/xml. For the exact request setup and assertions,\
         \ see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -107,10 +112,12 @@ paths:
                     status: 406
                     detail: "Acceptable representations: [application/json]."
                     instance: /mvc-extended-problem-detail/http-media-type-not-acceptable-exception
+      x-scenario: default
   /mvc-extended-problem-detail/web-exchange-bind-exception:
     post:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST /mvc-extended-problem-detail/web-exchange-bind-exception\
         \ with application/json body {\"name\":\"abc\",\"password\":\"123\"}. For\
         \ the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -151,10 +158,12 @@ paths:
                     - type: PARAMETER
                       target: confirmPassword
                       message: Password and confirm password do not match
+      x-scenario: default
   /mvc-extended-problem-detail/unsupported-media-type-status-exception:
     post:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST /mvc-extended-problem-detail/unsupported-media-type-status-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: unsupportedMediaTypeStatusException
@@ -175,10 +184,12 @@ paths:
                     status: 415
                     detail: Could not parse Content-Type.
                     instance: /mvc-extended-problem-detail/unsupported-media-type-status-exception
+      x-scenario: default
   /mvc-extended-problem-detail/payload-too-large-exception:
     post:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST multipart/form-data /mvc-extended-problem-detail/payload-too-large-exception\
         \ with file. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: payloadTooLargeException
@@ -206,14 +217,16 @@ paths:
                   summary: Payload too large
                   value:
                     type: about:blank
-                    title: Content Too Large
+                    title: Payload Too Large
                     status: 413
                     detail: payload too large
                     instance: /mvc-extended-problem-detail/payload-too-large-exception
+      x-scenario: default
   /mvc-extended-problem-detail/method-argument-not-valid-exception:
     post:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST /mvc-extended-problem-detail/method-argument-not-valid-exception\
         \ with application/json body {\"name\":\"abc\",\"password\":\"123\"}. For\
         \ the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -254,13 +267,15 @@ paths:
                     - type: PARAMETER
                       target: confirmPassword
                       message: Password and confirm password do not match
+      x-scenario: default
   /mvc-extended-problem-detail/max-upload-size-exceeded-exception:
     post:
       tags:
       - WebMVC Example
+      - scenario:multipart-limit
       description: "Real trigger from tests: POST multipart/form-data /mvc-extended-problem-detail/max-upload-size-exceeded-exception\
         \ with a file larger than 1 byte. For the exact request setup and assertions,\
-        \ see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerRandomPortTests.java."
+        \ see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerMultipartLimitTests.java."
       operationId: maxUploadSizeExceededException
       requestBody:
         content:
@@ -286,14 +301,16 @@ paths:
                   summary: Maximum upload size exceeded
                   value:
                     type: about:blank
-                    title: Content Too Large
+                    title: Payload Too Large
                     status: 413
                     detail: Maximum upload size exceeded
                     instance: /mvc-extended-problem-detail/max-upload-size-exceeded-exception
+      x-scenario: multipart-limit
   /mvc-extended-problem-detail/http-message-not-readable-exception:
     post:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST /mvc-extended-problem-detail/http-message-not-readable-exception\
         \ with malformed application/json body. For the exact request setup and assertions,\
         \ see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -321,10 +338,12 @@ paths:
                     status: 400
                     detail: Failed to read request
                     instance: /mvc-extended-problem-detail/http-message-not-readable-exception
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-request-body:
     post:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST /mvc-extended-problem-detail/handler-method-validation-exception-request-body\
         \ with application/json body {\"name\":\"abc\"}. For the exact request setup\
         \ and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -356,10 +375,12 @@ paths:
                     - type: PARAMETER
                       target: password
                       message: Password cannot be empty
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-request-body-validation-result:
     post:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST /mvc-extended-problem-detail/handler-method-validation-exception-request-body-validation-result\
         \ with application/json body [\"\",\"a\"]. For the exact request setup and\
         \ assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -392,44 +413,12 @@ paths:
                     errors:
                     - type: PARAMETER
                       message: Element cannot contain empty values
-  /mvc-extended-problem-detail/content-too-large-exception:
-    post:
-      tags:
-      - WebMVC Example
-      description: "Real trigger from tests: POST multipart/form-data /mvc-extended-problem-detail/content-too-large-exception\
-        \ with file. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
-      operationId: contentTooLargeException
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-              required:
-              - file
-      responses:
-        "413":
-          description: 413 content too large error. See the MVC example tests for
-            concrete triggering inputs.
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
-              examples:
-                example:
-                  summary: Content too large
-                  value:
-                    type: about:blank
-                    title: Content Too Large
-                    status: 413
-                    instance: /mvc-extended-problem-detail/content-too-large-exception
+      x-scenario: default
   /mvc-extended-problem-detail/unsatisfied-servlet-request-parameter-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/unsatisfied-servlet-request-parameter-exception?type=1.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: unsatisfiedServletRequestParameterException
@@ -450,10 +439,12 @@ paths:
                     status: 400
                     detail: Invalid request parameters.
                     instance: /mvc-extended-problem-detail/unsatisfied-servlet-request-parameter-exception
+      x-scenario: default
   /mvc-extended-problem-detail/unsatisfied-request-parameter-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/unsatisfied-request-parameter-exception?type=1.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: unsatisfiedRequestParameterException
@@ -474,11 +465,13 @@ paths:
                     status: 400
                     detail: Invalid request parameters.
                     instance: /mvc-extended-problem-detail/unsatisfied-request-parameter-exception
+      x-scenario: default
   /mvc-extended-problem-detail/type-mismatch-exception:
     get:
       tags:
       - WebMVC Example
-      description: "Real trigger from tests: GET /mvc-extended-problem-detail/type-mismatch-exception?integer=a.\
+      - scenario:default
+      description: "Real trigger from tests: GET /mvc-extended-problem-detail/type-mismatch-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: typeMismatchException
       responses:
@@ -496,13 +489,14 @@ paths:
                     type: about:blank
                     title: Bad Request
                     status: 400
-                    detail: Failed to convert value of type 'java.lang.String' to
-                      required type 'java.lang.Integer'.
+                    detail: "Failed to convert 'null' with value: 'test'"
                     instance: /mvc-extended-problem-detail/type-mismatch-exception
+      x-scenario: default
   /mvc-extended-problem-detail/servlet-request-binding-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/servlet-request-binding-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: servletRequestBindingException
@@ -522,10 +516,12 @@ paths:
                     title: Bad Request
                     status: 400
                     instance: /mvc-extended-problem-detail/servlet-request-binding-exception
+      x-scenario: default
   /mvc-extended-problem-detail/server-web-input-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/server-web-input-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: serverWebInputException
@@ -546,10 +542,12 @@ paths:
                     status: 400
                     detail: server web input error
                     instance: /mvc-extended-problem-detail/server-web-input-exception
+      x-scenario: default
   /mvc-extended-problem-detail/server-error-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/server-error-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: serverErrorException
@@ -570,10 +568,12 @@ paths:
                     status: 500
                     detail: server error
                     instance: /mvc-extended-problem-detail/server-error-exception
+      x-scenario: default
   /mvc-extended-problem-detail/response-status-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/response-status-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: responseStatusException
@@ -594,10 +594,12 @@ paths:
                     status: 400
                     detail: exception
                     instance: /mvc-extended-problem-detail/response-status-exception
+      x-scenario: default
   /mvc-extended-problem-detail/org-springframework-web-server-missing-request-value-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/org-springframework-web-server-missing-request-value-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: orgSpringframeworkWebServerMissingRequestValueException
@@ -624,10 +626,12 @@ paths:
                     status: 400
                     detail: Required request param 'id' is not present.
                     instance: /mvc-extended-problem-detail/org-springframework-web-server-missing-request-value-exception
+      x-scenario: default
   /mvc-extended-problem-detail/org-spring-web-bind-missing-request-value-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/org-spring-web-bind-missing-request-value-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: orgSpringWebBindMissingRequestValueException
@@ -647,10 +651,12 @@ paths:
                     title: Bad Request
                     status: 400
                     instance: /mvc-extended-problem-detail/org-spring-web-bind-missing-request-value-exception
+      x-scenario: default
   /mvc-extended-problem-detail/not-acceptable-status-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/not-acceptable-status-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: notAcceptableStatusException
@@ -671,10 +677,12 @@ paths:
                     status: 406
                     detail: "Acceptable representations: [application/json]."
                     instance: /mvc-extended-problem-detail/not-acceptable-status-exception
+      x-scenario: default
   /mvc-extended-problem-detail/missing-servlet-request-parameter-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/missing-servlet-request-parameter-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: missingServletRequestParameterException
@@ -702,10 +710,12 @@ paths:
                     status: 400
                     detail: Required parameter 'id' is not present.
                     instance: /mvc-extended-problem-detail/missing-servlet-request-parameter-exception
+      x-scenario: default
   /mvc-extended-problem-detail/missing-request-header-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/missing-request-header-exception\
         \ without header. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: missingRequestHeaderException
@@ -732,10 +742,12 @@ paths:
                     status: 400
                     detail: Required header 'header' is not present.
                     instance: /mvc-extended-problem-detail/missing-request-header-exception
+      x-scenario: default
   /mvc-extended-problem-detail/missing-request-cookie-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/missing-request-cookie-exception\
         \ without cookieValue cookie. For the exact request setup and assertions,\
         \ see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -763,10 +775,12 @@ paths:
                     status: 400
                     detail: Required cookie 'cookieValue' is not present.
                     instance: /mvc-extended-problem-detail/missing-request-cookie-exception
+      x-scenario: default
   /mvc-extended-problem-detail/missing-matrix-variable-exception/{id}:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/missing-matrix-variable-exception/abc;list1=a,b,c.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: missingMatrixVariableException
@@ -800,10 +814,12 @@ paths:
                     status: 400
                     detail: Required path parameter 'list' is not present.
                     instance: "/mvc-extended-problem-detail/missing-matrix-variable-exception/abc;list1=a,b,c"
+      x-scenario: default
   /mvc-extended-problem-detail/method-validation-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/method-validation-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: methodValidationException
@@ -848,10 +864,12 @@ paths:
                       message: Name length must be between 6-10
                     - type: PARAMETER
                       message: Name is not valid
+      x-scenario: default
   /mvc-extended-problem-detail/method-argument-type-mismatch-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/method-argument-type-mismatch-exception?integer=a.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: methodArgumentTypeMismatchException
@@ -877,12 +895,14 @@ paths:
                     type: about:blank
                     title: Bad Request
                     status: 400
-                    detail: Failed to convert value 'a' to required type 'java.lang.Integer'.
+                    detail: "Failed to convert 'integer' with value: 'a'"
                     instance: /mvc-extended-problem-detail/method-argument-type-mismatch-exception
+      x-scenario: default
   /mvc-extended-problem-detail/method-argument-conversion-not-supported-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/method-argument-conversion-not-supported-exception?error=test-value.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: methodArgumentConversionNotSupportedException
@@ -907,13 +927,14 @@ paths:
                     type: about:blank
                     title: Internal Server Error
                     status: 500
-                    detail: Failed to convert value of type 'java.lang.String' to
-                      required type 'io.github.sbracely.extended.problem.detail.webmvc.example.request.MvcProblemDetailRequest'.
+                    detail: "Failed to convert 'error' with value: 'test-value'"
                     instance: /mvc-extended-problem-detail/method-argument-conversion-not-supported-exception
+      x-scenario: default
   /mvc-extended-problem-detail/http-request-method-not-supported-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: POST /mvc-extended-problem-detail/http-request-method-not-supported-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: httpRequestMethodNotSupportedException
@@ -934,10 +955,12 @@ paths:
                     status: 405
                     detail: Method 'POST' is not supported.
                     instance: /mvc-extended-problem-detail/http-request-method-not-supported-exception
+      x-scenario: default
   /mvc-extended-problem-detail/http-message-not-writable-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/http-message-not-writable-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: httpMessageNotWritableException
@@ -946,7 +969,7 @@ paths:
           description: 500 message not writable error. See the MVC example tests for
             concrete triggering inputs.
           content:
-            application/problem+json:
+            application/json:
               schema:
                 $ref: "#/components/schemas/ExtendedProblemDetail"
               examples:
@@ -958,10 +981,12 @@ paths:
                     status: 500
                     detail: Failed to write request
                     instance: /mvc-extended-problem-detail/http-message-not-writable-exception
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-request-part:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-request-part\
         \ with Content-Type: multipart/form-data and no file. For the exact request\
         \ setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -996,10 +1021,12 @@ paths:
                     - type: PARAMETER
                       target: file
                       message: File cannot be empty
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-request-param:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-request-param\
         \ without param and param2. For the exact request setup and assertions, see\
         \ src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -1044,10 +1071,12 @@ paths:
                     - type: PARAMETER
                       target: param2
                       message: Parameter 2 cannot be blank
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-request-header:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-request-header\
         \ with header headerValue=a. For the exact request setup and assertions, see\
         \ src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -1079,10 +1108,12 @@ paths:
                     - type: HEADER
                       target: headerValue
                       message: Minimum length is 2
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-path-variable/{id}:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-path-variable/a.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: handlerMethodValidationExceptionPathVariable
@@ -1113,10 +1144,12 @@ paths:
                     - type: PARAMETER
                       target: id
                       message: ID minimum length is 2
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-other:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-other.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: handlerMethodValidationExceptionOther
@@ -1150,10 +1183,12 @@ paths:
                     status: 400
                     detail: Validation failure
                     instance: /mvc-extended-problem-detail/handler-method-validation-exception-other
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-model-attribute:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-model-attribute.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: handlerMethodValidationExceptionModelAttribute
@@ -1184,10 +1219,12 @@ paths:
                     - type: PARAMETER
                       target: password
                       message: Password cannot be empty
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-matrix-variable/{id}:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-matrix-variable/abc;list=a,b,c.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: handlerMethodValidationExceptionMatrixVariable
@@ -1227,10 +1264,12 @@ paths:
                     - type: PARAMETER
                       target: list
                       message: Maximum size is 2
+      x-scenario: default
   /mvc-extended-problem-detail/handler-method-validation-exception-cookie-value:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/handler-method-validation-exception-cookie-value\
         \ with cookie name=a. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: handlerMethodValidationExceptionCookieValue
@@ -1261,10 +1300,12 @@ paths:
                     - type: COOKIE
                       target: name
                       message: Name length must be at least 2
+      x-scenario: default
   /mvc-extended-problem-detail/extended-error-response-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/extended-error-response-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: extendedErrorResponseException
@@ -1290,10 +1331,12 @@ paths:
                       message: Insufficient balance
                     - type: BUSINESS
                       message: Payment frequent
+      x-scenario: default
   /mvc-extended-problem-detail/error-response-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/error-response-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: errorResponseException
@@ -1313,10 +1356,12 @@ paths:
                     title: Bad Request
                     status: 400
                     instance: /mvc-extended-problem-detail/error-response-exception
+      x-scenario: default
   /mvc-extended-problem-detail/conversion-not-supported-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/conversion-not-supported-exception?data=test-value.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: conversionNotSupportedException
@@ -1341,13 +1386,14 @@ paths:
                     type: about:blank
                     title: Internal Server Error
                     status: 500
-                    detail: Failed to convert value of type 'java.lang.String' to
-                      required type 'io.github.sbracely.extended.problem.detail.webmvc.example.request.MvcProblemDetailRequest'.
+                    detail: "Failed to convert 'null' with value: 'test-value'"
                     instance: /mvc-extended-problem-detail/conversion-not-supported-exception
+      x-scenario: default
   /mvc-extended-problem-detail/async-request-timeout-exception:
     get:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: GET /mvc-extended-problem-detail/async-request-timeout-exception\
         \ and let async processing time out. For the exact request setup and assertions,\
         \ see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
@@ -1368,33 +1414,38 @@ paths:
                     title: Service Unavailable
                     status: 503
                     instance: /mvc-extended-problem-detail/async-request-timeout-exception
+      x-scenario: default
   /mvc-extended-problem-detail/async-request-not-usable-exception:
     get:
       tags:
       - WebMVC Example
-      description: "Real trigger from tests: GET /mvc-extended-problem-detail/async-request-not-usable-exception.\
-        \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerRandomPortTests.java."
+      - scenario:random-port
+      description: "Normal client-visible response is 200 text/event-stream. AsyncRequestNotUsableException\
+        \ happens only after the client disconnects or times out while the server\
+        \ is still writing, so it is not observable as a stable application/problem+json\
+        \ body. For the disconnect trigger and server-side behaviour, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerRandomPortTests.java."
       operationId: asyncRequestNotUsableException
       responses:
-        "500":
-          description: 500 async request unusable error. See the MVC example tests
-            for concrete triggering inputs.
+        "200":
+          description: 200 server-sent events stream. Normal client-visible behavior
+            is an SSE stream; AsyncRequestNotUsableException is only triggered after
+            the client disconnects while the server is still writing.
           content:
-            application/problem+json:
+            text/event-stream:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
-              examples:
-                example:
-                  summary: Async request unusable
-                  value:
-                    type: about:blank
-                    title: Internal Server Error
-                    status: 500
-                    instance: /mvc-extended-problem-detail/async-request-not-usable-exception
+                type: string
+              example: |
+                data:event 0
+
+                data:event 1
+
+                data:event 2
+      x-scenario: random-port
   /mvc-extended-problem-detail/missing-path-variable-exception:
     delete:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: DELETE /mvc-extended-problem-detail/missing-path-variable-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: missingPathVariableException
@@ -1416,10 +1467,12 @@ paths:
                     status: 500
                     detail: Required path variable 'id' is not present.
                     instance: /mvc-extended-problem-detail/missing-path-variable-exception
+      x-scenario: default
   /mvc-extended-problem-detail/method-not-allowed-exception:
     delete:
       tags:
       - WebMVC Example
+      - scenario:default
       description: "Real trigger from tests: DELETE /mvc-extended-problem-detail/method-not-allowed-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java."
       operationId: methodNotAllowedException
@@ -1440,6 +1493,7 @@ paths:
                     status: 405
                     detail: "Supported methods: [GET, POST]"
                     instance: /mvc-extended-problem-detail/method-not-allowed-exception
+      x-scenario: default
 components:
   schemas:
     MvcProblemDetailRequest:

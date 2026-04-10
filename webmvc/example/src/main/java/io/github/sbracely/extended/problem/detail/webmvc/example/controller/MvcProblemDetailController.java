@@ -396,15 +396,6 @@ public class MvcProblemDetailController {
     }
 
     /**
-     * @see PayloadTooLargeException
-     */
-    @PostMapping("/content-too-large-exception")
-    public void contentTooLargeException(@RequestPart MultipartFile file) {
-        logger.info("contentTooLargeException, file: {}", file);
-        throw new PayloadTooLargeException(new RuntimeException("content too large"));
-    }
-
-    /**
      * @see UnsupportedMediaTypeStatusException
      */
     @PostMapping("/unsupported-media-type-status-exception")

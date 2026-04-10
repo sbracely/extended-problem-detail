@@ -237,7 +237,7 @@ class FluxControllerTests {
      * @see HandlerMethodValidationException.Visitor#matrixVariable(MatrixVariable, ParameterValidationResult)
      */
     @Test
-    void handlerMethodValidationExceptionMatrixVariable() {
+    void handlerMethodValidationExceptionMatrix() {
         String uri = BASE_PATH + "/handler-method-validation-exception-matrix/abc;list=a,b,c";
         ExtendedProblemDetail extendedProblemDetail = webTestClient.get().uri(uri)
                 .exchange()

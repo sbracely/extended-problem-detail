@@ -1,37 +1,30 @@
-package io.github.sbracely.extended.problem.detail.webmvc.example.contract;
+package io.github.sbracely.extended.problem.detail.webmvc.example.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Strict OpenAPI contract tests for the <b>multipart-limit</b> configuration scenario (WebMVC).
- * <p>
- * Starts a real HTTP server with {@code spring.servlet.multipart.max-file-size=1} to verify
- * that {@code maxUploadSizeExceededException} matches its documented OpenAPI example.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
 @TestPropertySource(properties = "spring.servlet.multipart.max-file-size=1")
-class MvcOpenApiMultipartContractTests {
+class MvcControllerMultipartLimitTests {
 
-    private static final String BASE = "/mvc-extended-problem-detail";
+    private static final String BASE_PATH = "/mvc-extended-problem-detail";
 
     @LocalServerPort
     private int port;
@@ -39,17 +32,12 @@ class MvcOpenApiMultipartContractTests {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    @Autowired
-    private MockMvcTester mockMvcTester;
-
+    /**
+     * @see MaxUploadSizeExceededException
+     * @see MvcProblemDetailController#maxUploadSizeExceededException(org.springframework.web.multipart.MultipartFile)
+     */
     @Test
-    void maxUploadSizeExceededExceptionContractMatches() throws Exception {
-        JsonNode apiDocs = MvcOpenApiContractTestSupport.fetchApiDocs(mockMvcTester);
-        JsonNode docExample = MvcOpenApiContractTestSupport.extractDocumentedExample(
-                apiDocs, BASE + "/max-upload-size-exceeded-exception", "post");
-        assertThat(docExample)
-                .as("documented example for maxUploadSizeExceededException should be present").isNotNull();
-
+    void maxUploadSizeExceededException() {
         byte[] largeContent = new byte[2];
         ByteArrayResource resource = new ByteArrayResource(largeContent) {
             @Override
@@ -62,7 +50,7 @@ class MvcOpenApiMultipartContractTests {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        String uri = BASE + "/max-upload-size-exceeded-exception";
+        String uri = BASE_PATH + "/max-upload-size-exceeded-exception";
         ResponseEntity<ExtendedProblemDetail> response = testRestTemplate.postForEntity(
                 "http://localhost:" + port + uri,
                 new HttpEntity<>(body, headers),
@@ -71,7 +59,14 @@ class MvcOpenApiMultipartContractTests {
         assertThat(response.getStatusCode().value()).isEqualTo(413);
         assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PROBLEM_JSON);
 
-        ExtendedProblemDetail actual = response.getBody();
-        MvcOpenApiContractTestSupport.assertContractMatches(actual, docExample);
+        ExtendedProblemDetail extendedProblemDetail = response.getBody();
+        assertThat(extendedProblemDetail).isNotNull();
+        assertThat(extendedProblemDetail.getType()).isEqualTo(URI.create("about:blank"));
+        assertThat(extendedProblemDetail.getTitle()).isEqualTo("Payload Too Large");
+        assertThat(extendedProblemDetail.getStatus()).isEqualTo(413);
+        assertThat(extendedProblemDetail.getDetail()).isEqualTo("Maximum upload size exceeded");
+        assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
+        assertThat(extendedProblemDetail.getProperties()).isNull();
+        assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 }
