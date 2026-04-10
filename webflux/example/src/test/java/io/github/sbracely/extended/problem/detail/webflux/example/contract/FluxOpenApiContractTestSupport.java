@@ -162,8 +162,8 @@ public final class FluxOpenApiContractTestSupport {
     public static void assertAllScenarioOperationsCovered(JsonNode apiDocs, String scenario,
                                                           Map<String, ?> fixtureMap) {
         List<String> missing = new ArrayList<>();
-        apiDocs.path("paths").fields().forEachRemaining(pathEntry ->
-                pathEntry.getValue().fields().forEachRemaining(methodEntry -> {
+        apiDocs.path("paths").properties().forEach(pathEntry ->
+                pathEntry.getValue().properties().forEach(methodEntry -> {
                     JsonNode operation = methodEntry.getValue();
                     String opScenario = operation.path("x-scenario").asText(null);
                     if (scenario.equals(opScenario)) {
@@ -185,9 +185,9 @@ public final class FluxOpenApiContractTestSupport {
      */
     public static Map<String, String[]> operationsByScenario(JsonNode apiDocs, String scenario) {
         Map<String, String[]> result = new HashMap<>();
-        apiDocs.path("paths").fields().forEachRemaining(pathEntry -> {
+        apiDocs.path("paths").properties().forEach(pathEntry -> {
             String path = pathEntry.getKey();
-            pathEntry.getValue().fields().forEachRemaining(methodEntry -> {
+            pathEntry.getValue().properties().forEach(methodEntry -> {
                 String method = methodEntry.getKey();
                 JsonNode operation = methodEntry.getValue();
                 String opScenario = operation.path("x-scenario").asText(null);
