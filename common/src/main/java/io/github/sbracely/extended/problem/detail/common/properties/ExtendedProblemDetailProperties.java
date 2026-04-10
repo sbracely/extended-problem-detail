@@ -1,5 +1,6 @@
 package io.github.sbracely.extended.problem.detail.common.properties;
 
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.logging.LogLevel;
 
 /**
@@ -52,6 +53,7 @@ public class ExtendedProblemDetailProperties {
     /**
      * CommonLogging configuration for extended problem detail exception handling.
      */
+    @NestedConfigurationProperty
     private CommonLogging logging = new CommonLogging();
 
     /**
