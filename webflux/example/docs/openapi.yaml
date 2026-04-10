@@ -16,6 +16,7 @@ paths:
     post:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: POST /flux-extended-problem-detail/web-exchange-bind-exception\
         \ with application/json body {\"name\":\"abc\",\"password\":\"123\"}. For\
         \ the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -55,10 +56,12 @@ paths:
                     - type: PARAMETER
                       target: confirmPassword
                       message: Password and confirm password do not match
+      x-scenario: default
   /flux-extended-problem-detail/unsupported-media-type-status-exception:
     post:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: POST /flux-extended-problem-detail/unsupported-media-type-status-exception\
         \ without Content-Type: application/xml. For the exact request setup and assertions,\
         \ see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -78,10 +81,12 @@ paths:
                     title: Unsupported Media Type
                     status: 415
                     instance: /flux-extended-problem-detail/unsupported-media-type-status-exception
+      x-scenario: default
   /flux-extended-problem-detail/payload-too-large-exception:
     post:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: POST /flux-extended-problem-detail/payload-too-large-exception\
         \ with body text. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: payloadTooLargeException
@@ -107,10 +112,12 @@ paths:
                     title: Content Too Large
                     status: 413
                     instance: /flux-extended-problem-detail/payload-too-large-exception
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-request-part:
     post:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: POST /flux-extended-problem-detail/handler-method-validation-exception-request-part\
         \ with an empty body. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: handlerMethodValidationExceptionRequestPart
@@ -143,10 +150,12 @@ paths:
                     - type: PARAMETER
                       target: file
                       message: File cannot be empty
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-request-body:
     post:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: POST /flux-extended-problem-detail/handler-method-validation-exception-request-body\
         \ with application/json body {\"name\":\"abc\"}. For the exact request setup\
         \ and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -177,10 +186,12 @@ paths:
                     - type: PARAMETER
                       target: password
                       message: Password cannot be empty
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-request-body-validation-result:
     post:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: POST /flux-extended-problem-detail/handler-method-validation-exception-request-body-validation-result\
         \ with application/json body [\"\",\"a\"]. For the exact request setup and\
         \ assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -212,10 +223,12 @@ paths:
                     errors:
                     - type: PARAMETER
                       message: Element cannot contain empty values
+      x-scenario: default
   /flux-extended-problem-detail/content-too-large-exception:
     post:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: POST /flux-extended-problem-detail/content-too-large-exception\
         \ with a 1MB request body. For the exact request setup and assertions, see\
         \ src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -242,10 +255,12 @@ paths:
                     title: Content Too Large
                     status: 413
                     instance: /flux-extended-problem-detail/content-too-large-exception
+      x-scenario: default
   /flux-extended-problem-detail/unsatisfied-request-parameter-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/unsatisfied-request-parameter-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: unsatisfiedRequestParameterException
@@ -265,10 +280,12 @@ paths:
                     status: 400
                     detail: Invalid request parameters.
                     instance: /flux-extended-problem-detail/unsatisfied-request-parameter-exception
+      x-scenario: default
   /flux-extended-problem-detail/server-web-input-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/server-web-input-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: serverWebInputException
@@ -288,10 +305,12 @@ paths:
                     status: 400
                     detail: server web input error
                     instance: /flux-extended-problem-detail/server-web-input-exception
+      x-scenario: default
   /flux-extended-problem-detail/server-error-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/server-error-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: serverErrorException
@@ -311,10 +330,12 @@ paths:
                     status: 500
                     detail: server error
                     instance: /flux-extended-problem-detail/server-error-exception
+      x-scenario: default
   /flux-extended-problem-detail/response-status-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/response-status-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: responseStatusException
@@ -334,10 +355,12 @@ paths:
                     status: 400
                     detail: exception
                     instance: /flux-extended-problem-detail/response-status-exception
+      x-scenario: default
   /flux-extended-problem-detail/not-acceptable-status-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/not-acceptable-status-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: notAcceptableStatusException
@@ -357,10 +380,12 @@ paths:
                     status: 406
                     detail: "Acceptable representations: [application/json]."
                     instance: /flux-extended-problem-detail/not-acceptable-status-exception
+      x-scenario: default
   /flux-extended-problem-detail/missing-request-value-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/missing-request-value-exception\
         \ without id. For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: missingRequestValueException
@@ -386,10 +411,12 @@ paths:
                     status: 400
                     detail: Required query parameter 'id' is not present.
                     instance: /flux-extended-problem-detail/missing-request-value-exception
+      x-scenario: default
   /flux-extended-problem-detail/missing-api-version-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:api-version
       description: "Real trigger from tests: GET /flux-extended-problem-detail/missing-api-version-exception\
         \ without API-Version header. For the exact request setup and assertions,\
         \ see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -410,10 +437,12 @@ paths:
                     status: 400
                     detail: API version is required.
                     instance: /flux-extended-problem-detail/missing-api-version-exception
+      x-scenario: api-version
   /flux-extended-problem-detail/method-validation-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/method-validation-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: methodValidationException
@@ -457,10 +486,12 @@ paths:
                       message: Name length must be between 6-10
                     - type: PARAMETER
                       message: Name is not valid
+      x-scenario: default
   /flux-extended-problem-detail/method-not-allowed-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: DELETE /flux-extended-problem-detail/method-not-allowed-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: methodNotAllowedException
@@ -480,10 +511,12 @@ paths:
                     status: 405
                     detail: "Supported methods: [GET]"
                     instance: /flux-extended-problem-detail/method-not-allowed-exception
+      x-scenario: default
   /flux-extended-problem-detail/invalid-api-version-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:api-version
       description: "Real trigger from tests: GET /flux-extended-problem-detail/invalid-api-version-exception\
         \ with header API-Version: 3. For the exact request setup and assertions,\
         \ see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -504,10 +537,12 @@ paths:
                     status: 400
                     detail: "Invalid API version: '3.0.0'."
                     instance: /flux-extended-problem-detail/invalid-api-version-exception
+      x-scenario: api-version
   /flux-extended-problem-detail/handler-method-validation-exception-request-param:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/handler-method-validation-exception-request-param?param=&value=ab.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: handlerMethodValidationExceptionRequestParam
@@ -548,10 +583,12 @@ paths:
                     - type: PARAMETER
                       target: value
                       message: Length must be at least 5
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-request-header:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/handler-method-validation-exception-request-header\
         \ with header headerValue=. For the exact request setup and assertions, see\
         \ src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -583,10 +620,12 @@ paths:
                     - type: HEADER
                       target: headerValue
                       message: Header cannot be empty
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-path-variable/{id}:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/handler-method-validation-exception-path-variable/abc.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: handlerMethodValidationExceptionPathVariable
@@ -618,10 +657,12 @@ paths:
                     - type: PARAMETER
                       target: id
                       message: id length must be at least 5
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-other:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/handler-method-validation-exception-other.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: handlerMethodValidationExceptionOther
@@ -654,10 +695,12 @@ paths:
                     status: 400
                     detail: Validation failure
                     instance: /flux-extended-problem-detail/handler-method-validation-exception-other
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-model-attribute:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/handler-method-validation-exception-model-attribute.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: handlerMethodValidationExceptionModelAttribute
@@ -687,10 +730,12 @@ paths:
                     - type: PARAMETER
                       target: password
                       message: Password cannot be empty
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-matrix/{id}:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/handler-method-validation-exception-matrix/abc;list=a,b,c.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: handlerMethodValidationExceptionMatrix
@@ -729,10 +774,12 @@ paths:
                     - type: PARAMETER
                       target: list
                       message: list maximum size is 2
+      x-scenario: default
   /flux-extended-problem-detail/handler-method-validation-exception-cookie-value:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/handler-method-validation-exception-cookie-value\
         \ with cookie cookieValue=. For the exact request setup and assertions, see\
         \ src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
@@ -764,10 +811,12 @@ paths:
                     - type: COOKIE
                       target: cookieValue
                       message: cookie cannot be empty
+      x-scenario: default
   /flux-extended-problem-detail/extended-error-response-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/extended-error-response-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: extendedErrorResponseException
@@ -792,10 +841,12 @@ paths:
                       message: Insufficient balance
                     - type: BUSINESS
                       message: Payment frequent
+      x-scenario: default
   /flux-extended-problem-detail/error-response-exception:
     get:
       tags:
       - WebFlux Example
+      - scenario:default
       description: "Real trigger from tests: GET /flux-extended-problem-detail/error-response-exception.\
         \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
       operationId: errorResponseException
@@ -820,6 +871,7 @@ paths:
                       message: Error message 1
                     - type: BUSINESS
                       message: Error message 2
+      x-scenario: default
 components:
   schemas:
     FluxProblemDetailRequest:
