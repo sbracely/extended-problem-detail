@@ -85,7 +85,7 @@
                         <executions>
                             <execution>
                                 <id>clean-offline-openapi-docs</id>
-                                <phase>initialize</phase>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>run</goal>
                                 </goals>

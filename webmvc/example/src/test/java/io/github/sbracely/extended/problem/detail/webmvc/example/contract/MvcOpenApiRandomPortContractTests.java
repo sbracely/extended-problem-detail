@@ -1,46 +1,55 @@
 package io.github.sbracely.extended.problem.detail.webmvc.example.contract;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Strict OpenAPI contract tests for the <b>random-port</b> configuration scenario (WebMVC).
  * <p>
- * The {@code asyncRequestNotUsableException} operation requires a real HTTP connection that
- * times out before the response body can be read (the server never writes the error back to
- * the client because the async context is no longer usable). Full request/response contract
- * verification is therefore not possible via a standard HTTP client; this test instead
- * confirms the <em>documentation contract</em>:
+ * The {@code asyncRequestNotUsableException} operation normally returns an SSE stream to the
+ * client. This test verifies the client-visible contract end-to-end by:
  * <ul>
- *     <li>The operation is present in {@code /v3/api-docs}.</li>
- *     <li>The documented status code is {@code 500}.</li>
- *     <li>A response example exists and contains the expected {@code title}.</li>
+ *     <li>Fetching the operation from the live {@code /v3/api-docs} document.</li>
+ *     <li>The documented status code is {@code 200}.</li>
+ *     <li>The documented content type is {@code text/event-stream}.</li>
+ *     <li>The documented stream example contains the first emitted events.</li>
+ *     <li>A real HTTP request returns {@code 200 text/event-stream} and contains
+ *         {@code data:event 0}, {@code data:event 1}, and {@code data:event 2}.</li>
  *     <li>The operation carries the {@code x-scenario: "random-port"} extension.</li>
  * </ul>
- * The behavioural coverage for this operation lives in
- * {@code MvcControllerRandomPortTests#asyncRequestNotUsableException()}.
  */
-@SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureTestRestTemplate
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MvcOpenApiRandomPortContractTests {
 
     private static final String SCENARIO = "random-port";
     private static final String BASE = "/mvc-extended-problem-detail";
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @LocalServerPort
+    private int port;
 
     @Autowired
-    private MockMvcTester mockMvcTester;
+    private TestRestTemplate testRestTemplate;
 
     @Test
     void asyncRequestNotUsableExceptionDocumentationContract() throws Exception {
-        JsonNode apiDocs = MvcOpenApiContractTestSupport.fetchApiDocs(mockMvcTester);
+        String apiDocsBody = testRestTemplate.getForObject("http://localhost:" + port + "/v3/api-docs", String.class);
+        JsonNode apiDocs = objectMapper.readTree(apiDocsBody);
 
-        // Verify documented status code and scenario metadata
         JsonNode operation = apiDocs.path("paths")
                 .path(BASE + "/async-request-not-usable-exception")
                 .path("get");
@@ -51,26 +60,43 @@ class MvcOpenApiRandomPortContractTests {
         int docStatus = MvcOpenApiContractTestSupport.extractDocumentedStatus(
                 apiDocs, BASE + "/async-request-not-usable-exception", "get");
         assertThat(docStatus)
-                .as("documented status for asyncRequestNotUsableException should be 500")
-                .isEqualTo(500);
+                .as("documented status for asyncRequestNotUsableException should be 200")
+                .isEqualTo(200);
 
         String xScenario = operation.path("x-scenario").asText(null);
         assertThat(xScenario)
                 .as("x-scenario extension on asyncRequestNotUsableException")
                 .isEqualTo(SCENARIO);
 
-        JsonNode docExample = MvcOpenApiContractTestSupport.extractDocumentedExample(
-                apiDocs, BASE + "/async-request-not-usable-exception", "get");
-        assertThat(docExample)
-                .as("documented example for asyncRequestNotUsableException should be present")
-                .isNotNull();
+        JsonNode streamContent = operation.path("responses").path("200")
+                .path("content").path("text/event-stream");
+        assertThat(streamContent.isMissingNode())
+                .as("documented SSE content for asyncRequestNotUsableException should be present")
+                .isFalse();
+        assertThat(streamContent.path("schema").path("type").asText())
+                .as("documented schema type for asyncRequestNotUsableException")
+                .isEqualTo("string");
+        assertThat(streamContent.path("example").asText())
+                .as("documented SSE example for asyncRequestNotUsableException")
+                .contains("data:event 0")
+                .contains("data:event 1")
+                .contains("data:event 2");
 
-        assertThat(docExample.path("title").asText(null))
-                .as("documented title for asyncRequestNotUsableException")
-                .isEqualTo("Internal Server Error");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(java.util.List.of(MediaType.TEXT_EVENT_STREAM));
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "http://localhost:" + port + BASE + "/async-request-not-usable-exception",
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class);
 
-        assertThat(docExample.path("status").asInt(-1))
-                .as("documented status in example for asyncRequestNotUsableException")
-                .isEqualTo(500);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
+        assertThat(response.getHeaders().getContentType()).isNotNull();
+        assertThat(response.getHeaders().getContentType().isCompatibleWith(MediaType.TEXT_EVENT_STREAM)).isTrue();
+        assertThat(response.getBody())
+                .isNotNull()
+                .contains("data:event 0")
+                .contains("data:event 1")
+                .contains("data:event 2");
     }
 }

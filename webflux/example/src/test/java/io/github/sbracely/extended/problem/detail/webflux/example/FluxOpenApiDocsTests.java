@@ -1,5 +1,6 @@
 package io.github.sbracely.extended.problem.detail.webflux.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -7,14 +8,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "PT1M")
 class FluxOpenApiDocsTests {
 
+    private static final Path OPENAPI_JSON = Path.of("docs", "openapi.json");
+    private static final Path OPENAPI_YAML = Path.of("docs", "openapi.yaml");
+
     @Autowired
     private WebTestClient webTestClient;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void shouldExposeOpenApiJson() {
@@ -71,6 +81,30 @@ class FluxOpenApiDocsTests {
     }
 
     @Test
+    void shouldMatchStaticOpenApiJsonExport() throws Exception {
+        assertThat(OPENAPI_JSON).exists();
+        String liveJson = webTestClient.get().uri("/v3/api-docs").exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+        String exportedJson = Files.readString(OPENAPI_JSON, StandardCharsets.UTF_8);
+        assertThat(objectMapper.readTree(exportedJson)).isEqualTo(objectMapper.readTree(liveJson));
+    }
+
+    @Test
+    void shouldMatchStaticOpenApiYamlExport() throws Exception {
+        assertThat(OPENAPI_YAML).exists();
+        String liveYaml = webTestClient.get().uri("/v3/api-docs.yaml").exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult()
+                .getResponseBody();
+        String exportedYaml = Files.readString(OPENAPI_YAML, StandardCharsets.UTF_8);
+        assertThat(normalizeLineEndings(exportedYaml)).isEqualTo(normalizeLineEndings(liveYaml));
+    }
+
+    @Test
     void shouldExposeSwaggerUi() {
         String body = webTestClient.get().uri("/swagger-ui/index.html").exchange()
                 .expectStatus().isOk()
@@ -89,5 +123,9 @@ class FluxOpenApiDocsTests {
                 .returnResult()
                 .getResponseBody();
         assertThat(config).contains("/v3/api-docs");
+    }
+
+    private static String normalizeLineEndings(String content) {
+        return content.replace("\r\n", "\n").trim();
     }
 }

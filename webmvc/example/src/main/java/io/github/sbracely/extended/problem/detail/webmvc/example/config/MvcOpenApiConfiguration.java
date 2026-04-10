@@ -65,11 +65,19 @@ public class MvcOpenApiConfiguration {
                 responses.remove("202");
                 responses.remove("204");
                 responses.remove("default");
-                MvcErrorResponseSpec errorResponseSpec = responseSpec(operation.getOperationId());
-                responses.addApiResponse(errorResponseSpec.statusCode(),
-                        response(errorResponseSpec.description(), errorResponseSpec.example()));
-                operation.setDescription(testGuidance(errorResponseSpec.trigger(),
-                        testPath(operation.getOperationId())));
+                if ("asyncRequestNotUsableException".equals(operation.getOperationId())) {
+                    responses.addApiResponse("200", eventStreamResponse(
+                            "200 server-sent events stream",
+                            "data:event 0\n\ndata:event 1\n\ndata:event 2\n"));
+                    operation.setDescription(asyncRequestNotUsableGuidance(testPath(operation.getOperationId())));
+                }
+                else {
+                    MvcErrorResponseSpec errorResponseSpec = responseSpec(operation.getOperationId());
+                    responses.addApiResponse(errorResponseSpec.statusCode(),
+                            response(errorResponseSpec.description(), errorResponseSpec.example()));
+                    operation.setDescription(testGuidance(errorResponseSpec.trigger(),
+                            testPath(operation.getOperationId())));
+                }
                 String scenario = scenario(operation.getOperationId());
                 operation.addExtension("x-scenario", scenario);
                 operation.addTagsItem("scenario:" + scenario);
@@ -138,6 +146,16 @@ public class MvcOpenApiConfiguration {
         return new ApiResponse()
                 .description(description + ". See the MVC example tests for concrete triggering inputs.")
                 .content(problemDetailContent(example));
+    }
+
+    private static ApiResponse eventStreamResponse(String description, String example) {
+        return new ApiResponse()
+                .description(description + ". Normal client-visible behavior is an SSE stream; "
+                        + "AsyncRequestNotUsableException is only triggered after the client disconnects while the "
+                        + "server is still writing.")
+                .content(new Content().addMediaType("text/event-stream", new MediaType()
+                        .schema(new StringSchema())
+                        .example(example)));
     }
 
     private static Content problemDetailContent(Example example) {
@@ -536,6 +554,13 @@ public class MvcOpenApiConfiguration {
     private static String testGuidance(String trigger, String testPath) {
         return "Real trigger from tests: " + trigger + ". "
                 + "For the exact request setup and assertions, see " + testPath + ".";
+    }
+
+    private static String asyncRequestNotUsableGuidance(String testPath) {
+        return "Normal client-visible response is 200 text/event-stream. "
+                + "AsyncRequestNotUsableException happens only after the client disconnects or times out while the "
+                + "server is still writing, so it is not observable as a stable application/problem+json body. "
+                + "For the disconnect trigger and server-side behaviour, see " + testPath + ".";
     }
 
     private record MvcErrorResponseSpec(String statusCode, String description, Example example, String trigger) {
