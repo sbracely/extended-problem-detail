@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import io.github.sbracely.extended.problem.detail.webflux.example.contract.FluxOperationFixtures.FluxOperationFixture;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -61,7 +62,7 @@ class FluxOpenApiDefaultContractTests {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("defaultFixtures")
-    void contractMatches(String operationId) throws Exception {
+    void contractMatches(String operationId) {
         FluxOperationFixture fixture = FluxOperationFixtures.all().get(operationId);
         assertThat(fixture).as("fixture for %s", operationId).isNotNull();
         assertThat(fixture.requestBuilder()).as("requestBuilder for %s", operationId).isNotNull();
@@ -95,7 +96,7 @@ class FluxOpenApiDefaultContractTests {
      * Ensures that every operation documented under the {@code "default"} scenario in the
      * API docs has a matching fixture in {@link FluxOperationFixtures}.
      */
-    @org.junit.jupiter.api.Test
+    @Test
     void allDefaultOperationsCovered() {
         FluxOpenApiContractTestSupport.assertAllScenarioOperationsCovered(
                 apiDocs, SCENARIO, FluxOperationFixtures.all());
