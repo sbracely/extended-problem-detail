@@ -1,4 +1,4 @@
-package io.github.sbracely.extended.problem.detail.flux.handler;
+package io.github.sbracely.extended.problem.detail.flux.advice;
 
 import io.github.sbracely.extended.problem.detail.common.handler.ExtendedProblemDetailErrorResolver;
 import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.http.*;
 import org.springframework.validation.method.MethodValidationException;
 import org.springframework.web.ErrorResponseException;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
@@ -42,7 +42,7 @@ import java.util.List;
  * @see ExtendedProblemDetailErrorResolver
  * @since 1.0.0
  */
-@RestControllerAdvice
+@ControllerAdvice
 public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler
         implements ExtendedProblemDetailErrorResolver {
 

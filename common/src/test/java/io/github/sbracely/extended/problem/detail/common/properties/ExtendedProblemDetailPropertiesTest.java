@@ -77,4 +77,27 @@ class ExtendedProblemDetailPropertiesTest {
 
         assertThat(loggingField.isAnnotationPresent(NestedConfigurationProperty.class)).isTrue();
     }
+
+    @Test
+    void shouldMarkFieldAsNestedConfigurationProperty() throws NoSuchFieldException {
+        Field fieldField = ExtendedProblemDetailProperties.class.getDeclaredField("field");
+
+        assertThat(fieldField.isAnnotationPresent(NestedConfigurationProperty.class)).isTrue();
+    }
+
+    @Test
+    void shouldSupportFieldVisibilityConfiguration() {
+        ExtendedProblemDetailProperties properties = new ExtendedProblemDetailProperties();
+
+        properties.getField().getInclude().add("status");
+        properties.getField().getExclude().add("instance");
+        ExtendedProblemDetailProperties.FieldRule dev = new ExtendedProblemDetailProperties.FieldRule();
+        dev.getInclude().add("errors");
+        properties.getField().getProfiles().put("dev", dev);
+
+        assertThat(properties.getField().getInclude()).containsExactly("status");
+        assertThat(properties.getField().getExclude()).containsExactly("instance");
+        assertThat(properties.getField().getProfiles()).containsKey("dev");
+        assertThat(properties.getField().getProfiles().get("dev").getInclude()).containsExactly("errors");
+    }
 }
