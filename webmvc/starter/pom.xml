@@ -13,7 +13,7 @@
 
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot3-webmvc-spring-boot-starter</artifactId>
-    <version>1.1.0</version>
+    <version>3.0.0</version>
     <name>Extended Problem Detail Boot 3 WebMVC Starter</name>
     <description>Spring Boot 3 starter for Extended Problem Detail on Spring WebMVC</description>
     <url>https://github.com/sbracely/extended-problem-detail</url>
