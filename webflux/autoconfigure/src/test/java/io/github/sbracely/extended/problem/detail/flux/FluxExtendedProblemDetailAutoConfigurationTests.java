@@ -1,7 +1,7 @@
 package io.github.sbracely.extended.problem.detail.flux;
 
 import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
-import io.github.sbracely.extended.problem.detail.flux.handler.FluxExtendedProblemDetailExceptionHandler;
+import io.github.sbracely.extended.problem.detail.flux.advice.FluxExtendedProblemDetailExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;

@@ -1,7 +1,7 @@
 package io.github.sbracely.extended.problem.detail.mvc;
 
 import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
-import io.github.sbracely.extended.problem.detail.mvc.handler.MvcExtendedProblemDetailExceptionHandler;
+import io.github.sbracely.extended.problem.detail.mvc.advice.MvcExtendedProblemDetailExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

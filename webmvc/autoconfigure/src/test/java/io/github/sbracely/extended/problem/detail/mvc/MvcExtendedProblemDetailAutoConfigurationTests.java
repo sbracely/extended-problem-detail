@@ -1,7 +1,7 @@
 package io.github.sbracely.extended.problem.detail.mvc;
 
 import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
-import io.github.sbracely.extended.problem.detail.mvc.handler.MvcExtendedProblemDetailExceptionHandler;
+import io.github.sbracely.extended.problem.detail.mvc.advice.MvcExtendedProblemDetailExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;

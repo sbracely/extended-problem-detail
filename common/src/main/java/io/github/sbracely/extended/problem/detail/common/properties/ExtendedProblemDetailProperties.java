@@ -3,6 +3,11 @@ package io.github.sbracely.extended.problem.detail.common.properties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.logging.LogLevel;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Extended Problem Detail Configuration Properties Base Class.
  * <p>
@@ -57,6 +62,12 @@ public class ExtendedProblemDetailProperties {
     private CommonLogging logging = new CommonLogging();
 
     /**
+     * Field visibility configuration for ProblemDetail responses.
+     */
+    @NestedConfigurationProperty
+    private FieldVisibility field = new FieldVisibility();
+
+    /**
      * Creates a new instance with default property values.
      */
     public ExtendedProblemDetailProperties() {
@@ -96,6 +107,24 @@ public class ExtendedProblemDetailProperties {
      */
     public void setLogging(CommonLogging logging) {
         this.logging = logging;
+    }
+
+    /**
+     * Gets the field visibility configuration.
+     *
+     * @return the field visibility configuration
+     */
+    public FieldVisibility getField() {
+        return field;
+    }
+
+    /**
+     * Sets the field visibility configuration.
+     *
+     * @param field the field visibility configuration to set
+     */
+    public void setField(FieldVisibility field) {
+        this.field = field;
     }
 
     /**
@@ -163,6 +192,143 @@ public class ExtendedProblemDetailProperties {
          */
         public void setPrintStackTrace(boolean printStackTrace) {
             this.printStackTrace = printStackTrace;
+        }
+    }
+
+    /**
+     * Field visibility configuration shared by both global and profile-specific settings.
+     */
+    public static class FieldVisibility {
+        /**
+         * default
+         */
+        public FieldVisibility() {
+        }
+
+        /**
+         * Fields that should be explicitly included in the response.
+         */
+        private Set<String> include = new LinkedHashSet<>();
+
+        /**
+         * Fields that should be excluded from the response.
+         */
+        private Set<String> exclude = new LinkedHashSet<>();
+
+        /**
+         * Profile-specific field visibility settings.
+         */
+        private Map<String, FieldRule> profiles = new LinkedHashMap<>();
+
+        /**
+         * Gets the explicitly included fields.
+         *
+         * @return the fields to include
+         */
+        public Set<String> getInclude() {
+            return include;
+        }
+
+        /**
+         * Sets the explicitly included fields.
+         *
+         * @param include the fields to include
+         */
+        public void setInclude(Set<String> include) {
+            this.include = include;
+        }
+
+        /**
+         * Gets the explicitly excluded fields.
+         *
+         * @return the fields to exclude
+         */
+        public Set<String> getExclude() {
+            return exclude;
+        }
+
+        /**
+         * Sets the explicitly excluded fields.
+         *
+         * @param exclude the fields to exclude
+         */
+        public void setExclude(Set<String> exclude) {
+            this.exclude = exclude;
+        }
+
+        /**
+         * Gets the profile-specific field rules.
+         *
+         * @return the profile-specific field rules
+         */
+        public Map<String, FieldRule> getProfiles() {
+            return profiles;
+        }
+
+        /**
+         * Sets the profile-specific field rules.
+         *
+         * @param profiles the profile-specific field rules
+         */
+        public void setProfiles(Map<String, FieldRule> profiles) {
+            this.profiles = profiles;
+        }
+    }
+
+    /**
+     * Profile-specific field visibility configuration.
+     */
+    public static class FieldRule {
+        /**
+         * default
+         */
+        public FieldRule() {
+        }
+
+        /**
+         * Fields that should be explicitly included for the profile.
+         */
+        private Set<String> include = new LinkedHashSet<>();
+
+        /**
+         * Fields that should be excluded for the profile.
+         */
+        private Set<String> exclude = new LinkedHashSet<>();
+
+        /**
+         * Gets the explicitly included fields.
+         *
+         * @return the fields to include
+         */
+        public Set<String> getInclude() {
+            return include;
+        }
+
+        /**
+         * Sets the explicitly included fields.
+         *
+         * @param include the fields to include
+         */
+        public void setInclude(Set<String> include) {
+            this.include = include;
+        }
+
+        /**
+         * Gets the explicitly excluded fields.
+         *
+         * @return the fields to exclude
+         */
+        public Set<String> getExclude() {
+            return exclude;
+        }
+
+        /**
+         * Sets the explicitly excluded fields.
+         *
+         * @param exclude the fields to exclude
+         */
+        public void setExclude(Set<String> exclude) {
+            this.exclude = exclude;
         }
     }
 

@@ -1,4 +1,4 @@
-package io.github.sbracely.extended.problem.detail.mvc.handler;
+package io.github.sbracely.extended.problem.detail.mvc.advice;
 
 import io.github.sbracely.extended.problem.detail.common.handler.ExtendedProblemDetailErrorResolver;
 import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
@@ -60,7 +60,7 @@ import java.util.List;
  * @see ExtendedProblemDetailErrorResolver
  * @since 1.0.0
  */
-@RestControllerAdvice
+@ControllerAdvice
 public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExceptionHandler
         implements ExtendedProblemDetailErrorResolver {
 
