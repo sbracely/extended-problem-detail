@@ -88,7 +88,8 @@ class FluxExtendedProblemDetailAutoConfigurationTests {
                         "spring.profiles.active=dev,prod",
                         "extended.problem-detail.field.hide[0]=title",
                         "extended.problem-detail.field.profiles.dev.hide[0]=status",
-                        "extended.problem-detail.field.profiles.prod.hide[0]=detail"
+                        "extended.problem-detail.field.profiles.prod.hide[0]=detail",
+                        "extended.problem-detail.field.profiles.prod.hide[1]=errors.target"
                 )
                 .run(context -> {
                     ProblemDetailFieldVisibility fieldVisibility = context.getBean(ProblemDetailFieldVisibility.class);
@@ -96,6 +97,7 @@ class FluxExtendedProblemDetailAutoConfigurationTests {
                     assertThat(fieldVisibility.isVisible("title")).isTrue();
                     assertThat(fieldVisibility.isVisible("status")).isFalse();
                     assertThat(fieldVisibility.isVisible("detail")).isFalse();
+                    assertThat(fieldVisibility.isErrorFieldVisible("target")).isFalse();
                 });
     }
 
