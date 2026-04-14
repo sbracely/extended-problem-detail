@@ -1,4 +1,4 @@
-package io.github.sbracely.extended.problem.detail.common.response;
+package io.github.sbracely.extended.problem.detail.common.field.hide;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

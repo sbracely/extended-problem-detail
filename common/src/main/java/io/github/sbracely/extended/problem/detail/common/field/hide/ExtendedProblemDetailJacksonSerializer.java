@@ -1,8 +1,9 @@
-package io.github.sbracely.extended.problem.detail.common.response;
+package io.github.sbracely.extended.problem.detail.common.field.hide;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 
 /**
  * Jackson serializer for ExtendedProblemDetail that applies field visibility rules.
