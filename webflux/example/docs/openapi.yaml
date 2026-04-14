@@ -811,6 +811,30 @@ paths:
                     - type: BUSINESS
                       message: Error message 2
       x-scenario: default
+  /flux-extended-problem-detail/no-resource-found:
+    get:
+      tags:
+      - scenario:default
+      description: "Real trigger from tests: GET /flux-extended-problem-detail/no-resource-found.\
+        \ For the exact request setup and assertions, see src/test/java/io/github/sbracely/extended/problem/detail/webflux/example/controller/FluxControllerTests.java."
+      operationId: noResourceFoundException
+      responses:
+        "404":
+          description: 404 no resource found error. See the WebFlux example tests
+            for concrete triggering inputs.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ExtendedProblemDetail"
+              examples:
+                example:
+                  summary: No resource found
+                  value:
+                    type: about:blank
+                    title: Not Found
+                    status: 404
+                    instance: /flux-extended-problem-detail/no-resource-found
+      x-scenario: default
 components:
   schemas:
     FluxProblemDetailRequest:

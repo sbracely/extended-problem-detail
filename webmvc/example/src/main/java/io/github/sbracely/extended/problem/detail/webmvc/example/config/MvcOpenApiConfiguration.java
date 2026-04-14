@@ -2,6 +2,8 @@ package io.github.sbracely.extended.problem.detail.webmvc.example.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.examples.Example;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.ArraySchema;
@@ -58,6 +60,7 @@ public class MvcOpenApiConfiguration {
             if (openApi.getPaths() == null) {
                 return;
             }
+            registerSyntheticOperations(openApi);
             openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
                 ApiResponses responses = operation.getResponses();
                 responses.remove("200");
@@ -85,6 +88,31 @@ public class MvcOpenApiConfiguration {
                 operation.addTagsItem("scenario:" + scenario);
             }));
         };
+    }
+
+    private static void registerSyntheticOperations(OpenAPI openApi) {
+        addSyntheticGetOperation(openApi,
+                "/mvc-extended-problem-detail/no-resource-found-exception",
+                "noResourceFoundException");
+        addSyntheticGetOperation(openApi,
+                "/mvc-extended-problem-detail/no-handler-found-exception",
+                "noHandlerFoundException");
+        addSyntheticGetOperation(openApi,
+                "/actuator/demo/{name}",
+                "invalidEndpointBadRequestException");
+    }
+
+    private static void addSyntheticGetOperation(OpenAPI openApi, String path, String operationId) {
+        PathItem pathItem = openApi.getPaths().get(path);
+        if (pathItem == null) {
+            pathItem = new PathItem();
+            openApi.getPaths().addPathItem(path, pathItem);
+        }
+        if (pathItem.getGet() == null) {
+            pathItem.setGet(new Operation()
+                    .operationId(operationId)
+                    .responses(new ApiResponses()));
+        }
     }
 
     private static void ensureProblemSchemas(OpenAPI openApi) {
@@ -275,6 +303,18 @@ public class MvcOpenApiConfiguration {
                             problemExample("Server web input error", "Bad Request", 400, "server web input error",
                                     "/mvc-extended-problem-detail/server-web-input-exception"),
                             "GET /mvc-extended-problem-detail/server-web-input-exception");
+            case "noResourceFoundException" ->
+                    new MvcErrorResponseSpec("404", "404 no resource found error",
+                            problemExample("No resource found", "Not Found", 404,
+                                    "No static resource mvc-extended-problem-detail/no-resource-found-exception.",
+                                    "/mvc-extended-problem-detail/no-resource-found-exception"),
+                            "GET /mvc-extended-problem-detail/no-resource-found-exception");
+            case "noHandlerFoundException" ->
+                    new MvcErrorResponseSpec("404", "404 no handler found error",
+                            problemExample("No handler found", "Not Found", 404,
+                                    "No endpoint GET /mvc-extended-problem-detail/no-handler-found-exception.",
+                                    "/mvc-extended-problem-detail/no-handler-found-exception"),
+                            "GET /mvc-extended-problem-detail/no-handler-found-exception with spring.web.resources.add-mappings=false");
             case "missingServletRequestPartException" ->
                     new MvcErrorResponseSpec("400", "400 missing request part error",
                             problemExample("Missing request part", "Bad Request", 400,
@@ -331,6 +371,11 @@ public class MvcOpenApiConfiguration {
                     new MvcErrorResponseSpec("400", "400 missing request parameter error",
                             genericBadRequestProblemDetailExample(),
                             "GET /mvc-extended-problem-detail/missing-servlet-request-parameter-exception");
+            case "invalidEndpointBadRequestException" ->
+                    new MvcErrorResponseSpec("400", "400 invalid actuator endpoint request error",
+                            problemExample("Invalid actuator endpoint request", "Bad Request", 400, null,
+                                    "/actuator/demo/name"),
+                            "GET /actuator/demo/name with management.endpoints.web.exposure.include=demo");
             case "payloadTooLargeException" ->
                     new MvcErrorResponseSpec("413", "413 payload too large error",
                             problemExample("Payload too large", "Payload Too Large", 413, "payload too large",
@@ -543,11 +588,16 @@ public class MvcOpenApiConfiguration {
 
     private static String testPath(String operationId) {
         return switch (operationId) {
-            case "asyncRequestNotUsableException",
-                 "invalidApiVersionException", "missingApiVersionException" ->
-                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerRandomPortTests.java";
+            case "asyncRequestNotUsableException" ->
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/open/api/MvcOpenApiRandomPortContractTests.java";
             case "maxUploadSizeExceededException" ->
-                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerMultipartLimitTests.java";
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/open/api/MvcOpenApiMultipartContractTests.java";
+            case "invalidApiVersionException", "missingApiVersionException" ->
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/open/api/MvcOpenApiApiVersionContractTests.java";
+            case "noHandlerFoundException" ->
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/open/api/MvcOpenApiNoHandlerFoundContractTests.java";
+            case "invalidEndpointBadRequestException" ->
+                    "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/open/api/MvcOpenApiActuatorContractTests.java";
             default ->
                     "src/test/java/io/github/sbracely/extended/problem/detail/webmvc/example/controller/MvcControllerTests.java";
         };
@@ -558,6 +608,8 @@ public class MvcOpenApiConfiguration {
             case "asyncRequestNotUsableException" -> "random-port";
             case "maxUploadSizeExceededException" -> "multipart-limit";
             case "invalidApiVersionException", "missingApiVersionException" -> "api-version";
+            case "noHandlerFoundException" -> "no-handler-found";
+            case "invalidEndpointBadRequestException" -> "actuator-endpoint";
             default -> "default";
         };
     }

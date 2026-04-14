@@ -2,6 +2,8 @@ package io.github.sbracely.extended.problem.detail.webflux.example.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.examples.Example;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.ArraySchema;
@@ -58,6 +60,7 @@ public class FluxOpenApiConfiguration {
             if (openApi.getPaths() == null) {
                 return;
             }
+            registerSyntheticOperations(openApi);
             openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
                 ApiResponses responses = operation.getResponses();
                 responses.remove("200");
@@ -75,6 +78,25 @@ public class FluxOpenApiConfiguration {
                 operation.addTagsItem("scenario:" + scenario);
             }));
         };
+    }
+
+    private static void registerSyntheticOperations(OpenAPI openApi) {
+        addSyntheticGetOperation(openApi,
+                "/flux-extended-problem-detail/no-resource-found",
+                "noResourceFoundException");
+    }
+
+    private static void addSyntheticGetOperation(OpenAPI openApi, String path, String operationId) {
+        PathItem pathItem = openApi.getPaths().get(path);
+        if (pathItem == null) {
+            pathItem = new PathItem();
+            openApi.getPaths().addPathItem(path, pathItem);
+        }
+        if (pathItem.getGet() == null) {
+            pathItem.setGet(new Operation()
+                    .operationId(operationId)
+                    .responses(new ApiResponses()));
+        }
     }
 
     private static void ensureProblemSchemas(OpenAPI openApi) {
@@ -239,6 +261,11 @@ public class FluxOpenApiConfiguration {
                             problemExample("Server web input error", "Bad Request", 400, "server web input error",
                                     "/flux-extended-problem-detail/server-web-input-exception"),
                             "GET /flux-extended-problem-detail/server-web-input-exception");
+            case "noResourceFoundException" ->
+                    new FluxErrorResponseSpec("404", "404 no resource found error",
+                            problemExample("No resource found", "Not Found", 404, null,
+                                    "/flux-extended-problem-detail/no-resource-found"),
+                            "GET /flux-extended-problem-detail/no-resource-found");
             case "serverErrorException" ->
                     new FluxErrorResponseSpec("500", "500 server error", serverProblemDetailExample(),
                             "GET /flux-extended-problem-detail/server-error-exception");

@@ -91,6 +91,12 @@ public final class FluxOperationFixtures {
                         client -> client.get().uri(BASE + "/server-web-input-exception").exchange(),
                         400));
 
+        map.put("noResourceFoundException",
+                new FluxOperationFixture("default",
+                        BASE + "/no-resource-found", "get",
+                        client -> client.get().uri(BASE + "/no-resource-found").exchange(),
+                        404));
+
         map.put("serverErrorException",
                 new FluxOperationFixture("default",
                         BASE + "/server-error-exception", "get",
