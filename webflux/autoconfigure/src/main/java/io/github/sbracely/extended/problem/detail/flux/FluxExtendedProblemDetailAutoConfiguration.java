@@ -2,17 +2,22 @@ package io.github.sbracely.extended.problem.detail.flux;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import io.github.sbracely.extended.problem.detail.common.condition.FieldHideConfiguredCondition;
+import io.github.sbracely.extended.problem.detail.common.condition.LoggingEnabledCondition;
 import io.github.sbracely.extended.problem.detail.common.field.hide.ExtendedProblemDetailJacksonSerializer;
-import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
 import io.github.sbracely.extended.problem.detail.common.field.hide.ProblemDetailFieldVisibility;
 import io.github.sbracely.extended.problem.detail.common.field.hide.ProblemDetailJacksonSerializer;
+import io.github.sbracely.extended.problem.detail.common.logging.ExtendedProblemDetailLog;
 import io.github.sbracely.extended.problem.detail.flux.advice.FluxExtendedProblemDetailExceptionHandler;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.core.env.Environment;
 /**
  * Spring WebFlux Extended Problem Detail Auto Configuration Class.
@@ -62,6 +67,7 @@ public class FluxExtendedProblemDetailAutoConfiguration {
      * @return ExtendedProblemDetailLog instance
      */
     @Bean
+    @Conditional(LoggingEnabledCondition.class)
     @ConditionalOnMissingBean
     public ExtendedProblemDetailLog extendedProblemDetailLog(FluxExtendedProblemDetailProperties properties) {
         return new ExtendedProblemDetailLog(properties.getLogging().getAtLevel(), properties.getLogging().isPrintStackTrace());
@@ -75,6 +81,7 @@ public class FluxExtendedProblemDetailAutoConfiguration {
      * @return the effective field visibility rules
      */
     @Bean
+    @Conditional(FieldHideConfiguredCondition.class)
     @ConditionalOnMissingBean
     public ProblemDetailFieldVisibility problemDetailFieldVisibility(
             FluxExtendedProblemDetailProperties properties,
@@ -89,6 +96,7 @@ public class FluxExtendedProblemDetailAutoConfiguration {
      * @return the object mapper builder customizer
      */
     @Bean
+    @ConditionalOnBean(ProblemDetailFieldVisibility.class)
     public Module extendedProblemDetailJacksonModule(
             ProblemDetailFieldVisibility fieldVisibility) {
         SimpleModule module = new SimpleModule();
@@ -105,8 +113,9 @@ public class FluxExtendedProblemDetailAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public FluxExtendedProblemDetailExceptionHandler requestExceptionHandler(ExtendedProblemDetailLog extendedProblemDetailLog) {
-        return new FluxExtendedProblemDetailExceptionHandler(extendedProblemDetailLog);
+    public FluxExtendedProblemDetailExceptionHandler requestExceptionHandler(
+            ObjectProvider<ExtendedProblemDetailLog> extendedProblemDetailLog) {
+        return new FluxExtendedProblemDetailExceptionHandler(extendedProblemDetailLog.getIfAvailable());
     }
 
 }
