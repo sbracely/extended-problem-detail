@@ -1,11 +1,10 @@
 package io.github.sbracely.extended.problem.detail.common.field.hide;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import io.github.sbracely.extended.problem.detail.common.response.Error;
 import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import org.springframework.http.ProblemDetail;
-import tools.jackson.core.JacksonException;
-import tools.jackson.core.JsonGenerator;
-import tools.jackson.databind.SerializationContext;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -54,13 +53,13 @@ final class ProblemDetailJacksonSerializerSupport {
 
     private static void writeErrors(
             JsonGenerator gen,
-            SerializationContext provider,
+            SerializerProvider provider,
             ProblemDetailFieldVisibility fieldVisibility,
-            List<Error> errors) throws JacksonException {
+            List<Error> errors) throws java.io.IOException {
         if (!fieldVisibility.isErrorsVisible() || isEmpty(errors)) {
             return;
         }
-        gen.writeName("errors");
+        gen.writeFieldName("errors");
         gen.writeStartArray();
         for (Error error : errors) {
             if (error == null) {
@@ -74,9 +73,9 @@ final class ProblemDetailJacksonSerializerSupport {
 
     private static void writeError(
             JsonGenerator gen,
-            SerializationContext provider,
+            SerializerProvider provider,
             ProblemDetailFieldVisibility fieldVisibility,
-            Error error) throws JacksonException {
+            Error error) throws java.io.IOException {
         gen.writeStartObject();
         writeField(gen, provider, fieldVisibility.isErrorFieldVisible("type"), "type", error.type());
         writeField(gen, provider, fieldVisibility.isErrorFieldVisible("target"), "target", error.target());
