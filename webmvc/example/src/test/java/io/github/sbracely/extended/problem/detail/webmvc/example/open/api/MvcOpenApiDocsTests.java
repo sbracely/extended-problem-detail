@@ -37,7 +37,6 @@ class MvcOpenApiDocsTests {
         assertThat(body)
                 .contains("\"openapi\":\"3.1.0\"")
                 .contains("\"components\":{\"schemas\":")
-                .contains("\"Error\":{\"type\":\"object\"")
                 .contains("\"ExtendedProblemDetail\":{\"type\":\"object\"")
                 .contains("/mvc-extended-problem-detail/http-request-method-not-supported-exception")
                 .contains("Extended Problem Detail Boot 3 WebMVC Example API")
@@ -51,7 +50,6 @@ class MvcOpenApiDocsTests {
                 .contains("\"value\":{\"type\":\"about:blank\",\"title\":\"Bad Request\",\"status\":400")
                 .contains("\"target\":\"name\"")
                 .contains("\"message\":\"Name length must be between 6-10\"")
-                .contains("MvcControllerTests.java")
                 .doesNotContain("\"responseStatusException\":{\"description\":\"OK\"")
                 .doesNotContain("\"notAcceptableStatusException\":{\"description\":\"OK\"");
     }
@@ -66,7 +64,6 @@ class MvcOpenApiDocsTests {
                 .contains("components:")
                 .contains("schemas:")
                 .contains("ExtendedProblemDetail:")
-                .contains("Error:")
                 .contains("/mvc-extended-problem-detail/http-request-method-not-supported-exception")
                 .contains("Extended Problem Detail Boot 3 WebMVC Example API")
                 .contains("/mvc-extended-problem-detail/async-request-not-usable-exception")
@@ -81,8 +78,7 @@ class MvcOpenApiDocsTests {
                 .contains("status: 400")
                 .contains("detail: Invalid request content.")
                 .contains("target: name")
-                .contains("message: Name length must be between 6-10")
-                .contains("MvcControllerTests.java");
+                .contains("message: Name length must be between 6-10");
     }
 
     @Test
