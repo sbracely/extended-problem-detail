@@ -12,8 +12,16 @@ import io.github.sbracely.extended.problem.detail.common.response.Error;
  */
 public class ErrorJacksonSerializer extends StdSerializer<Error> {
 
+    /**
+     * Effective visibility rules for fields in {@code errors[]} entries.
+     */
     private final ProblemDetailFieldVisibility fieldVisibility;
 
+    /**
+     * Creates a serializer that applies the given field visibility rules.
+     *
+     * @param fieldVisibility the effective field visibility rules
+     */
     public ErrorJacksonSerializer(ProblemDetailFieldVisibility fieldVisibility) {
         super(Error.class);
         this.fieldVisibility = fieldVisibility;
