@@ -1,12 +1,12 @@
 package io.github.sbracely.extended.problem.detail.common.logging;
 
+import io.github.sbracely.extended.problem.detail.common.properties.ExtendedProblemDetailProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
-import io.github.sbracely.extended.problem.detail.common.properties.ExtendedProblemDetailProperties;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,6 +18,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class ExtendedProblemDetailStartupLogger implements ApplicationListener<ApplicationReadyEvent> {
 
     static final String ENABLED_PROPERTY = "extended.problem-detail.enabled";
+
+    static final String LOGGING_PROPERTY = "extended.problem-detail.logging";
 
     static final String LOGGING_AT_LEVEL_PROPERTY = "extended.problem-detail.logging.at-level";
 
@@ -51,11 +53,12 @@ public final class ExtendedProblemDetailStartupLogger implements ApplicationList
             return;
         }
         if (this.logger.isInfoEnabled()) {
-            ExtendedProblemDetailProperties.CommonLogging loggingDefaults =
-                    new ExtendedProblemDetailProperties.CommonLogging();
+            ExtendedProblemDetailProperties.CommonLogging logging = Binder.get(this.environment)
+                    .bind(LOGGING_PROPERTY, ExtendedProblemDetailProperties.CommonLogging.class)
+                    .orElseGet(ExtendedProblemDetailProperties.CommonLogging::new);
             this.logger.info("Extended Problem Detail is enabled by default for " + this.stackName
-                    + ". Defaults: " + LOGGING_AT_LEVEL_PROPERTY + "=" + loggingDefaults.getAtLevel() + ", "
-                    + LOGGING_PRINT_STACK_TRACE_PROPERTY + "=" + loggingDefaults.isPrintStackTrace()
+                    + ". Logging: " + LOGGING_AT_LEVEL_PROPERTY + "=" + logging.getAtLevel() + ", "
+                    + LOGGING_PRINT_STACK_TRACE_PROPERTY + "=" + logging.isPrintStackTrace()
                     + ". To disable it, set '"
                     + ENABLED_PROPERTY + "=false'");
         }
