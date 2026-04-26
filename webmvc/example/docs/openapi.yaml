@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
-  title: Extended Problem Detail Boot 4 WebMVC Example API
-  description: Example Spring Boot 4 WebMVC endpoints that demonstrate Extended Problem
+  title: Extended Problem Detail Boot 3 WebMVC Example API
+  description: Example Spring Boot 3 WebMVC endpoints that demonstrate Extended Problem
     Detail responses.
   version: 1.1.0
 servers:
@@ -219,7 +219,7 @@ paths:
                 example:
                   description: example
                   value:
-                    title: Content Too Large
+                    title: Payload Too Large
                     status: 413
                     detail: payload too large
                     instance: /mvc-extended-problem-detail/payload-too-large-exception
@@ -296,7 +296,7 @@ paths:
                 example:
                   description: example
                   value:
-                    title: Content Too Large
+                    title: Payload Too Large
                     status: 413
                     detail: Maximum upload size exceeded
                     instance: /mvc-extended-problem-detail/max-upload-size-exceeded-exception
@@ -405,36 +405,6 @@ paths:
                     errors:
                     - type: PARAMETER
                       message: Element cannot contain empty values
-  /mvc-extended-problem-detail/content-too-large-exception:
-    post:
-      tags:
-      - WebMVC Example
-      operationId: contentTooLargeException
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-              required:
-              - file
-      responses:
-        "413":
-          description: ContentTooLargeException
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
-              examples:
-                example:
-                  description: example
-                  value:
-                    title: Content Too Large
-                    status: 413
-                    instance: /mvc-extended-problem-detail/content-too-large-exception
   /mvc-extended-problem-detail/unsatisfied-servlet-request-parameter-exception:
     get:
       tags:
@@ -770,30 +740,6 @@ paths:
                     status: 400
                     detail: Required path parameter 'list' is not present.
                     instance: "/mvc-extended-problem-detail/missing-matrix-variable-exception/abc;list1=a,b,c"
-  /mvc-extended-problem-detail/missing-api-version-exception:
-    get:
-      tags:
-      - WebMVC Example
-      operationId: missingApiVersionException
-      parameters:
-      - name: API-Version
-        in: header
-        example: 1
-      responses:
-        "400":
-          description: MissingApiVersionException
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
-              examples:
-                example:
-                  description: example
-                  value:
-                    title: Bad Request
-                    status: 400
-                    detail: API version is required.
-                    instance: /mvc-extended-problem-detail/missing-api-version-exception
   /mvc-extended-problem-detail/method-validation-exception:
     get:
       tags:
@@ -893,30 +839,6 @@ paths:
                     status: 500
                     detail: "Failed to convert 'error' with value: 'test-value'"
                     instance: /mvc-extended-problem-detail/method-argument-conversion-not-supported-exception
-  /mvc-extended-problem-detail/invalid-api-version-exception:
-    get:
-      tags:
-      - WebMVC Example
-      operationId: invalidApiVersionException
-      parameters:
-      - name: API-Version
-        in: header
-        example: 3
-      responses:
-        "400":
-          description: InvalidApiVersionException
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
-              examples:
-                example:
-                  description: example
-                  value:
-                    title: Bad Request
-                    status: 400
-                    detail: "Invalid API version: '3.0.0'."
-                    instance: /mvc-extended-problem-detail/invalid-api-version-exception
   /mvc-extended-problem-detail/http-request-method-not-supported-exception:
     get:
       tags:
@@ -1421,6 +1343,7 @@ paths:
                 example:
                   summary: No resource found
                   value:
+                    type: about:blank
                     title: Not Found
                     status: 404
                     detail: No static resource mvc-extended-problem-detail/no-resource-found-exception.
@@ -1445,6 +1368,7 @@ paths:
                 example:
                   summary: No handler found
                   value:
+                    type: about:blank
                     title: Not Found
                     status: 404
                     detail: No endpoint GET /mvc-extended-problem-detail/no-handler-found-exception.
@@ -1468,34 +1392,11 @@ paths:
                 example:
                   summary: Invalid actuator endpoint request
                   value:
+                    type: about:blank
                     title: Bad Request
                     status: 400
                     detail: "Missing parameters: param1,param2"
                     instance: /actuator/demo/name
-  /not-acceptable-api-version:
-    get:
-      tags:
-      - Supplemental Operations
-      description: "Matches the documented example when API version negotiation is\
-        \ enabled for the `API-Version` header (for example, `spring.mvc.apiversion.use.header=API-Version`\
-        \ and `spring.mvc.apiversion.supported=1,2`). The example application registers\
-        \ a versioned `GET /not-acceptable-api-version` handler only in that setup."
-      operationId: notAcceptableApiVersionException
-      responses:
-        "400":
-          description: 400 not acceptable API version error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
-              examples:
-                example:
-                  summary: Not acceptable API version
-                  value:
-                    title: Bad Request
-                    status: 400
-                    detail: "Invalid API version: '2.0.0'."
-                    instance: /not-acceptable-api-version
 components:
   schemas:
     ExtendedProblemDetail:

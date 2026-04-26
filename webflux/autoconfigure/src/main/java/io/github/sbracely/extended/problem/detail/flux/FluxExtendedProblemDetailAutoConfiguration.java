@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.github.sbracely.extended.problem.detail.common.condition.FieldHideConfiguredCondition;
 import io.github.sbracely.extended.problem.detail.common.condition.LoggingEnabledCondition;
+import io.github.sbracely.extended.problem.detail.common.field.hide.ErrorJacksonSerializer;
 import io.github.sbracely.extended.problem.detail.common.field.hide.ExtendedProblemDetailJacksonSerializer;
 import io.github.sbracely.extended.problem.detail.common.field.hide.ProblemDetailFieldVisibility;
 import io.github.sbracely.extended.problem.detail.common.field.hide.ProblemDetailJacksonSerializer;
@@ -103,6 +104,7 @@ public class FluxExtendedProblemDetailAutoConfiguration {
         SimpleModule module = new SimpleModule();
         module.addSerializer(new ProblemDetailJacksonSerializer(fieldVisibility));
         module.addSerializer(new ExtendedProblemDetailJacksonSerializer(fieldVisibility));
+        module.addSerializer(new ErrorJacksonSerializer(fieldVisibility));
         return module;
     }
 

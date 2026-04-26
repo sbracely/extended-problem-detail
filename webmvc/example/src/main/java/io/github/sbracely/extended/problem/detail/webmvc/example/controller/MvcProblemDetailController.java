@@ -1049,28 +1049,6 @@ public class MvcProblemDetailController {
     }
 
     /**
-     * @see ContentTooLargeException
-     */
-    @ApiResponse(
-            responseCode = "413",
-            description = "ContentTooLargeException",
-            content = @Content(
-                    mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
-                    examples = @ExampleObject(name = "example", value = """
-                            {
-                              "title": "Content Too Large",
-                              "status": 413,
-                              "instance": "/mvc-extended-problem-detail/content-too-large-exception"
-                            }
-                            """)))
-    @PostMapping("/content-too-large-exception")
-    public void contentTooLargeException(@Parameter(example = "demo.txt") @RequestPart MultipartFile file) {
-        logger.info("contentTooLargeException, file: {}", file);
-        throw new ContentTooLargeException(new RuntimeException("content too large"));
-    }
-
-    /**
      * @see UnsupportedMediaTypeStatusException
      */
     @ApiResponse(
@@ -1127,7 +1105,7 @@ public class MvcProblemDetailController {
                     schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
-                              "title": "Content Too Large",
+                              "title": "Payload Too Large",
                               "status": 413,
                               "detail": "payload too large",
                               "instance": "/mvc-extended-problem-detail/payload-too-large-exception"
@@ -1152,7 +1130,7 @@ public class MvcProblemDetailController {
                     schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
-                              "title": "Content Too Large",
+                              "title": "Payload Too Large",
                               "status": 413,
                               "detail": "Maximum upload size exceeded",
                               "instance": "/mvc-extended-problem-detail/max-upload-size-exceeded-exception"

@@ -78,6 +78,13 @@ public final class FluxOperationFixtures {
                                 .exchange(),
                         400));
 
+        map.put("contentTooLargeException",
+                new FluxOperationFixture("default",
+                        BASE + "/content-too-large-exception", "post",
+                        client -> client.post().uri(BASE + "/content-too-large-exception")
+                                .bodyValue("x".repeat(1024 * 1024)).exchange(),
+                        413));
+
         map.put("payloadTooLargeException",
                 new FluxOperationFixture("default",
                         BASE + "/payload-too-large-exception", "post",
@@ -118,7 +125,7 @@ public final class FluxOperationFixtures {
                                 .cookie("cookieValue", "").exchange(),
                         400));
 
-        map.put("handlerMethodValidationExceptionMatrix",
+        map.put("handlerMethodValidationExceptionMatrixVariable",
                 new FluxOperationFixture("default",
                         BASE + "/handler-method-validation-exception-matrix/{id}", "get",
                         client -> client.get()
