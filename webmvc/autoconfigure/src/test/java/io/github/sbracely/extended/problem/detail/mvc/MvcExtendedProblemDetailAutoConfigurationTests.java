@@ -69,12 +69,31 @@ class MvcExtendedProblemDetailAutoConfigurationTests {
                     Duration.ZERO));
             assertThat(output)
                     .contains("Extended Problem Detail is enabled by default for Spring WebMVC")
-                    .contains("Defaults: extended.problem-detail.logging.at-level=" + loggingDefaults.getAtLevel() + ", "
+                    .contains("Logging: extended.problem-detail.logging.at-level=" + loggingDefaults.getAtLevel() + ", "
                             + "extended.problem-detail.logging.print-stack-trace="
                             + loggingDefaults.isPrintStackTrace())
                     .contains("To disable it, set 'extended.problem-detail.enabled=false'");
             assertThat(output).contains("extended.problem-detail.enabled=false");
         });
+    }
+
+    @Test
+    void shouldLogEffectiveLoggingSettingsWhenEnabledByDefault(CapturedOutput output) {
+        this.contextRunner
+                .withPropertyValues(
+                        "extended.problem-detail.logging.at-level=WARN",
+                        "extended.problem-detail.logging.print-stack-trace=true")
+                .run(context -> {
+                    context.publishEvent(new ApplicationReadyEvent(
+                            new SpringApplication(MvcExtendedProblemDetailAutoConfiguration.class),
+                            new String[0],
+                            context,
+                            Duration.ZERO));
+                    assertThat(output)
+                            .contains("Extended Problem Detail is enabled by default for Spring WebMVC")
+                            .contains("Logging: extended.problem-detail.logging.at-level=WARN, "
+                                    + "extended.problem-detail.logging.print-stack-trace=true");
+                });
     }
 
     @Test
