@@ -4,530 +4,854 @@
 - Ordering: follows the current `ResponseEntityExceptionHandler#handleException` dispatch order; subclasses are placed next to their parent class.
 - The 3 API-version rows are triggered with the API-version configuration: `spring.webflux.apiversion.use.header=API-Version`, `spring.webflux.apiversion.supported=1,2`; `/not-acceptable-api-version` is registered by `FluxApiVersionController` only when that configuration is enabled.
 
-<table>
-  <thead>
-    <tr><th>No.</th><th>Scenario</th><th>Response</th></tr>
-  </thead>
-  <tbody>
-        <tr>
-      <td>1</td>
-      <td><code>org.springframework.web.server.MethodNotAllowedException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>DELETE /flux-extended-problem-detail/method-not-allowed-exception</code><br><pre>None</pre></td>
-      <td><pre>status: 405
+## 1. `org.springframework.web.server.MethodNotAllowedException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+DELETE /flux-extended-problem-detail/method-not-allowed-exception
+None
+```
+
+**Response**
+
+```http
+status: 405
 Content-Type: application/problem+json
 Allow: GET
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Supported methods: [GET]&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/method-not-allowed-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 405,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Method Not Allowed&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>2</td>
-      <td><code>org.springframework.web.server.NotAcceptableStatusException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/not-acceptable-status-exception</code><br><pre>Header: Accept=application/xml</pre></td>
-      <td><pre>status: 406
+  "detail" : "Supported methods: [GET]",
+  "instance" : "/flux-extended-problem-detail/method-not-allowed-exception",
+  "status" : 405,
+  "title" : "Method Not Allowed"
+}
+```
+
+## 2. `org.springframework.web.server.NotAcceptableStatusException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/not-acceptable-status-exception
+Header: Accept=application/xml
+```
+
+**Response**
+
+```http
+status: 406
 Content-Type: application/problem+json
 Accept: application/json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Acceptable representations: [application/json].&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/not-acceptable-status-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 406,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Not Acceptable&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>3</td>
-      <td><code>org.springframework.web.server.UnsupportedMediaTypeStatusException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>POST /flux-extended-problem-detail/unsupported-media-type-status-exception</code><br><pre>None (Content-Type: application/xml not sent)</pre></td>
-      <td><pre>status: 415
+  "detail" : "Acceptable representations: [application/json].",
+  "instance" : "/flux-extended-problem-detail/not-acceptable-status-exception",
+  "status" : 406,
+  "title" : "Not Acceptable"
+}
+```
+
+## 3. `org.springframework.web.server.UnsupportedMediaTypeStatusException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+POST /flux-extended-problem-detail/unsupported-media-type-status-exception
+None (Content-Type: application/xml not sent)
+```
+
+**Response**
+
+```http
+status: 415
 Content-Type: application/problem+json
 Accept: application/xml
 
 {
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/unsupported-media-type-status-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 415,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Unsupported Media Type&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>4</td>
-      <td><code>org.springframework.web.server.MissingRequestValueException</code><br><sub>extends ServerWebInputException → ResponseStatusException</sub><br><code>GET /flux-extended-problem-detail/missing-request-value-exception</code><br><pre>None (missing query parameter id)</pre></td>
-      <td><pre>status: 400
+  "instance" : "/flux-extended-problem-detail/unsupported-media-type-status-exception",
+  "status" : 415,
+  "title" : "Unsupported Media Type"
+}
+```
+
+## 4. `org.springframework.web.server.MissingRequestValueException`
+
+_extends ServerWebInputException → ResponseStatusException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/missing-request-value-exception
+None (missing query parameter id)
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Required query parameter &#x27;id&#x27; is not present.&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/missing-request-value-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>5</td>
-      <td><code>org.springframework.web.server.UnsatisfiedRequestParameterException</code><br><sub>extends ServerWebInputException → ResponseStatusException</sub><br><code>GET /flux-extended-problem-detail/unsatisfied-request-parameter-exception</code><br><pre>None (does not satisfy params condition `type=1`, `exist`, `!debug`)</pre></td>
-      <td><pre>status: 400
+  "detail" : "Required query parameter 'id' is not present.",
+  "instance" : "/flux-extended-problem-detail/missing-request-value-exception",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 5. `org.springframework.web.server.UnsatisfiedRequestParameterException`
+
+_extends ServerWebInputException → ResponseStatusException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/unsatisfied-request-parameter-exception
+None (does not satisfy params condition `type=1`, `exist`, `!debug`)
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Invalid request parameters.&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/unsatisfied-request-parameter-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>6</td>
-      <td><code>org.springframework.web.bind.support.WebExchangeBindException</code><br><sub>extends ServerWebInputException → ResponseStatusException</sub><br><code>POST /flux-extended-problem-detail/web-exchange-bind-exception</code><br><pre>Content-Type: application/json；Body: {&quot;name&quot;:&quot;abc&quot;,&quot;password&quot;:&quot;123&quot;}</pre></td>
-      <td><pre>status: 400
+  "detail" : "Invalid request parameters.",
+  "instance" : "/flux-extended-problem-detail/unsatisfied-request-parameter-exception",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 6. `org.springframework.web.bind.support.WebExchangeBindException`
+
+_extends ServerWebInputException → ResponseStatusException_
+
+**Request**
+
+```text
+POST /flux-extended-problem-detail/web-exchange-bind-exception
+Content-Type: application/json；Body: {"name":"abc","password":"123"}
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Invalid request content.&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;name&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Name length must be between 6-10&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;confirmPassword&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Password and confirm password do not match&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;password&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Password and confirm password do not match&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;age&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Age cannot be null&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/web-exchange-bind-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>7</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/handler-method-validation-exception-cookie-value</code><br><pre>Cookie: cookieValue=</pre></td>
-      <td><pre>status: 400
+  "detail" : "Invalid request content.",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "name",
+      "message" : "Name length must be between 6-10"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "confirmPassword",
+      "message" : "Password and confirm password do not match"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "password",
+      "message" : "Password and confirm password do not match"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "age",
+      "message" : "Age cannot be null"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/web-exchange-bind-exception",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 7. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/handler-method-validation-exception-cookie-value
+Cookie: cookieValue=
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;COOKIE&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;cookieValue&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;cookie cannot be empty&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-cookie-value&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>8</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/handler-method-validation-exception-matrix/abc;list=a,b,c</code><br><pre>Path matrix: list=a,b,c</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "COOKIE",
+      "target" : "cookieValue",
+      "message" : "cookie cannot be empty"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-cookie-value",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 8. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/handler-method-validation-exception-matrix/abc;list=a,b,c
+Path matrix: list=a,b,c
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;list&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;list maximum size is 2&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-matrix/abc;list=a,b,c&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>9</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/handler-method-validation-exception-model-attribute</code><br><pre>None</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "list",
+      "message" : "list maximum size is 2"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-matrix/abc;list=a,b,c",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 9. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/handler-method-validation-exception-model-attribute
+None
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;password&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Password cannot be empty&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-model-attribute&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>10</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/handler-method-validation-exception-path-variable/abc</code><br><pre>PathVariable: id=abc</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "password",
+      "message" : "Password cannot be empty"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-model-attribute",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 10. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/handler-method-validation-exception-path-variable/abc
+PathVariable: id=abc
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;id&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;id length must be at least 5&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-path-variable/abc&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>11</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>POST /flux-extended-problem-detail/handler-method-validation-exception-request-body</code><br><pre>Content-Type: application/json；Body: {&quot;name&quot;:&quot;abc&quot;}</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "id",
+      "message" : "id length must be at least 5"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-path-variable/abc",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 11. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+POST /flux-extended-problem-detail/handler-method-validation-exception-request-body
+Content-Type: application/json；Body: {"name":"abc"}
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;password&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Password cannot be empty&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-request-body&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>12</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>POST /flux-extended-problem-detail/handler-method-validation-exception-request-body-validation-result</code><br><pre>Content-Type: application/json；Body: [&quot;&quot;,&quot;a&quot;]</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "password",
+      "message" : "Password cannot be empty"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-request-body",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 12. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+POST /flux-extended-problem-detail/handler-method-validation-exception-request-body-validation-result
+Content-Type: application/json；Body: ["","a"]
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : null,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Element cannot contain empty values&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-request-body-validation-result&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>13</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/handler-method-validation-exception-request-header</code><br><pre>Header: headerValue=</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : null,
+      "message" : "Element cannot contain empty values"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-request-body-validation-result",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 13. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/handler-method-validation-exception-request-header
+Header: headerValue=
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;HEADER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;headerValue&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Header cannot be empty&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-request-header&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>14</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/handler-method-validation-exception-request-param?param=&amp;value=ab</code><br><pre>Query: param=；value=ab</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "HEADER",
+      "target" : "headerValue",
+      "message" : "Header cannot be empty"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-request-header",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 14. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/handler-method-validation-exception-request-param?param=&value=ab
+Query: param=；value=ab
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;param&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Parameter cannot be empty&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;value&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Length must be at least 5&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-request-param&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>15</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>POST /flux-extended-problem-detail/handler-method-validation-exception-request-part</code><br><pre>Body: {}</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "param",
+      "message" : "Parameter cannot be empty"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "value",
+      "message" : "Length must be at least 5"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-request-param",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 15. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+POST /flux-extended-problem-detail/handler-method-validation-exception-request-part
+Body: {}
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;file&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;File cannot be empty&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-request-part&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>16</td>
-      <td><code>org.springframework.web.method.annotation.HandlerMethodValidationException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/handler-method-validation-exception-other</code><br><pre>None</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "file",
+      "message" : "File cannot be empty"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-request-part",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 16. `org.springframework.web.method.annotation.HandlerMethodValidationException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/handler-method-validation-exception-other
+None
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failure&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/handler-method-validation-exception-other&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>17</td>
-      <td><code>org.springframework.web.server.ServerWebInputException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/server-web-input-exception</code><br><pre>None</pre></td>
-      <td><pre>status: 400
+  "detail" : "Validation failure",
+  "instance" : "/flux-extended-problem-detail/handler-method-validation-exception-other",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 17. `org.springframework.web.server.ServerWebInputException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/server-web-input-exception
+None
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;server web input error&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/server-web-input-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>18</td>
-      <td><code>org.springframework.web.server.ServerErrorException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/server-error-exception</code><br><pre>None</pre></td>
-      <td><pre>status: 500
+  "detail" : "server web input error",
+  "instance" : "/flux-extended-problem-detail/server-web-input-exception",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 18. `org.springframework.web.server.ServerErrorException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/server-error-exception
+None
+```
+
+**Response**
+
+```http
+status: 500
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;server error&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/server-error-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 500,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Internal Server Error&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>19</td>
-      <td><code>org.springframework.web.server.ResponseStatusException</code><br><sub>extends ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/response-status-exception</code><br><pre>None</pre></td>
-      <td><pre>status: 400
+  "detail" : "server error",
+  "instance" : "/flux-extended-problem-detail/server-error-exception",
+  "status" : 500,
+  "title" : "Internal Server Error"
+}
+```
+
+## 19. `org.springframework.web.server.ResponseStatusException`
+
+_extends ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/response-status-exception
+None
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;exception&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/response-status-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>20</td>
-      <td><code>org.springframework.web.server.ContentTooLargeException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>POST /flux-extended-problem-detail/content-too-large-exception</code><br><pre>Body: &quot;x&quot; × 1048576</pre></td>
-      <td><pre>status: 413
+  "detail" : "exception",
+  "instance" : "/flux-extended-problem-detail/response-status-exception",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 20. `org.springframework.web.server.ContentTooLargeException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+POST /flux-extended-problem-detail/content-too-large-exception
+Body: "x" × 1048576
+```
+
+**Response**
+
+```http
+status: 413
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/content-too-large-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 413,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Content Too Large&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>21</td>
-      <td><code>org.springframework.web.accept.InvalidApiVersionException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/invalid-api-version-exception</code><br><pre>Header: API-Version=3; requires `spring.webflux.apiversion.*`</pre></td>
-      <td><pre>status: 400
+  "instance" : "/flux-extended-problem-detail/content-too-large-exception",
+  "status" : 413,
+  "title" : "Content Too Large"
+}
+```
+
+## 21. `org.springframework.web.accept.InvalidApiVersionException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/invalid-api-version-exception
+Header: API-Version=3; requires `spring.webflux.apiversion.*`
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Invalid API version: &#x27;3.0.0&#x27;.&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/invalid-api-version-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>22</td>
-      <td><code>org.springframework.web.accept.MissingApiVersionException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/missing-api-version-exception</code><br><pre>Requires `spring.webflux.apiversion.*`; API-Version not sent</pre></td>
-      <td><pre>status: 400
+  "detail" : "Invalid API version: '3.0.0'.",
+  "instance" : "/flux-extended-problem-detail/invalid-api-version-exception",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 22. `org.springframework.web.accept.MissingApiVersionException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/missing-api-version-exception
+Requires `spring.webflux.apiversion.*`; API-Version not sent
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;API version is required.&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/missing-api-version-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>23</td>
-      <td><code>org.springframework.web.accept.NotAcceptableApiVersionException</code><br><sub>extends InvalidApiVersionException → ResponseStatusException</sub><br><code>GET /not-acceptable-api-version</code><br><pre>Header: API-Version=2; requires `spring.webflux.apiversion.*`</pre></td>
-      <td><pre>status: 400
+  "detail" : "API version is required.",
+  "instance" : "/flux-extended-problem-detail/missing-api-version-exception",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 23. `org.springframework.web.accept.NotAcceptableApiVersionException`
+
+_extends InvalidApiVersionException → ResponseStatusException_
+
+**Request**
+
+```text
+GET /not-acceptable-api-version
+Header: API-Version=2; requires `spring.webflux.apiversion.*`
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Invalid API version: &#x27;2.0.0&#x27;.&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/not-acceptable-api-version&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Bad Request&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>24</td>
-      <td><code>org.springframework.web.reactive.resource.NoResourceFoundException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/no-resource-found</code><br><pre>None</pre></td>
-      <td><pre>status: 404
+  "detail" : "Invalid API version: '2.0.0'.",
+  "instance" : "/not-acceptable-api-version",
+  "status" : 400,
+  "title" : "Bad Request"
+}
+```
+
+## 24. `org.springframework.web.reactive.resource.NoResourceFoundException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/no-resource-found
+None
+```
+
+**Response**
+
+```http
+status: 404
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;No static resource flux-extended-problem-detail/no-resource-found.&quot;,
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/no-resource-found&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 404,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Not Found&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>25</td>
-      <td><code>org.springframework.web.server.PayloadTooLargeException</code><br><sub>extends ResponseStatusException → ErrorResponseException</sub><br><code>POST /flux-extended-problem-detail/payload-too-large-exception</code><br><pre>Body: text</pre></td>
-      <td><pre>status: 413
+  "detail" : "No static resource flux-extended-problem-detail/no-resource-found.",
+  "instance" : "/flux-extended-problem-detail/no-resource-found",
+  "status" : 404,
+  "title" : "Not Found"
+}
+```
+
+## 25. `org.springframework.web.server.PayloadTooLargeException`
+
+_extends ResponseStatusException → ErrorResponseException_
+
+**Request**
+
+```text
+POST /flux-extended-problem-detail/payload-too-large-exception
+Body: text
+```
+
+**Response**
+
+```http
+status: 413
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/payload-too-large-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 413,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Content Too Large&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>26</td>
-      <td><code>org.springframework.web.ErrorResponseException</code><br><code>GET /flux-extended-problem-detail/error-response-exception</code><br><pre>None</pre></td>
-      <td><pre>status: 400
+  "instance" : "/flux-extended-problem-detail/payload-too-large-exception",
+  "status" : 413,
+  "title" : "Content Too Large"
+}
+```
+
+## 26. `org.springframework.web.ErrorResponseException`
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/error-response-exception
+None
+```
+
+**Response**
+
+```http
+status: 400
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Error details&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;BUSINESS&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : null,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Error message 1&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;BUSINESS&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : null,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Error message 2&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/error-response-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 400,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Error title&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>27</td>
-      <td><code>io.github.sbracely.extended.problem.detail.webflux.example.exception.FluxExtendedErrorResponseException</code><br><sub>extends ErrorResponseException</sub><br><code>GET /flux-extended-problem-detail/extended-error-response-exception</code><br><pre>None</pre></td>
-      <td><pre>status: 500
+  "detail" : "Error details",
+  "errors" : [
+    {
+      "type" : "BUSINESS",
+      "target" : null,
+      "message" : "Error message 1"
+    },
+    {
+      "type" : "BUSINESS",
+      "target" : null,
+      "message" : "Error message 2"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/error-response-exception",
+  "status" : 400,
+  "title" : "Error title"
+}
+```
+
+## 27. `io.github.sbracely.extended.problem.detail.webflux.example.exception.FluxExtendedErrorResponseException`
+
+_extends ErrorResponseException_
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/extended-error-response-exception
+None
+```
+
+**Response**
+
+```http
+status: 500
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Payment failed details&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;BUSINESS&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : null,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Insufficient balance&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;BUSINESS&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : null,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Payment frequent&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/extended-error-response-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 500,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Payment failed title&quot;
-}</pre></td>
-    </tr>
-        <tr>
-      <td>28</td>
-      <td><code>org.springframework.validation.method.MethodValidationException</code><br><code>GET /flux-extended-problem-detail/method-validation-exception</code><br><pre>None</pre></td>
-      <td><pre>status: 500
+  "detail" : "Payment failed details",
+  "errors" : [
+    {
+      "type" : "BUSINESS",
+      "target" : null,
+      "message" : "Insufficient balance"
+    },
+    {
+      "type" : "BUSINESS",
+      "target" : null,
+      "message" : "Payment frequent"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/extended-error-response-exception",
+  "status" : 500,
+  "title" : "Payment failed title"
+}
+```
+
+## 28. `org.springframework.validation.method.MethodValidationException`
+
+**Request**
+
+```text
+GET /flux-extended-problem-detail/method-validation-exception
+None
+```
+
+**Response**
+
+```http
+status: 500
 Content-Type: application/problem+json
 
 {
-&nbsp;&nbsp;&quot;detail&quot; : &quot;Validation failed&quot;,
-&nbsp;&nbsp;&quot;errors&quot; : [
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;name&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;name must not be null&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;name&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;name must not be blank&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;name&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Name cannot be blank&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;age&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Age cannot be null&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;name&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Name length must be between 6-10&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;confirmPassword&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Password and confirm password do not match&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : &quot;password&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Password and confirm password do not match&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;},
-&nbsp;&nbsp;&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;type&quot; : &quot;PARAMETER&quot;,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;target&quot; : null,
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;message&quot; : &quot;Name is not valid&quot;
-&nbsp;&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;],
-&nbsp;&nbsp;&quot;instance&quot; : &quot;/flux-extended-problem-detail/method-validation-exception&quot;,
-&nbsp;&nbsp;&quot;status&quot; : 500,
-&nbsp;&nbsp;&quot;title&quot; : &quot;Internal Server Error&quot;
-}</pre></td>
-    </tr>
-  </tbody>
-</table>
+  "detail" : "Validation failed",
+  "errors" : [
+    {
+      "type" : "PARAMETER",
+      "target" : "name",
+      "message" : "name must not be null"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "name",
+      "message" : "name must not be blank"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "name",
+      "message" : "Name cannot be blank"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "age",
+      "message" : "Age cannot be null"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "name",
+      "message" : "Name length must be between 6-10"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "confirmPassword",
+      "message" : "Password and confirm password do not match"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : "password",
+      "message" : "Password and confirm password do not match"
+    },
+    {
+      "type" : "PARAMETER",
+      "target" : null,
+      "message" : "Name is not valid"
+    }
+  ],
+  "instance" : "/flux-extended-problem-detail/method-validation-exception",
+  "status" : 500,
+  "title" : "Internal Server Error"
+}
+```
