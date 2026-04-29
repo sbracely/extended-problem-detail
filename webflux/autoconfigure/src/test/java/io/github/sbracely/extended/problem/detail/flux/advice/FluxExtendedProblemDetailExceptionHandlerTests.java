@@ -189,7 +189,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
     class FluxHandleMethodValidationException {
 
         @Test
-        void shouldReturnExtendedProblemDetailFromParameterErrors() {
+        void shouldReturnProblemDetailWithoutErrorsFromParameterErrors() {
             ParameterErrors parameterErrors = buildParameterErrors(
                     List.of(new FieldError("testBean", "name", "Name is required")));
             org.springframework.validation.method.MethodValidationException ex =
@@ -201,13 +201,10 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             StepVerifier.create(result)
                     .assertNext(responseEntity -> {
                         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_CONTENT);
-                        assertThat(responseEntity.getBody()).isInstanceOf(ExtendedProblemDetail.class);
-                        ExtendedProblemDetail body = (ExtendedProblemDetail) responseEntity.getBody();
+                        assertThat(responseEntity.getBody()).isInstanceOf(ProblemDetail.class);
+                        ProblemDetail body = (ProblemDetail) responseEntity.getBody();
                         assertThat(body).isNotNull();
-                        assertThat(body.getErrors()).isNotEmpty();
-                        assertThat(body.getErrors()).hasSize(1);
-                        assertThat(body.getErrors().get(0).target()).isEqualTo("name");
-                        assertThat(body.getErrors().get(0).message()).isEqualTo("Name is required");
+                        assertThat(body.getDetail()).isEqualTo("Validation failed");
                     })
                     .verifyComplete();
         }
@@ -223,7 +220,8 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             h.handleMethodValidationException(ex, HttpStatus.UNPROCESSABLE_CONTENT, exchange)
                     .block();
 
-            verify(mockLogger).debug(eq("handleMethodValidationException"), isNull());
+            verify(mockLogger).debug(actual -> actual.contains("MethodValidationException validation errors: ")
+                    && actual.contains("error"), isNull());
         }
     }
 
@@ -236,6 +234,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
         @Test
         void shouldResolveParameterErrors() {
+            FluxExtendedProblemDetailExceptionHandlerWithMockLogger h = handlerWithMockLogger(LogLevel.DEBUG, false);
             ParameterErrors parameterErrors = buildParameterErrors(List.of(
                     new FieldError("bean", "name", "required"),
                     new ObjectError("bean", "global error")
@@ -243,41 +242,37 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             org.springframework.validation.method.MethodValidationException ex =
                     buildMethodValidationException(List.of(parameterErrors), Collections.emptyList());
 
-            List<Error> errors = handler.resolveMethodValidationException(ex);
+            h.resolveMethodValidationException(ex);
 
-            assertThat(errors).hasSize(2);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
-            assertThat(errors.get(0).target()).isEqualTo("name");
-            assertThat(errors.get(0).message()).isEqualTo("required");
-            assertThat(errors.get(1).target()).isNull();
-            assertThat(errors.get(1).message()).isEqualTo("global error");
+            verify(mockLogger).debug(actual -> actual.contains("MethodValidationException validation errors: ")
+                    && actual.contains("bean.name: required")
+                    && actual.contains("bean: global error"), isNull());
         }
 
         @Test
         void shouldResolveRegularParameterValidationResult() {
+            FluxExtendedProblemDetailExceptionHandlerWithMockLogger h = handlerWithMockLogger(LogLevel.DEBUG, false);
             ParameterValidationResult pvr = buildParameterValidationResult("must be positive");
             org.springframework.validation.method.MethodValidationException ex =
                     buildMethodValidationException(List.of(pvr), Collections.emptyList());
 
-            List<Error> errors = handler.resolveMethodValidationException(ex);
+            h.resolveMethodValidationException(ex);
 
-            assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
-            assertThat(errors.get(0).message()).isEqualTo("must be positive");
+            verify(mockLogger).debug(actual -> actual.contains("MethodValidationException validation errors: ")
+                    && actual.contains("bean: must be positive"), isNull());
         }
 
         @Test
         void shouldResolveCrossParameterValidationResults() {
+            FluxExtendedProblemDetailExceptionHandlerWithMockLogger h = handlerWithMockLogger(LogLevel.DEBUG, false);
             MessageSourceResolvable crossParamResolvable = messageSourceResolvable("cross param error");
             org.springframework.validation.method.MethodValidationException ex =
                     buildMethodValidationException(Collections.emptyList(), List.of(crossParamResolvable));
 
-            List<Error> errors = handler.resolveMethodValidationException(ex);
+            h.resolveMethodValidationException(ex);
 
-            assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
-            assertThat(errors.get(0).target()).isNull();
-            assertThat(errors.get(0).message()).isEqualTo("cross param error");
+            verify(mockLogger).debug(actual -> actual.contains("MethodValidationException validation errors: ")
+                    && actual.contains("cross-parameter: cross param error"), isNull());
         }
     }
 

@@ -1381,48 +1381,6 @@ Content-Type: application/problem+json
 
 {
   "detail" : "Validation failed",
-  "errors" : [
-    {
-      "type" : "PARAMETER",
-      "target" : "name",
-      "message" : "name must not be blank"
-    },
-    {
-      "type" : "PARAMETER",
-      "target" : "name",
-      "message" : "name must not be null"
-    },
-    {
-      "type" : "PARAMETER",
-      "target" : "confirmPassword",
-      "message" : "Password and confirm password do not match"
-    },
-    {
-      "type" : "PARAMETER",
-      "target" : "name",
-      "message" : "Name length must be between 6-10"
-    },
-    {
-      "type" : "PARAMETER",
-      "target" : "age",
-      "message" : "Age cannot be null"
-    },
-    {
-      "type" : "PARAMETER",
-      "target" : "password",
-      "message" : "Password and confirm password do not match"
-    },
-    {
-      "type" : "PARAMETER",
-      "target" : "name",
-      "message" : "Name cannot be blank"
-    },
-    {
-      "type" : "PARAMETER",
-      "target" : null,
-      "message" : "Name is not valid"
-    }
-  ],
   "instance" : "/mvc-extended-problem-detail/method-validation-exception",
   "status" : 500,
   "title" : "Internal Server Error"
