@@ -2,17 +2,18 @@
 
 ## Build, test, and lint commands
 
-- Full build: `.\mvnw.cmd clean verify`
+- CI build: `.\mvnw.cmd -B verify` on Windows, or `./mvnw -B verify` as used by GitHub Actions.
+- Full clean build: `.\mvnw.cmd clean verify`
 - Full test suite: `.\mvnw.cmd test`
-- Single test class: `.\mvnw.cmd -pl common -Dtest=ExtendedProblemDetailTest test`
-- Another single-test example: `.\mvnw.cmd -pl webmvc\autoconfigure -Dtest=MvcExtendedProblemDetailAutoConfigurationTests test`
-- WebFlux single-test example: `.\mvnw.cmd -pl webflux\example -Dtest=FluxOpenApiDefaultContractTests test`
+- Single common test class: `.\mvnw.cmd -pl common -Dtest=ExtendedProblemDetailTest test`
+- Single MVC auto-config test class: `.\mvnw.cmd -pl webmvc\autoconfigure -Dtest=MvcExtendedProblemDetailAutoConfigurationTests test`
+- Single WebFlux example contract test class: `.\mvnw.cmd -pl webflux\example -Dtest=FluxOpenApiDefaultContractTests test`
 - Generate offline OpenAPI docs: `.\mvnw.cmd -pl webmvc\example -Poffline-openapi-docs verify` and `.\mvnw.cmd -pl webflux\example -Poffline-openapi-docs verify`
-- Static analysis: `qodana scan` (configuration lives in `qodana.yaml`)
 
 ## High-level architecture
 
 - This is a Maven reactor with three top-level modules: `common`, `webmvc`, and `webflux`.
+- The project is the Spring Boot 4 line of the starter. Module POMs use Spring Boot `4.0.6`; README compatibility says Java 17+.
 - `common` contains the shared model and behavior used by both stacks:
   - `ExtendedProblemDetail` extends Spring's `ProblemDetail` with an `errors` list.
   - `Error` is the shared error record returned in API responses.
@@ -24,6 +25,7 @@
   - `autoconfigure`: the real runtime integration layer
   - `starter`: a thin published starter that depends on the corresponding autoconfigure module
   - `example`: a runnable demo/test application that is not meant to be deployed to Maven Central
+- The top-level `webmvc` and `webflux` POMs are aggregators with `maven.deploy.skip=true`; the published artifacts are the `common`, `autoconfigure`, and `starter` modules.
 - The published starters are intentionally thin. The actual framework behavior lives in:
   - `webmvc\autoconfigure\...\MvcExtendedProblemDetailAutoConfiguration`
   - `webmvc\autoconfigure\...\MvcExtendedProblemDetailExceptionHandler`
@@ -32,6 +34,7 @@
 - Both auto-configuration modules register the same kinds of infrastructure: optional logging, optional field-visibility/Jackson serialization, and the framework-specific exception handler.
 - Both framework-specific exception handlers build on Spring's own `ProblemDetail` body and then wrap it with `ExtendedProblemDetail.from(...)` after resolving detailed errors.
 - The example modules are more than demos: they also hold the end-to-end HTTP coverage and the OpenAPI contract surface. Their OpenAPI configs rewrite generated docs so the documented `application/problem+json` examples match the actual error responses.
+- Offline OpenAPI generation is active by default in the example modules and writes `openapi.json` / `openapi.yaml` plus exception response tables under each example module's `docs` directory.
 - Some example OpenAPI operations are synthetic rather than controller-backed, especially on MVC, so framework fallback exceptions can still be documented and contract-tested.
 - Boot auto-configuration registration is resource-based. If an auto-configuration class is renamed or moved, update:
   - `webmvc\autoconfigure\src\main\resources\META-INF\spring\org.springframework.boot.autoconfigure.AutoConfiguration.imports`
@@ -45,6 +48,7 @@
   - a `resolveXxx(...)` method from `ExtendedProblemDetailErrorResolver`
 - Default beans are registered with `@ConditionalOnMissingBean`. A custom handler bean replaces the auto-configured one; do not add parallel competing handlers unless that is intentional.
 - The configuration prefix is `extended.problem-detail`. The default behavior is enabled, logs at `INFO`, and does not print stack traces.
+- If `extended.problem-detail.enabled` is omitted, startup logging emits a one-time reminder; explicitly setting it to `true` or `false` suppresses that reminder.
 - `extended.problem-detail.field.hide` is not just documentation; it activates custom Jackson serializers. If one or more configured profile rules match the active Spring profiles, those profile hide rules replace the default hide set, and multiple matching profiles are unioned together.
 - Example modules are part of the reactor because they provide end-to-end coverage and usage examples, but they are explicitly non-deployable (`maven.deploy.skip=true`).
 - Tests are split by purpose:
