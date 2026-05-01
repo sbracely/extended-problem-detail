@@ -110,12 +110,12 @@ When a validation exception occurs, the response extends the standard RFC 9457 b
   "instance": "/api/users",
   "errors": [
     {
-      "type": "PARAMETER",
+      "type": "REQUEST_BODY",
       "target": "email",
       "message": "must be a well-formed email address"
     },
     {
-      "type": "PARAMETER",
+      "type": "REQUEST_BODY",
       "target": "password",
       "message": "size must be between 8 and 20"
     }
@@ -130,7 +130,7 @@ JSON usually omits the `type` field unless your application sets it explicitly.
 
 | Field     | Description                                                            |
 |-----------|------------------------------------------------------------------------|
-| `type`    | Error source: `PARAMETER`, `COOKIE`, `HEADER`, or `BUSINESS`           |
+| `type`    | Error source: `QUERY_PARAMETER`, `PATH_VARIABLE`, `REQUEST_BODY`, `MODEL_ATTRIBUTE`, `REQUEST_PART`, `MATRIX_VARIABLE`, `COOKIE`, `HEADER`, or `BUSINESS` |
 | `target`  | Field name, parameter name, or other identifier of the offending input |
 | `message` | Human-readable description of the constraint violation                 |
 

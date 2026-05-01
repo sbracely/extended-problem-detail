@@ -146,7 +146,7 @@ public class FluxExtendedProblemDetailExceptionHandler extends ResponseEntityExc
      * @return list of Error objects representing all errors
      */
     protected List<Error> resolveWebExchangeBindException(WebExchangeBindException ex) {
-        return resolveBindingResult(ex.getBindingResult());
+        return resolveBindingResult(ex.getBindingResult(), Error.Type.MODEL_ATTRIBUTE);
     }
 
     /**

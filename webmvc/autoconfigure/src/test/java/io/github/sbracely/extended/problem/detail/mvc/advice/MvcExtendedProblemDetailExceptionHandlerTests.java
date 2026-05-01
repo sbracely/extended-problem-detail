@@ -337,7 +337,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveMethodArgumentNotValidException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.REQUEST_BODY);
             assertThat(errors.get(0).target()).isEqualTo("field");
             assertThat(errors.get(0).message()).isEqualTo("Field error");
         }
@@ -359,7 +359,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveWebExchangeBindException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(errors.get(0).target()).isEqualTo("name");
             assertThat(errors.get(0).message()).isEqualTo("Name is required");
         }
@@ -380,7 +380,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveBindingResult(bindingResult);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(errors.get(0).target()).isEqualTo("email");
             assertThat(errors.get(0).message()).isEqualTo("Invalid email format");
         }
@@ -422,7 +422,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             Error error = handler.objectErrorToError(objectError);
 
-            assertThat(error.type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(error.type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(error.target()).isNull();
             assertThat(error.message()).isEqualTo("Global error message");
         }
@@ -433,7 +433,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
             Error error = handler.objectErrorToError(fieldError);
 
-            assertThat(error.type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(error.type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(error.target()).isEqualTo("username");
             assertThat(error.message()).isEqualTo("Username is too short");
         }
@@ -477,10 +477,10 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             ParameterValidationResult result = buildParameterValidationResult("param error");
             List<Error> errorList = new java.util.ArrayList<>();
 
-            handler.addParameterErrors(result, Error.Type.PARAMETER, null, errorList);
+            handler.addParameterErrors(result, Error.Type.QUERY_PARAMETER, null, errorList);
 
             assertThat(errorList).hasSize(1);
-            assertThat(errorList.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errorList.get(0).type()).isEqualTo(Error.Type.QUERY_PARAMETER);
             assertThat(errorList.get(0).target()).isNull();
             assertThat(errorList.get(0).message()).isEqualTo("param error");
         }
@@ -490,7 +490,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             ParameterValidationResult result = buildParameterValidationResult(List.of("error1", "error2"));
             List<Error> errorList = new java.util.ArrayList<>();
 
-            handler.addParameterErrors(result, Error.Type.PARAMETER, "field", errorList);
+            handler.addParameterErrors(result, Error.Type.QUERY_PARAMETER, "field", errorList);
 
             assertThat(errorList).hasSize(2);
             assertThat(errorList.get(0).message()).isEqualTo("error1");
@@ -586,7 +586,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MATRIX_VARIABLE);
         }
 
         @Test
@@ -610,7 +610,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(errors.get(0).target()).isEqualTo("field1");
         }
 
@@ -635,7 +635,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PATH_VARIABLE);
         }
 
         @Test
@@ -659,7 +659,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.REQUEST_BODY);
             assertThat(errors.get(0).target()).isEqualTo("bodyField");
         }
 
@@ -685,7 +685,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.REQUEST_BODY);
             assertThat(errors.get(0).target()).isNull();
         }
 
@@ -730,7 +730,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.QUERY_PARAMETER);
         }
 
         @Test
@@ -753,7 +753,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.REQUEST_PART);
             assertThat(errors.get(0).target()).isEqualTo("file");
         }
 

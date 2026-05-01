@@ -406,22 +406,22 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/method-argument-not-valid-exception",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "target": "name",
                                   "message": "Name length must be between 6-10"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "target": "age",
                                   "message": "Age cannot be null"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "target": "password",
                                   "message": "Password and confirm password do not match"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "target": "confirmPassword",
                                   "message": "Password and confirm password do not match"
                                 }
@@ -481,7 +481,7 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/handler-method-validation-exception-matrix-variable/abc;list=a,b,c",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MATRIX_VARIABLE",
                                   "target": "list",
                                   "message": "Maximum size is 2"
                                 }
@@ -512,7 +512,7 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/handler-method-validation-exception-model-attribute",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "password",
                                   "message": "Password cannot be empty"
                                 }
@@ -542,7 +542,7 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/handler-method-validation-exception-path-variable/a",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "PATH_VARIABLE",
                                   "target": "id",
                                   "message": "ID minimum length is 2"
                                 }
@@ -579,7 +579,7 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/handler-method-validation-exception-request-body",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "target": "password",
                                   "message": "Password cannot be empty"
                                 }
@@ -617,7 +617,7 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/handler-method-validation-exception-request-body-validation-result",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "message": "Element cannot contain empty values"
                                 }
                               ]
@@ -676,17 +676,17 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/handler-method-validation-exception-request-param",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "QUERY_PARAMETER",
                                   "target": "param",
                                   "message": "Parameter cannot be empty"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "QUERY_PARAMETER",
                                   "target": "param2",
                                   "message": "Parameter 2 cannot be null"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "QUERY_PARAMETER",
                                   "target": "param2",
                                   "message": "Parameter 2 cannot be blank"
                                 }
@@ -717,7 +717,7 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/handler-method-validation-exception-request-part",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_PART",
                                   "target": "file",
                                   "message": "File cannot be empty"
                                 }
@@ -965,22 +965,22 @@ public class MvcProblemDetailController {
                               "instance": "/mvc-extended-problem-detail/web-exchange-bind-exception",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "name",
                                   "message": "Name length must be between 6-10"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "age",
                                   "message": "Age cannot be null"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "password",
                                   "message": "Password and confirm password do not match"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "confirmPassword",
                                   "message": "Password and confirm password do not match"
                                 }

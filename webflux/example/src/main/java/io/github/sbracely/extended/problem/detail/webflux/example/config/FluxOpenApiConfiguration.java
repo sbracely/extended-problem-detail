@@ -139,7 +139,12 @@ public class FluxOpenApiConfiguration {
     private static Schema<?> extendedProblemDetailSchema() {
         StringSchema errorType = new StringSchema();
         errorType.description("Source of the error.");
-        errorType.addEnumItemObject("PARAMETER");
+        errorType.addEnumItemObject("QUERY_PARAMETER");
+        errorType.addEnumItemObject("PATH_VARIABLE");
+        errorType.addEnumItemObject("REQUEST_BODY");
+        errorType.addEnumItemObject("MODEL_ATTRIBUTE");
+        errorType.addEnumItemObject("REQUEST_PART");
+        errorType.addEnumItemObject("MATRIX_VARIABLE");
         errorType.addEnumItemObject("COOKIE");
         errorType.addEnumItemObject("HEADER");
         errorType.addEnumItemObject("BUSINESS");
