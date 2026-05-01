@@ -1,6 +1,6 @@
 package io.github.sbracely.extended.problem.detail.webmvc.example.controller;
 
-import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
+import org.springframework.http.ProblemDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,12 +41,12 @@ class MvcControllerMultipartLimitTests {
     @Test
     void maxUploadSizeExceededException() {
         String uri = BASE_PATH + "/max-upload-size-exceeded-exception";
-        ResponseEntity<ExtendedProblemDetail> response = uploadOversizedFile(uri, List.of(Locale.ENGLISH));
+        ResponseEntity<ProblemDetail> response = uploadOversizedFile(uri, List.of(Locale.ENGLISH));
 
         assertThat(response.getStatusCode().value()).isEqualTo(413);
         assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PROBLEM_JSON);
 
-        ExtendedProblemDetail extendedProblemDetail = response.getBody();
+        ProblemDetail extendedProblemDetail = response.getBody();
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isEqualTo(URI.create("about:blank"));
         assertThat(extendedProblemDetail.getTitle()).isEqualTo("Content Too Large");
@@ -54,15 +54,14 @@ class MvcControllerMultipartLimitTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Maximum upload size exceeded");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 
     @Test
     void maxUploadSizeExceededExceptionLocalized() {
         String uri = BASE_PATH + "/max-upload-size-exceeded-exception";
-        ResponseEntity<ExtendedProblemDetail> response = uploadOversizedFile(uri, List.of(Locale.SIMPLIFIED_CHINESE));
+        ResponseEntity<ProblemDetail> response = uploadOversizedFile(uri, List.of(Locale.SIMPLIFIED_CHINESE));
 
-        ExtendedProblemDetail extendedProblemDetail = response.getBody();
+        ProblemDetail extendedProblemDetail = response.getBody();
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isEqualTo(URI.create("about:blank"));
         assertThat(extendedProblemDetail.getTitle()).isEqualTo("内容过大");
@@ -71,7 +70,7 @@ class MvcControllerMultipartLimitTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
     }
 
-    private ResponseEntity<ExtendedProblemDetail> uploadOversizedFile(String uri, List<Locale> locales) {
+    private ResponseEntity<ProblemDetail> uploadOversizedFile(String uri, List<Locale> locales) {
         byte[] largeContent = new byte[2];
         ByteArrayResource resource = new ByteArrayResource(largeContent) {
             @Override
@@ -88,6 +87,6 @@ class MvcControllerMultipartLimitTests {
         return testRestTemplate.postForEntity(
                 "http://localhost:" + port + uri,
                 new HttpEntity<>(body, headers),
-                ExtendedProblemDetail.class);
+                ProblemDetail.class);
     }
 }

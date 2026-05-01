@@ -1,6 +1,6 @@
 package io.github.sbracely.extended.problem.detail.webmvc.example.controller;
 
-import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
+import org.springframework.http.ProblemDetail;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,8 +38,8 @@ class MvcControllerActuatorTests {
                 .hasStatus(400)
                 .hasContentType(APPLICATION_PROBLEM_JSON);
 
-        ExtendedProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
-                .convertTo(ExtendedProblemDetail.class).isNotNull().actual();
+        ProblemDetail extendedProblemDetail = assertThat(result).bodyJson()
+                .convertTo(ProblemDetail.class).isNotNull().actual();
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isEqualTo(URI.create("about:blank"));
         assertThat(extendedProblemDetail.getTitle()).isEqualTo("Bad Request");
@@ -50,6 +50,5 @@ class MvcControllerActuatorTests {
                 .contains("param2");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
-        assertThat(extendedProblemDetail.getErrors()).isNull();
     }
 }

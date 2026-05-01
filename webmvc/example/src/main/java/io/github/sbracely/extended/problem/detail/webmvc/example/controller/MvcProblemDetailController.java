@@ -90,7 +90,7 @@ public class MvcProblemDetailController {
             headers = @Header(name = "Allow", schema = @Schema(type = "string", example = "GET")),
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Method Not Allowed",
@@ -124,7 +124,7 @@ public class MvcProblemDetailController {
             headers = @Header(name = "Accept", schema = @Schema(type = "string", example = MediaType.APPLICATION_JSON_VALUE)),
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Unsupported Media Type",
@@ -159,7 +159,7 @@ public class MvcProblemDetailController {
             headers = @Header(name = "Accept", schema = @Schema(type = "string", example = MediaType.APPLICATION_JSON_VALUE)),
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Not Acceptable",
@@ -181,7 +181,7 @@ public class MvcProblemDetailController {
             description = "MissingPathVariableException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Internal Server Error",
@@ -203,7 +203,7 @@ public class MvcProblemDetailController {
             description = "MissingServletRequestParameterException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -225,7 +225,7 @@ public class MvcProblemDetailController {
             description = "MissingServletRequestPartException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -247,7 +247,7 @@ public class MvcProblemDetailController {
             description = "ServletRequestBindingException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -270,7 +270,7 @@ public class MvcProblemDetailController {
             description = "UnsatisfiedServletRequestParameterException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -292,7 +292,7 @@ public class MvcProblemDetailController {
             description = "org.springframework.web.bind.MissingRequestValueException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -315,7 +315,7 @@ public class MvcProblemDetailController {
             description = "MissingMatrixVariableException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -338,7 +338,7 @@ public class MvcProblemDetailController {
             description = "MissingRequestCookieException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -360,7 +360,7 @@ public class MvcProblemDetailController {
             description = "MissingRequestHeaderException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -390,7 +390,7 @@ public class MvcProblemDetailController {
             description = "MethodArgumentNotValidException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -435,7 +435,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException cookieValue",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -465,7 +465,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException matrixVariable",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -496,7 +496,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException modelAttribute",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -526,7 +526,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException pathVariable",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -563,7 +563,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException requestBody",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -601,7 +601,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException requestBodyValidationResult",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -630,7 +630,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException requestHeader",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -660,7 +660,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException requestParam",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -701,7 +701,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException requestPart",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -732,7 +732,7 @@ public class MvcProblemDetailController {
             description = "HandlerMethodValidationException other",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Bad Request",
@@ -759,7 +759,7 @@ public class MvcProblemDetailController {
             description = "AsyncRequestTimeoutException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", summary = "Validation error", value = """
                             {
                               "title": "Service Unavailable",
@@ -781,7 +781,7 @@ public class MvcProblemDetailController {
             description = "ErrorResponseException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -803,7 +803,7 @@ public class MvcProblemDetailController {
             description = "MvcExtendedErrorResponseException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Payment failed",
@@ -840,7 +840,7 @@ public class MvcProblemDetailController {
             description = "ResponseStatusException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -863,7 +863,7 @@ public class MvcProblemDetailController {
             description = "ServerWebInputException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -887,7 +887,7 @@ public class MvcProblemDetailController {
             description = "UnsatisfiedRequestParameterException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -909,7 +909,7 @@ public class MvcProblemDetailController {
             description = "org.springframework.web.server.MissingRequestValueException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -949,7 +949,7 @@ public class MvcProblemDetailController {
             description = "WebExchangeBindException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -1005,7 +1005,7 @@ public class MvcProblemDetailController {
             headers = @Header(name = "Allow", schema = @Schema(type = "string", example = "GET, POST")),
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Method Not Allowed",
@@ -1030,7 +1030,7 @@ public class MvcProblemDetailController {
             headers = @Header(name = "Accept", schema = @Schema(type = "string", example = MediaType.APPLICATION_JSON_VALUE)),
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Not Acceptable",
@@ -1053,7 +1053,7 @@ public class MvcProblemDetailController {
             description = "UnsupportedMediaTypeStatusException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Unsupported Media Type",
@@ -1076,7 +1076,7 @@ public class MvcProblemDetailController {
             description = "ServerErrorException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Internal Server Error",
@@ -1099,7 +1099,7 @@ public class MvcProblemDetailController {
             description = "PayloadTooLargeException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Content Too Large",
@@ -1124,7 +1124,7 @@ public class MvcProblemDetailController {
             description = "MaxUploadSizeExceededException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Content Too Large",
@@ -1146,7 +1146,7 @@ public class MvcProblemDetailController {
             description = "ConversionNotSupportedException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Internal Server Error",
@@ -1177,7 +1177,7 @@ public class MvcProblemDetailController {
             description = "MethodArgumentConversionNotSupportedException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Internal Server Error",
@@ -1199,7 +1199,7 @@ public class MvcProblemDetailController {
             description = "TypeMismatchException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -1222,7 +1222,7 @@ public class MvcProblemDetailController {
             description = "MethodArgumentTypeMismatchException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -1249,7 +1249,7 @@ public class MvcProblemDetailController {
             description = "HttpMessageNotReadableException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Bad Request",
@@ -1272,7 +1272,7 @@ public class MvcProblemDetailController {
             description = "HttpMessageNotWritableException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Internal Server Error",
@@ -1296,7 +1296,7 @@ public class MvcProblemDetailController {
             description = "MethodValidationException",
             content = @Content(
                     mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
-                    schema = @Schema(ref = "#/components/schemas/ExtendedProblemDetail"),
+                    schema = @Schema(ref = "#/components/schemas/ProblemDetail"),
                     examples = @ExampleObject(name = "example", value = """
                             {
                               "title": "Internal Server Error",

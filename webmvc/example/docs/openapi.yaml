@@ -36,7 +36,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -75,7 +75,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -118,7 +118,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -150,7 +150,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -183,7 +183,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -214,7 +214,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -246,7 +246,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -291,7 +291,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -322,7 +322,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -353,7 +353,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -392,7 +392,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -420,7 +420,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -444,7 +444,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -464,7 +464,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -484,7 +484,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -503,7 +503,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -523,7 +523,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -543,7 +543,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -569,7 +569,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -589,7 +589,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -614,7 +614,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -642,7 +642,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -669,7 +669,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -696,7 +696,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -731,7 +731,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -751,7 +751,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -779,7 +779,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -806,7 +806,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -832,7 +832,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -852,7 +852,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -881,7 +881,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -919,7 +919,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -957,7 +957,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -989,7 +989,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -1027,7 +1027,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -1054,7 +1054,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -1096,7 +1096,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -1128,7 +1128,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -1153,7 +1153,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -1178,7 +1178,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -1204,7 +1204,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -1224,7 +1224,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Validation error
@@ -1264,7 +1264,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -1290,7 +1290,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   description: example
@@ -1314,7 +1314,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: No resource found
@@ -1339,7 +1339,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: No handler found
@@ -1363,7 +1363,7 @@ paths:
           content:
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/ExtendedProblemDetail"
+                $ref: "#/components/schemas/ProblemDetail"
               examples:
                 example:
                   summary: Invalid actuator endpoint request
@@ -1375,7 +1375,7 @@ paths:
                     instance: /actuator/demo/name
 components:
   schemas:
-    ExtendedProblemDetail:
+    ProblemDetail:
       type: object
       description: RFC 9457 problem detail extended with an errors array.
       properties:
@@ -1402,7 +1402,7 @@ components:
           description: Detailed validation or business errors.
           items:
             type: object
-            description: Detailed error entry inside the Extended Problem Detail response.
+            description: Detailed error entry inside the Problem Detail response.
             properties:
               type:
                 type: string

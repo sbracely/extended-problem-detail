@@ -1,6 +1,5 @@
 package io.github.sbracely.extended.problem.detail.webflux.example.config;
 
-import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -20,6 +19,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ProblemDetail;
 
 import java.net.URI;
 import java.util.List;
@@ -50,7 +50,7 @@ public class FluxOpenApiConfiguration {
                         .url("/")
                         .description("Relative server URL")))
                 .components(new Components()
-                        .addSchemas("ExtendedProblemDetail", extendedProblemDetailSchema()));
+                        .addSchemas("ProblemDetail", problemDetailSchema()));
     }
 
     @Bean
@@ -63,9 +63,8 @@ public class FluxOpenApiConfiguration {
     }
 
     private static void registerNoResourceFoundOperation(OpenAPI openApi) {
-        ExtendedProblemDetail noResourceFoundExample = new ExtendedProblemDetail();
+        ProblemDetail noResourceFoundExample = ProblemDetail.forStatus(404);
         noResourceFoundExample.setTitle("Not Found");
-        noResourceFoundExample.setStatus(404);
         noResourceFoundExample.setDetail("No static resource {0}.");
         noResourceFoundExample.setInstance(URI.create("/flux-extended-problem-detail/no-resource-found"));
         addSupplementalGetOperation(openApi,
@@ -96,7 +95,7 @@ public class FluxOpenApiConfiguration {
         }
         if (pathItem.getGet() == null) {
             MediaType mediaType = new MediaType();
-            mediaType.schema(new Schema<>().$ref("#/components/schemas/ExtendedProblemDetail"));
+            mediaType.schema(new Schema<>().$ref("#/components/schemas/ProblemDetail"));
             mediaType.addExamples("example", example);
 
             Content content = new Content();
@@ -118,7 +117,7 @@ public class FluxOpenApiConfiguration {
         }
     }
 
-    private static Schema<?> extendedProblemDetailSchema() {
+    private static Schema<?> problemDetailSchema() {
         StringSchema errorType = new StringSchema();
         errorType.description("Source of the error.");
         errorType.addEnumItemObject("PARAMETER");
@@ -127,7 +126,7 @@ public class FluxOpenApiConfiguration {
         errorType.addEnumItemObject("BUSINESS");
 
         ObjectSchema errorItemSchema = new ObjectSchema();
-        errorItemSchema.description("Detailed error entry inside the Extended Problem Detail response.");
+        errorItemSchema.description("Detailed error entry inside the Problem Detail response.");
         errorItemSchema.addProperty("type", errorType);
         errorItemSchema.addProperty("target", new StringSchema()
                 .description("Field, parameter, cookie, header, or business target associated with the error."));

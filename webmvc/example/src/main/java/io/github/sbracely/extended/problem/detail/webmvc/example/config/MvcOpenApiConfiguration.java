@@ -1,6 +1,5 @@
 package io.github.sbracely.extended.problem.detail.webmvc.example.config;
 
-import io.github.sbracely.extended.problem.detail.common.response.ExtendedProblemDetail;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -14,6 +13,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ProblemDetail;
 
 import java.net.URI;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  * </p>
  * <ul>
  *     <li>{@link #webMvcExampleOpenApi()} – defines the top-level API metadata, server URL, reusable
- *         component schemas ({@code Error} and {@code ExtendedProblemDetail}), and a set of shared
+ *         component schemas ({@code Error} and {@code ProblemDetail}), and a set of shared
  *         {@code application/problem+json} examples that represent each supported error scenario.</li>
  *     <li>{@link #webMvcErrorResponseCustomizer()} – an {@link OpenApiCustomizer} that rewrites the
  *         auto-generated operation responses so that every endpoint shows the concrete problem-detail
@@ -50,7 +50,7 @@ public class MvcOpenApiConfiguration {
      *         deployed on.</li>
      *     <li><b>Components / Schemas</b> – one reusable schema definition:
      *         <ul>
-     *             <li>{@code ExtendedProblemDetail} – the RFC 9457 problem-detail object augmented
+     *             <li>{@code ProblemDetail} – the RFC 9457 problem-detail object augmented
      *                 with the {@code errors} array whose item schema is defined inline.</li>
      *         </ul>
      *     </li>
@@ -79,10 +79,10 @@ public class MvcOpenApiConfiguration {
                         .url("/")
                         .description("Relative server URL")))
                 .components(new Components()
-                        .addSchemas("ExtendedProblemDetail", extendedProblemDetailSchema()));
+                        .addSchemas("ProblemDetail", problemDetailSchema()));
     }
 
-    private static Schema<?> extendedProblemDetailSchema() {
+    private static Schema<?> problemDetailSchema() {
         StringSchema errorType = new StringSchema();
         errorType.description("Source of the error.");
         errorType.addEnumItemObject("PARAMETER");
@@ -91,7 +91,7 @@ public class MvcOpenApiConfiguration {
         errorType.addEnumItemObject("BUSINESS");
 
         ObjectSchema errorItemSchema = new ObjectSchema();
-        errorItemSchema.description("Detailed error entry inside the Extended Problem Detail response.");
+        errorItemSchema.description("Detailed error entry inside the Problem Detail response.");
         errorItemSchema.addProperty("type", errorType);
         errorItemSchema.addProperty("target", new StringSchema()
                 .description("Field, parameter, cookie, header, or business target associated with the error."));
@@ -148,9 +148,8 @@ public class MvcOpenApiConfiguration {
     }
 
     private static void registerNoResourceFoundOperation(OpenAPI openApi) {
-        ExtendedProblemDetail noResourceFoundExample = new ExtendedProblemDetail();
+        ProblemDetail noResourceFoundExample = ProblemDetail.forStatus(404);
         noResourceFoundExample.setTitle("Not Found");
-        noResourceFoundExample.setStatus(404);
         noResourceFoundExample.setDetail("No static resource {0}.");
         noResourceFoundExample.setInstance(URI.create("/mvc-extended-problem-detail/no-resource-found-exception"));
         addSupplementalGetOperation(openApi,
@@ -166,9 +165,8 @@ public class MvcOpenApiConfiguration {
     }
 
     private static void registerNoHandlerFoundOperation(OpenAPI openApi) {
-        ExtendedProblemDetail noHandlerFoundExample = new ExtendedProblemDetail();
+        ProblemDetail noHandlerFoundExample = ProblemDetail.forStatus(404);
         noHandlerFoundExample.setTitle("Not Found");
-        noHandlerFoundExample.setStatus(404);
         noHandlerFoundExample.setDetail("No endpoint GET /mvc-extended-problem-detail/no-handler-found-exception.");
         noHandlerFoundExample.setInstance(URI.create("/mvc-extended-problem-detail/no-handler-found-exception"));
         addSupplementalGetOperation(openApi,
@@ -184,9 +182,8 @@ public class MvcOpenApiConfiguration {
     }
 
     private static void registerInvalidEndpointBadRequestOperation(OpenAPI openApi) {
-        ExtendedProblemDetail invalidEndpointExample = new ExtendedProblemDetail();
+        ProblemDetail invalidEndpointExample = ProblemDetail.forStatus(400);
         invalidEndpointExample.setTitle("Bad Request");
-        invalidEndpointExample.setStatus(400);
         invalidEndpointExample.setDetail("Missing parameters: param1,param2");
         invalidEndpointExample.setInstance(URI.create("/actuator/demo/name"));
         addSupplementalGetOperation(openApi,
@@ -214,7 +211,7 @@ public class MvcOpenApiConfiguration {
         }
         if (pathItem.getGet() == null) {
             MediaType mediaType = new MediaType();
-            mediaType.schema(new Schema<>().$ref("#/components/schemas/ExtendedProblemDetail"));
+            mediaType.schema(new Schema<>().$ref("#/components/schemas/ProblemDetail"));
             mediaType.addExamples("example", example);
 
             Content content = new Content();
@@ -235,6 +232,4 @@ public class MvcOpenApiConfiguration {
             pathItem.setGet(operation);
         }
     }
-
-
 }
