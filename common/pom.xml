@@ -13,7 +13,7 @@
 
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot3-common</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <name>Extended Problem Detail Boot 3 Common</name>
     <description>Shared response model, exception-resolution, logging, and properties support for the Boot 3 line of Extended Problem Detail</description>
     <url>https://github.com/sbracely/extended-problem-detail</url>

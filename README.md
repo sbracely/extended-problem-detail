@@ -23,7 +23,7 @@ Choose the starter that matches your web stack and Spring Boot line.
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot3-webmvc-spring-boot-starter</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 </dependency>
 ```
 
@@ -34,7 +34,7 @@ Choose the starter that matches your web stack and Spring Boot line.
 <dependency>
     <groupId>io.github.sbracely</groupId>
     <artifactId>extended-problem-detail-boot3-webflux-spring-boot-starter</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 </dependency>
 ```
 
@@ -46,7 +46,7 @@ No additional configuration is required. The exception handler registers automat
 |------|---------|-------|
 | Spring Boot 3 line | `3.5.x` | Use `extended-problem-detail-boot3-*` artifacts |
 | Minimum Java | `17+` | Project source and public API target Java 17 or newer |
-| Verified in this repository | Spring Boot `3.5.13` / Java `25.0.2` | Current reactor test run covers the Boot 3 line |
+| Verified in this repository | Spring Boot `3.5.14` / Java `25.0.2` | Current reactor test run covers the Boot 3 line |
 
 ## Example OpenAPI Documents
 
