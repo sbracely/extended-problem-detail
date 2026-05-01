@@ -74,7 +74,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(METHOD_NOT_ALLOWED.getReasonPhrase());
@@ -100,7 +100,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_ACCEPTABLE.getReasonPhrase());
@@ -124,7 +124,7 @@ class FluxControllerTests {
                 .expectHeader().valueEquals(ACCEPT, APPLICATION_XML_VALUE)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(UNSUPPORTED_MEDIA_TYPE.getReasonPhrase());
@@ -147,7 +147,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -171,7 +171,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -202,7 +202,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -232,7 +232,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -258,7 +258,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -284,7 +284,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -310,7 +310,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -342,7 +342,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -372,7 +372,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -399,7 +399,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -430,7 +430,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -459,7 +459,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -485,7 +485,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -494,12 +494,6 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(extendedProblemDetail.getProperties()).isNull();
         assertThat(extendedProblemDetail.getErrors()).isNull();
-//        ArgumentCaptor<Object[]> argsCaptor = ArgumentCaptor.forClass(Object[].class);
-//        verify(extendedProblemDetailLog, atLeastOnce()).log(any(), isNull(), eq("codes: {}, defaultMessage: {}"), argsCaptor.capture());
-//        List<String> defaultMessages = argsCaptor.getAllValues().stream()
-//                .map(args -> (String) args[1])
-//                .toList();
-//        assertThat(defaultMessages).containsExactlyInAnyOrder(
 //                "sessionAttribute cannot be empty",
 //                "requestAttribute cannot be empty",
 //                "value cannot be empty"
@@ -519,7 +513,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -543,7 +537,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
@@ -567,7 +561,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -592,7 +586,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(CONTENT_TOO_LARGE.getReasonPhrase());
@@ -615,7 +609,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(NOT_FOUND.getReasonPhrase());
@@ -640,7 +634,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(CONTENT_TOO_LARGE.getReasonPhrase());
@@ -664,7 +658,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo("Error title");
@@ -691,7 +685,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo("Payment failed");
@@ -774,7 +768,7 @@ class FluxControllerTests {
                 .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                 .expectBody(ExtendedProblemDetail.class)
                 .returnResult().getResponseBody();
-        logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+        logger.info("extendedProblemDetail: " + extendedProblemDetail);
         assertThat(extendedProblemDetail).isNotNull();
         assertThat(extendedProblemDetail.getType()).isNull();
         assertThat(extendedProblemDetail.getTitle()).isEqualTo(INTERNAL_SERVER_ERROR.getReasonPhrase());
@@ -812,7 +806,7 @@ class FluxControllerTests {
                     .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                     .expectBody(ExtendedProblemDetail.class)
                     .returnResult().getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            logger.info("extendedProblemDetail: " + extendedProblemDetail);
             assertThat(extendedProblemDetail).isNotNull();
             assertThat(extendedProblemDetail.getType()).isNull();
             assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -856,7 +850,7 @@ class FluxControllerTests {
                     .expectBody(ExtendedProblemDetail.class)
                     .returnResult();
             ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            logger.info("extendedProblemDetail: " + extendedProblemDetail);
             assertThat(extendedProblemDetail).isNotNull();
             assertThat(extendedProblemDetail.getDetail()).isEqualTo("API version is required.");
             assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
@@ -897,7 +891,7 @@ class FluxControllerTests {
                     .expectHeader().contentType(APPLICATION_PROBLEM_JSON)
                     .expectBody(ExtendedProblemDetail.class)
                     .returnResult().getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            logger.info("extendedProblemDetail: " + extendedProblemDetail);
             assertThat(extendedProblemDetail).isNotNull();
             assertThat(extendedProblemDetail.getType()).isNull();
             assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());

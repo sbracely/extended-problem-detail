@@ -115,7 +115,7 @@ class MvcControllerRandomPortTests {
             assertThat(response.getStatusCode()).isEqualTo(CONTENT_TOO_LARGE);
             assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_PROBLEM_JSON);
             ExtendedProblemDetail extendedProblemDetail = response.getBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            logger.info("extendedProblemDetail: " + extendedProblemDetail);
             assertThat(extendedProblemDetail).isNotNull();
             assertThat(extendedProblemDetail.getType()).isNull();
             assertThat(extendedProblemDetail.getTitle()).isEqualTo(CONTENT_TOO_LARGE.getReasonPhrase());
@@ -192,7 +192,7 @@ class MvcControllerRandomPortTests {
                     .expectBody(ExtendedProblemDetail.class)
                     .returnResult();
             ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            logger.info("extendedProblemDetail: " + extendedProblemDetail);
             assertThat(extendedProblemDetail).isNotNull();
             assertThat(extendedProblemDetail.getType()).isNull();
             assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -242,7 +242,7 @@ class MvcControllerRandomPortTests {
                     .expectBody(ExtendedProblemDetail.class)
                     .returnResult();
             ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            logger.info("extendedProblemDetail: " + extendedProblemDetail);
             assertThat(extendedProblemDetail).isNotNull();
             assertThat(extendedProblemDetail.getType()).isNull();
             assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
@@ -291,7 +291,7 @@ class MvcControllerRandomPortTests {
                     .expectBody(ExtendedProblemDetail.class)
                     .returnResult();
             ExtendedProblemDetail extendedProblemDetail = result.getResponseBody();
-            logger.info("extendedProblemDetail: {}", extendedProblemDetail);
+            logger.info("extendedProblemDetail: " + extendedProblemDetail);
             assertThat(extendedProblemDetail).isNotNull();
             assertThat(extendedProblemDetail.getType()).isNull();
             assertThat(extendedProblemDetail.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
