@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static io.github.sbracely.extended.problem.detail.common.properties.ExtendedProblemDetailProperties.DEFAULT_ERRORS_PROPERTY_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -70,7 +71,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
     void setUp() {
         mockLogger = new MvcRecordingLog();
         ExtendedProblemDetailLog log = new ExtendedProblemDetailLog(LogLevel.DEBUG, false);
-        handler = new MvcExtendedProblemDetailExceptionHandler(log);
+        handler = new MvcExtendedProblemDetailExceptionHandler(log, DEFAULT_ERRORS_PROPERTY_NAME);
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/test");
         request.addPreferredLocale(Locale.ENGLISH);
         webRequest = new ServletWebRequest(request, new MockHttpServletResponse());
@@ -79,7 +80,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
     @Test
     void shouldHandleHandlerMethodValidationExceptionWithoutLogConfiguration() {
         MvcExtendedProblemDetailExceptionHandler handlerWithoutLog =
-                new MvcExtendedProblemDetailExceptionHandler(null);
+                new MvcExtendedProblemDetailExceptionHandler(null, DEFAULT_ERRORS_PROPERTY_NAME);
         HandlerMethodValidationException ex = buildExceptionVisitingRequestParam("name", "must not be blank");
 
         ResponseEntity<Object> response = handlerWithoutLog.handleHandlerMethodValidationException(
@@ -88,6 +89,24 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
         assertThat(response).isNotNull();
         assertThat(response.getBody()).isInstanceOf(ProblemDetail.class);
         assertThat(errorsOf((ProblemDetail) response.getBody())).hasSize(1);
+    }
+
+    @Test
+    void shouldUseCustomErrorsPropertyName() {
+        MvcExtendedProblemDetailExceptionHandler customHandler =
+                new MvcExtendedProblemDetailExceptionHandler(null, "violations");
+        HandlerMethodValidationException ex = buildExceptionVisitingRequestParam("name", "must not be blank");
+
+        ResponseEntity<Object> response = customHandler.handleHandlerMethodValidationException(
+                ex, new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getBody()).isInstanceOf(ProblemDetail.class);
+        ProblemDetail body = (ProblemDetail) response.getBody();
+        assertThat(body.getProperties())
+                .containsKey("violations")
+                .doesNotContainKey("errors");
+        assertThat(errorsOf(body, "violations")).hasSize(1);
     }
 
     // =====================================================================
@@ -1037,7 +1056,12 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
     @SuppressWarnings("unchecked")
     private static List<Error> errorsOf(ProblemDetail problemDetail) {
-        return (List<Error>) problemDetail.getProperties().get("errors");
+        return errorsOf(problemDetail, "errors");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Error> errorsOf(ProblemDetail problemDetail, String errorsPropertyName) {
+        return (List<Error>) problemDetail.getProperties().get(errorsPropertyName);
     }
 
     private MethodParameter createMethodParameter() {
@@ -1170,7 +1194,7 @@ class MvcExtendedProblemDetailExceptionHandlerTests {
 
         MvcExtendedProblemDetailExceptionHandlerWithMockLogger(
                 ExtendedProblemDetailLog extendedProblemDetailLog, Log mockLog) {
-            super(extendedProblemDetailLog);
+            super(extendedProblemDetailLog, DEFAULT_ERRORS_PROPERTY_NAME);
             injectLogger(mockLog);
         }
 

@@ -147,6 +147,7 @@ When a validation exception occurs, the response extends the standard RFC 9457 b
 extended:
   problem-detail:
     enabled: true        # Set to false to disable the auto-configured handler (default: true)
+    errors-property-name: errors  # ProblemDetail properties entry name for structured errors (default: errors)
     logging:
       at-level: INFO     # Level used to log caught exceptions: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF (default: INFO)
       print-stack-trace: false  # Include full stack trace in the log entry (default: false)
@@ -156,6 +157,7 @@ Equivalent `application.properties`:
 
 ```properties
 extended.problem-detail.enabled=true
+extended.problem-detail.errors-property-name=errors
 extended.problem-detail.logging.at-level=INFO
 extended.problem-detail.logging.print-stack-trace=false
 ```
@@ -181,19 +183,20 @@ public class OrderNotFoundException extends ErrorResponseException {
 }
 ```
 
-To include structured `errors` in the response, add them to the `ProblemDetail` properties:
+To include structured `errors` in the response, add them to the `ProblemDetail` properties using the
+configured entry name (`extended.problem-detail.errors-property-name`, default `errors`):
 
 ```java
 public class OrderNotFoundException extends ErrorResponseException {
 
-    public OrderNotFoundException(String orderId) {
-        super(HttpStatus.NOT_FOUND, createBody(orderId), null);
+    public OrderNotFoundException(String orderId, String errorsPropertyName) {
+        super(HttpStatus.NOT_FOUND, createBody(orderId, errorsPropertyName), null);
     }
 
-    private static ProblemDetail createBody(String orderId) {
+    private static ProblemDetail createBody(String orderId, String errorsPropertyName) {
         ProblemDetail body =
                 ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "Order not found: " + orderId);
-        body.setProperty("errors", List.of(
+        body.setProperty(errorsPropertyName, List.of(
                 new Error(Error.Type.BUSINESS, "orderId", "Order not found: " + orderId)));
         return body;
     }
