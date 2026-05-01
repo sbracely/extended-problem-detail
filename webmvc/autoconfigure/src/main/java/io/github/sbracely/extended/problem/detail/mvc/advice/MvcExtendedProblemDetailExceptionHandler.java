@@ -175,7 +175,7 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * @return list of Error objects representing all errors
      */
     protected List<Error> resolveMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return resolveBindingResult(ex.getBindingResult());
+        return resolveBindingResult(ex.getBindingResult(), Error.Type.REQUEST_BODY);
     }
 
     /**
@@ -253,7 +253,7 @@ public class MvcExtendedProblemDetailExceptionHandler extends ResponseEntityExce
      * @return list of Error objects representing all errors
      */
     protected List<Error> resolveWebExchangeBindException(WebExchangeBindException ex) {
-        return resolveBindingResult(ex.getBindingResult());
+        return resolveBindingResult(ex.getBindingResult(), Error.Type.MODEL_ATTRIBUTE);
     }
 
     @Override

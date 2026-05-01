@@ -190,22 +190,22 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/web-exchange-bind-exception",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "name",
                                   "message": "Name length must be between 6-10"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "age",
                                   "message": "Age cannot be null"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "password",
                                   "message": "Password and confirm password do not match"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "confirmPassword",
                                   "message": "Password and confirm password do not match"
                                 }
@@ -267,7 +267,7 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/handler-method-validation-exception-matrix/abc;list=a,b,c",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MATRIX_VARIABLE",
                                   "target": "list",
                                   "message": "list maximum size is 2"
                                 }
@@ -299,7 +299,7 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/handler-method-validation-exception-model-attribute",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "MODEL_ATTRIBUTE",
                                   "target": "password",
                                   "message": "Password cannot be empty"
                                 }
@@ -330,7 +330,7 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/handler-method-validation-exception-path-variable/abc",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "PATH_VARIABLE",
                                   "target": "id",
                                   "message": "id length must be at least 5"
                                 }
@@ -361,7 +361,7 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/handler-method-validation-exception-request-body",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "target": "password",
                                   "message": "Password cannot be empty"
                                 }
@@ -392,7 +392,7 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/handler-method-validation-exception-request-body-validation-result",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_BODY",
                                   "message": "Element cannot contain empty values"
                                 }
                               ]
@@ -453,12 +453,12 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/handler-method-validation-exception-request-param",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "QUERY_PARAMETER",
                                   "target": "param",
                                   "message": "Parameter cannot be empty"
                                 },
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "QUERY_PARAMETER",
                                   "target": "value",
                                   "message": "Length must be at least 5"
                                 }
@@ -490,7 +490,7 @@ public class FluxExtendedProblemDetailController {
                               "instance": "/flux-extended-problem-detail/handler-method-validation-exception-request-part",
                               "errors": [
                                 {
-                                  "type": "PARAMETER",
+                                  "type": "REQUEST_PART",
                                   "target": "file",
                                   "message": "File cannot be empty"
                                 }

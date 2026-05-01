@@ -312,7 +312,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveWebExchangeBindException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(errors.get(0).target()).isEqualTo("field");
             assertThat(errors.get(0).message()).isEqualTo("Field error");
         }
@@ -333,7 +333,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveBindingResult(bindingResult);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(errors.get(0).target()).isEqualTo("name");
             assertThat(errors.get(0).message()).isEqualTo("Name is required");
         }
@@ -376,7 +376,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             Error error = handler.objectErrorToError(objectError);
 
-            assertThat(error.type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(error.type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(error.target()).isNull();
             assertThat(error.message()).isEqualTo("Global error");
         }
@@ -387,7 +387,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
 
             Error error = handler.objectErrorToError(fieldError);
 
-            assertThat(error.type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(error.type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(error.target()).isEqualTo("email");
             assertThat(error.message()).isEqualTo("Invalid email format");
         }
@@ -431,10 +431,10 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             ParameterValidationResult result = buildParameterValidationResult("param error");
             List<Error> errorList = new java.util.ArrayList<>();
 
-            handler.addParameterErrors(result, Error.Type.PARAMETER, null, errorList);
+            handler.addParameterErrors(result, Error.Type.QUERY_PARAMETER, null, errorList);
 
             assertThat(errorList).hasSize(1);
-            assertThat(errorList.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errorList.get(0).type()).isEqualTo(Error.Type.QUERY_PARAMETER);
             assertThat(errorList.get(0).target()).isNull();
             assertThat(errorList.get(0).message()).isEqualTo("param error");
         }
@@ -444,7 +444,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             ParameterValidationResult result = buildParameterValidationResult(List.of("error1", "error2"));
             List<Error> errorList = new java.util.ArrayList<>();
 
-            handler.addParameterErrors(result, Error.Type.PARAMETER, "field", errorList);
+            handler.addParameterErrors(result, Error.Type.QUERY_PARAMETER, "field", errorList);
 
             assertThat(errorList).hasSize(2);
             assertThat(errorList.get(0).message()).isEqualTo("error1");
@@ -489,7 +489,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MATRIX_VARIABLE);
         }
 
         @Test
@@ -513,7 +513,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.MODEL_ATTRIBUTE);
             assertThat(errors.get(0).target()).isEqualTo("field1");
         }
 
@@ -538,7 +538,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PATH_VARIABLE);
         }
 
         @Test
@@ -562,7 +562,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.REQUEST_BODY);
             assertThat(errors.get(0).target()).isEqualTo("bodyField");
         }
 
@@ -588,7 +588,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.REQUEST_BODY);
             assertThat(errors.get(0).target()).isNull();
         }
 
@@ -633,7 +633,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.QUERY_PARAMETER);
         }
 
         @Test
@@ -656,7 +656,7 @@ class FluxExtendedProblemDetailExceptionHandlerTests {
             List<Error> errors = handler.resolveHandlerMethodValidationException(ex);
 
             assertThat(errors).hasSize(1);
-            assertThat(errors.get(0).type()).isEqualTo(Error.Type.PARAMETER);
+            assertThat(errors.get(0).type()).isEqualTo(Error.Type.REQUEST_PART);
             assertThat(errors.get(0).target()).isEqualTo("file");
         }
 

@@ -370,10 +370,10 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid request content.");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
-                new Error(Error.Type.PARAMETER, "age", "Age cannot be null"),
-                new Error(Error.Type.PARAMETER, "password", "Password and confirm password do not match"),
-                new Error(Error.Type.PARAMETER, "confirmPassword", "Password and confirm password do not match")
+                new Error(Error.Type.REQUEST_BODY, "name", "Name length must be between 6-10"),
+                new Error(Error.Type.REQUEST_BODY, "age", "Age cannot be null"),
+                new Error(Error.Type.REQUEST_BODY, "password", "Password and confirm password do not match"),
+                new Error(Error.Type.REQUEST_BODY, "confirmPassword", "Password and confirm password do not match")
         );
     }
 
@@ -422,7 +422,7 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "Maximum size is 2"));
+                .isEqualTo(new Error(Error.Type.MATRIX_VARIABLE, "list", "Maximum size is 2"));
     }
 
     /**
@@ -446,7 +446,7 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
+                .isEqualTo(new Error(Error.Type.MODEL_ATTRIBUTE, "password", "Password cannot be empty"));
     }
 
     /**
@@ -470,7 +470,7 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "ID minimum length is 2"));
+                .isEqualTo(new Error(Error.Type.PATH_VARIABLE, "id", "ID minimum length is 2"));
     }
 
     /**
@@ -498,7 +498,7 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
+                .isEqualTo(new Error(Error.Type.REQUEST_BODY, "password", "Password cannot be empty"));
     }
 
     /**
@@ -524,7 +524,7 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, null, "Element cannot contain empty values"));
+                .isEqualTo(new Error(Error.Type.REQUEST_BODY, null, "Element cannot contain empty values"));
 
     }
 
@@ -573,9 +573,9 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "param", "Parameter cannot be empty"),
-                new Error(Error.Type.PARAMETER, "param2", "Parameter 2 cannot be null"),
-                new Error(Error.Type.PARAMETER, "param2", "Parameter 2 cannot be blank")
+                new Error(Error.Type.QUERY_PARAMETER, "param", "Parameter cannot be empty"),
+                new Error(Error.Type.QUERY_PARAMETER, "param2", "Parameter 2 cannot be null"),
+                new Error(Error.Type.QUERY_PARAMETER, "param2", "Parameter 2 cannot be blank")
         );
     }
 
@@ -601,7 +601,7 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "file", "File cannot be empty"));
+                .isEqualTo(new Error(Error.Type.REQUEST_PART, "file", "File cannot be empty"));
     }
 
     /**
@@ -899,10 +899,10 @@ class MvcControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid request content.");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
-                new Error(Error.Type.PARAMETER, "age", "Age cannot be null"),
-                new Error(Error.Type.PARAMETER, "password", "Password and confirm password do not match"),
-                new Error(Error.Type.PARAMETER, "confirmPassword", "Password and confirm password do not match")
+                new Error(Error.Type.MODEL_ATTRIBUTE, "name", "Name length must be between 6-10"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "age", "Age cannot be null"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "password", "Password and confirm password do not match"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "confirmPassword", "Password and confirm password do not match")
         );
     }
 

@@ -153,7 +153,7 @@ public interface ExtendedProblemDetailErrorResolver {
     default void resolveMatrixVariable(HandlerMethodValidationException ex, MatrixVariable matrixVariable,
                                        ParameterValidationResult result, List<Error> errorList) {
         log("[exception#" + Integer.toHexString(System.identityHashCode(ex)) + "] resolveMatrixVariable");
-        addParameterErrors(result, Error.Type.PARAMETER, result.getMethodParameter().getParameterName(), errorList);
+        addParameterErrors(result, Error.Type.MATRIX_VARIABLE, result.getMethodParameter().getParameterName(), errorList);
     }
 
     /**
@@ -172,7 +172,7 @@ public interface ExtendedProblemDetailErrorResolver {
                                        ParameterErrors errors, List<Error> errorList) {
         log("[exception#" + Integer.toHexString(System.identityHashCode(ex)) + "] resolveModelAttribute");
         errors.getAllErrors().stream()
-                .map(this::objectErrorToError)
+                .map(error -> objectErrorToError(error, Error.Type.MODEL_ATTRIBUTE))
                 .forEach(errorList::add);
     }
 
@@ -191,7 +191,7 @@ public interface ExtendedProblemDetailErrorResolver {
     default void resolvePathVariable(HandlerMethodValidationException ex, PathVariable pathVariable,
                                      ParameterValidationResult result, List<Error> errorList) {
         log("[exception#" + Integer.toHexString(System.identityHashCode(ex)) + "] resolvePathVariable");
-        addParameterErrors(result, Error.Type.PARAMETER, result.getMethodParameter().getParameterName(), errorList);
+        addParameterErrors(result, Error.Type.PATH_VARIABLE, result.getMethodParameter().getParameterName(), errorList);
     }
 
     /**
@@ -210,7 +210,7 @@ public interface ExtendedProblemDetailErrorResolver {
                                     ParameterErrors errors, List<Error> errorList) {
         log("[exception#" + Integer.toHexString(System.identityHashCode(ex)) + "] resolveRequestBody");
         errors.getAllErrors().stream()
-                .map(this::objectErrorToError)
+                .map(error -> objectErrorToError(error, Error.Type.REQUEST_BODY))
                 .forEach(errorList::add);
     }
 
@@ -229,7 +229,7 @@ public interface ExtendedProblemDetailErrorResolver {
     default void resolveRequestBodyValidationResult(HandlerMethodValidationException ex, RequestBody requestBody,
                                                     ParameterValidationResult result, List<Error> errorList) {
         log("[exception#" + Integer.toHexString(System.identityHashCode(ex)) + "] resolveRequestBodyValidationResult");
-        addParameterErrors(result, Error.Type.PARAMETER, null, errorList);
+        addParameterErrors(result, Error.Type.REQUEST_BODY, null, errorList);
     }
 
     /**
@@ -265,7 +265,7 @@ public interface ExtendedProblemDetailErrorResolver {
     default void resolveRequestParam(HandlerMethodValidationException ex, @Nullable RequestParam requestParam,
                                      ParameterValidationResult result, List<Error> errorList) {
         log("[exception#" + Integer.toHexString(System.identityHashCode(ex)) + "] resolveRequestParam");
-        addParameterErrors(result, Error.Type.PARAMETER, result.getMethodParameter().getParameterName(), errorList);
+        addParameterErrors(result, Error.Type.QUERY_PARAMETER, result.getMethodParameter().getParameterName(), errorList);
     }
 
     /**
@@ -284,7 +284,7 @@ public interface ExtendedProblemDetailErrorResolver {
                                     ParameterErrors errors, List<Error> errorList) {
         log("[exception#" + Integer.toHexString(System.identityHashCode(ex)) + "] resolveRequestPart");
         errors.getAllErrors().stream()
-                .map(this::objectErrorToError)
+                .map(error -> objectErrorToError(error, Error.Type.REQUEST_PART))
                 .forEach(errorList::add);
     }
 
@@ -403,8 +403,19 @@ public interface ExtendedProblemDetailErrorResolver {
      * @return list of Error objects representing all errors
      */
     default List<Error> resolveBindingResult(BindingResult bindingResult) {
+        return resolveBindingResult(bindingResult, Error.Type.MODEL_ATTRIBUTE);
+    }
+
+    /**
+     * Converts a {@link BindingResult} to a list of {@link Error} objects with the provided type.
+     *
+     * @param bindingResult the BindingResult to convert
+     * @param errorType     the error type to use for every converted error
+     * @return list of Error objects representing all errors
+     */
+    default List<Error> resolveBindingResult(BindingResult bindingResult, Error.Type errorType) {
         return bindingResult.getAllErrors().stream()
-                .map(this::objectErrorToError)
+                .map(error -> objectErrorToError(error, errorType))
                 .toList();
     }
 
@@ -415,11 +426,22 @@ public interface ExtendedProblemDetailErrorResolver {
      * @return Error object with field and message information
      */
     default Error objectErrorToError(ObjectError objectError) {
+        return objectErrorToError(objectError, Error.Type.MODEL_ATTRIBUTE);
+    }
+
+    /**
+     * Converts an {@link ObjectError} to an {@link Error} object with the provided type.
+     *
+     * @param objectError the ObjectError to convert
+     * @param errorType   the error type
+     * @return Error object with field and message information
+     */
+    default Error objectErrorToError(ObjectError objectError, Error.Type errorType) {
         String target = null;
         if (objectError instanceof FieldError fieldError) {
             target = fieldError.getField();
         }
-        return new Error(Error.Type.PARAMETER, target, objectError.getDefaultMessage());
+        return new Error(errorType, target, objectError.getDefaultMessage());
     }
 
     /**

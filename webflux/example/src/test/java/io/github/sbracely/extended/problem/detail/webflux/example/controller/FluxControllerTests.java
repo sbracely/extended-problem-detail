@@ -207,10 +207,10 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Invalid request content.");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "name", "Name length must be between 6-10"),
-                new Error(Error.Type.PARAMETER, "age", "Age cannot be null"),
-                new Error(Error.Type.PARAMETER, "password", "Password and confirm password do not match"),
-                new Error(Error.Type.PARAMETER, "confirmPassword", "Password and confirm password do not match")
+                new Error(Error.Type.MODEL_ATTRIBUTE, "name", "Name length must be between 6-10"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "age", "Age cannot be null"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "password", "Password and confirm password do not match"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "confirmPassword", "Password and confirm password do not match")
         );
     }
 
@@ -262,7 +262,7 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "list", "list maximum size is 2"));
+                .isEqualTo(new Error(Error.Type.MATRIX_VARIABLE, "list", "list maximum size is 2"));
     }
 
     /**
@@ -287,7 +287,7 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
+                .isEqualTo(new Error(Error.Type.MODEL_ATTRIBUTE, "password", "Password cannot be empty"));
     }
 
     /**
@@ -312,7 +312,7 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "id", "id length must be at least 5"));
+                .isEqualTo(new Error(Error.Type.PATH_VARIABLE, "id", "id length must be at least 5"));
     }
 
     /**
@@ -343,7 +343,7 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "password", "Password cannot be empty"));
+                .isEqualTo(new Error(Error.Type.REQUEST_BODY, "password", "Password cannot be empty"));
     }
 
     /**
@@ -372,7 +372,7 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, null, "Element cannot contain empty values"));
+                .isEqualTo(new Error(Error.Type.REQUEST_BODY, null, "Element cannot contain empty values"));
     }
 
     /**
@@ -428,8 +428,8 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).containsExactlyInAnyOrder(
-                new Error(Error.Type.PARAMETER, "param", "Parameter cannot be empty"),
-                new Error(Error.Type.PARAMETER, "value", "Length must be at least 5")
+                new Error(Error.Type.QUERY_PARAMETER, "param", "Parameter cannot be empty"),
+                new Error(Error.Type.QUERY_PARAMETER, "value", "Length must be at least 5")
         );
     }
 
@@ -456,7 +456,7 @@ class FluxControllerTests {
         assertThat(extendedProblemDetail.getDetail()).isEqualTo("Validation failure");
         assertThat(extendedProblemDetail.getInstance()).isEqualTo(URI.create(uri));
         assertThat(errorsOf(extendedProblemDetail)).singleElement()
-                .isEqualTo(new Error(Error.Type.PARAMETER, "file", "File cannot be empty"));
+                .isEqualTo(new Error(Error.Type.REQUEST_PART, "file", "File cannot be empty"));
     }
 
     /**
