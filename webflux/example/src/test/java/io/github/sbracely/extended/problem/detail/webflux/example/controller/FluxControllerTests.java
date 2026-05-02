@@ -191,7 +191,10 @@ class FluxControllerTests {
                 .bodyValue("""
                         {
                             "name": "abc",
-                            "password": "123"
+                            "password": "123",
+                            "address": {
+                                "street": ""
+                            }
                         }
                         """)
                 .exchange()
@@ -210,7 +213,8 @@ class FluxControllerTests {
                 new Error(Error.Type.MODEL_ATTRIBUTE, "name", "Name length must be between 6-10"),
                 new Error(Error.Type.MODEL_ATTRIBUTE, "age", "Age cannot be null"),
                 new Error(Error.Type.MODEL_ATTRIBUTE, "password", "Password and confirm password do not match"),
-                new Error(Error.Type.MODEL_ATTRIBUTE, "confirmPassword", "Password and confirm password do not match")
+                new Error(Error.Type.MODEL_ATTRIBUTE, "confirmPassword", "Password and confirm password do not match"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "address.street", "Street cannot be blank")
         );
     }
 
@@ -757,7 +761,10 @@ class FluxControllerTests {
                     .bodyValue("""
                             {
                                 "name": "abc",
-                                "password": "123"
+                                "password": "123",
+                                "address": {
+                                    "street": ""
+                                }
                             }
                             """)
                     .exchange()

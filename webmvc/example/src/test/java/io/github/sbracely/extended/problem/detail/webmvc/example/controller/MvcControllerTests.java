@@ -355,7 +355,10 @@ class MvcControllerTests {
         MvcTestResult result = mockMvcTester.post().uri(uri).contentType(APPLICATION_JSON).content("""
                                 {
                                     "name": "abc",
-                                    "password": "123"
+                                    "password": "123",
+                                    "address": {
+                                        "street": ""
+                                    }
                                 }
                 """).exchange();
         assertThat(result)
@@ -373,7 +376,8 @@ class MvcControllerTests {
                 new Error(Error.Type.REQUEST_BODY, "name", "Name length must be between 6-10"),
                 new Error(Error.Type.REQUEST_BODY, "age", "Age cannot be null"),
                 new Error(Error.Type.REQUEST_BODY, "password", "Password and confirm password do not match"),
-                new Error(Error.Type.REQUEST_BODY, "confirmPassword", "Password and confirm password do not match")
+                new Error(Error.Type.REQUEST_BODY, "confirmPassword", "Password and confirm password do not match"),
+                new Error(Error.Type.REQUEST_BODY, "address.street", "Street cannot be blank")
         );
     }
 
@@ -884,7 +888,10 @@ class MvcControllerTests {
         MvcTestResult result = mockMvcTester.post().uri(uri).contentType(APPLICATION_JSON).content("""
                                 {
                                     "name": "abc",
-                                    "password": "123"
+                                    "password": "123",
+                                    "address": {
+                                        "street": ""
+                                    }
                                 }
                 """).exchange();
         assertThat(result)
@@ -902,7 +909,8 @@ class MvcControllerTests {
                 new Error(Error.Type.MODEL_ATTRIBUTE, "name", "Name length must be between 6-10"),
                 new Error(Error.Type.MODEL_ATTRIBUTE, "age", "Age cannot be null"),
                 new Error(Error.Type.MODEL_ATTRIBUTE, "password", "Password and confirm password do not match"),
-                new Error(Error.Type.MODEL_ATTRIBUTE, "confirmPassword", "Password and confirm password do not match")
+                new Error(Error.Type.MODEL_ATTRIBUTE, "confirmPassword", "Password and confirm password do not match"),
+                new Error(Error.Type.MODEL_ATTRIBUTE, "address.street", "Street cannot be blank")
         );
     }
 
@@ -1249,7 +1257,10 @@ class MvcControllerTests {
                             .content("""
                                     {
                                         "name": "abc",
-                                        "password": "123"
+                                        "password": "123",
+                                        "address": {
+                                            "street": ""
+                                        }
                                     }
                                     """)
                             .exchange();
@@ -1272,7 +1283,10 @@ class MvcControllerTests {
                     .content("""
                             {
                                 "name": "abc",
-                                "password": "123"
+                                "password": "123",
+                                "address": {
+                                    "street": ""
+                                }
                             }
                             """)
                     .exchange();
