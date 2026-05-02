@@ -139,7 +139,7 @@ _extends ServerWebInputException → ResponseStatusException_
 
 ```text
 POST /flux-extended-problem-detail/web-exchange-bind-exception
-Content-Type: application/json；Body: {"name":"abc","password":"123"}
+Content-Type: application/json；Body: {"name":"abc","password":"123","address":{"street":"","geo":{"location":{"code":"LOC-100"}}}}
 ```
 
 **Response**
@@ -152,24 +152,29 @@ Content-Type: application/problem+json
   "detail" : "Invalid request content.",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "name",
       "message" : "Name length must be between 6-10"
     },
     {
-      "type" : "PARAMETER",
-      "target" : "confirmPassword",
-      "message" : "Password and confirm password do not match"
+      "type" : "MODEL_ATTRIBUTE",
+      "target" : "age",
+      "message" : "Age cannot be null"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "password",
       "message" : "Password and confirm password do not match"
     },
     {
-      "type" : "PARAMETER",
-      "target" : "age",
-      "message" : "Age cannot be null"
+      "type" : "MODEL_ATTRIBUTE",
+      "target" : "confirmPassword",
+      "message" : "Password and confirm password do not match"
+    },
+    {
+      "type" : "MODEL_ATTRIBUTE",
+      "target" : "address.street",
+      "message" : "Street cannot be blank"
     }
   ],
   "instance" : "/flux-extended-problem-detail/web-exchange-bind-exception",
@@ -231,7 +236,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "MATRIX_VARIABLE",
       "target" : "list",
       "message" : "list maximum size is 2"
     }
@@ -263,7 +268,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "password",
       "message" : "Password cannot be empty"
     }
@@ -295,7 +300,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "PATH_VARIABLE",
       "target" : "id",
       "message" : "id length must be at least 5"
     }
@@ -327,7 +332,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_BODY",
       "target" : "password",
       "message" : "Password cannot be empty"
     }
@@ -359,7 +364,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_BODY",
       "target" : null,
       "message" : "Element cannot contain empty values"
     }
@@ -423,12 +428,12 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "QUERY_PARAMETER",
       "target" : "param",
       "message" : "Parameter cannot be empty"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "QUERY_PARAMETER",
       "target" : "value",
       "message" : "Length must be at least 5"
     }
@@ -460,7 +465,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_PART",
       "target" : "file",
       "message" : "File cannot be empty"
     }
