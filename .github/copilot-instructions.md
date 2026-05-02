@@ -5,11 +5,13 @@
 - CI build: `.\mvnw.cmd -B verify` on Windows, or `./mvnw -B verify` in GitHub Actions.
 - Full clean build: `.\mvnw.cmd clean verify`
 - Full test suite: `.\mvnw.cmd test`
+- There is no separate lint-only Maven goal in this repository; use `test`/`verify` as the quality gate.
 - Single common response test class: `.\mvnw.cmd -pl common -Dtest=ErrorTest test`
 - Single MVC auto-config test class: `.\mvnw.cmd -pl webmvc\autoconfigure -Dtest=MvcExtendedProblemDetailAutoConfigurationTests test`
 - Single WebFlux auto-config test class: `.\mvnw.cmd -pl webflux\autoconfigure -Dtest=FluxExtendedProblemDetailAutoConfigurationTests test`
 - Single MVC example controller test class: `.\mvnw.cmd -pl webmvc\example -Dtest=MvcControllerTests test`
 - Single WebFlux example contract test class: `.\mvnw.cmd -pl webflux\example -Dtest=FluxOpenApiDefaultContractTests test`
+- If a targeted test depends on changes in upstream modules, run with `-am` (for example, `.\mvnw.cmd -pl webflux\autoconfigure -am -Dtest=FluxExtendedProblemDetailAutoConfigurationTests test`).
 - Generate offline OpenAPI docs: `.\mvnw.cmd -pl webmvc\example -Poffline-openapi-docs verify` and `.\mvnw.cmd -pl webflux\example -Poffline-openapi-docs verify`
 
 ## High-level architecture
@@ -38,15 +40,15 @@
 - Put shared error-shaping changes in `common\...\ExtendedProblemDetailErrorResolver` first. MVC and WebFlux handlers are expected to stay thin adapters unless behavior is truly stack-specific.
 - The main customization seam is subclassing the stack-specific exception handler and overriding either a `handle...` method in the handler or a `resolveXxx(...)` method from `ExtendedProblemDetailErrorResolver`.
 - Default beans are registered with `@ConditionalOnMissingBean`. A custom handler bean is meant to replace the auto-configured one; avoid introducing parallel competing handlers unless that is intentional.
-- The configuration prefix is `extended.problem-detail`. Default behavior is enabled, writes structured errors to the `errors` extension field, logs at `INFO`, and omits stack traces. If `extended.problem-detail.enabled` is omitted entirely, the startup logger emits a one-time reminder; explicitly setting it to `true` or `false` suppresses that message.
+- The configuration prefix is `extended.problem-detail`. Default behavior is enabled, writes structured errors to the `errors` extension field, logs at `INFO`, omits stack traces, and uses `controller-advice-order=0` for both built-in handlers. If `extended.problem-detail.enabled` is omitted entirely, the startup logger emits a one-time reminder; explicitly setting it to `true` or `false` suppresses that message.
+- Keep parity between MVC and WebFlux behavior for public error payload changes unless a stack-specific difference is intentional.
 - Message text can be locale-sensitive. Tests that assert concrete messages or compare against generated OpenAPI docs pin English explicitly with `Locale.ENGLISH` or `Accept-Language` headers so docs and runtime responses stay stable.
 - Tests are split by purpose:
   - autoconfigure modules use `WebApplicationContextRunner` / `ReactiveWebApplicationContextRunner`
   - handler tests exercise framework adapters directly
-  - MVC example tests use `MockMvcTester`
+  - MVC example tests use `MockMvcTester`; RANDOM_PORT scenarios use `@AutoConfigureRestTestClient` with `RestTestClient`
   - WebFlux example tests use `WebTestClient`
   - OpenAPI contract tests compare live responses against `/v3/api-docs`, so response-shape changes usually require fixture and contract-test updates together
-- MVC example tests mostly use `@AutoConfigureMockMvc` with `MockMvcTester`; random-port and multipart-limit cases live in dedicated `*RandomPortTests` / `*MultipartLimitTests` classes.
 - In API-version contract scenarios, fetch `/v3/api-docs` with the `API-Version` header so the generated docs match the versioned behavior under test.
 - When changing public error behavior, update both stacks unless the difference is intentionally framework-specific. The example modules and handler tests are the best place to confirm parity.
 - Release/version bumps are explicit: the published modules inherit `spring-boot-starter-parent`, not the root aggregator, so version updates must touch each module POM directly plus the `webmvc` / `webflux` aggregator parent references.
