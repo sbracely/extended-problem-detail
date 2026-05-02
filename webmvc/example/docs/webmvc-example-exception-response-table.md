@@ -299,7 +299,7 @@ Content-Type: application/problem+json
 
 ```text
 POST /mvc-extended-problem-detail/method-argument-not-valid-exception
-Content-Type: application/json；Body: {"name":"abc","password":"123"}
+Content-Type: application/json；Body: {"name":"abc","password":"123","address":{"street":"","geo":{"location":{"code":"LOC-100"}}}}
 ```
 
 **Response**
@@ -312,24 +312,29 @@ Content-Type: application/problem+json
   "detail" : "Invalid request content.",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_BODY",
+      "target" : "name",
+      "message" : "Name length must be between 6-10"
+    },
+    {
+      "type" : "REQUEST_BODY",
       "target" : "age",
       "message" : "Age cannot be null"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_BODY",
       "target" : "password",
       "message" : "Password and confirm password do not match"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_BODY",
       "target" : "confirmPassword",
       "message" : "Password and confirm password do not match"
     },
     {
-      "type" : "PARAMETER",
-      "target" : "name",
-      "message" : "Name length must be between 6-10"
+      "type" : "REQUEST_BODY",
+      "target" : "address.street",
+      "message" : "Street cannot be blank"
     }
   ],
   "instance" : "/mvc-extended-problem-detail/method-argument-not-valid-exception",
@@ -391,7 +396,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "MATRIX_VARIABLE",
       "target" : "list",
       "message" : "Maximum size is 2"
     }
@@ -423,7 +428,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "password",
       "message" : "Password cannot be empty"
     }
@@ -455,7 +460,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "PATH_VARIABLE",
       "target" : "id",
       "message" : "ID minimum length is 2"
     }
@@ -487,7 +492,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_BODY",
       "target" : "password",
       "message" : "Password cannot be empty"
     }
@@ -519,7 +524,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_BODY",
       "target" : null,
       "message" : "Element cannot contain empty values"
     }
@@ -583,17 +588,17 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "QUERY_PARAMETER",
       "target" : "param",
       "message" : "Parameter cannot be empty"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "QUERY_PARAMETER",
       "target" : "param2",
       "message" : "Parameter 2 cannot be null"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "QUERY_PARAMETER",
       "target" : "param2",
       "message" : "Parameter 2 cannot be blank"
     }
@@ -625,7 +630,7 @@ Content-Type: application/problem+json
   "detail" : "Validation failure",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "REQUEST_PART",
       "target" : "file",
       "message" : "File cannot be empty"
     }
@@ -973,7 +978,7 @@ _extends ServerWebInputException → ResponseStatusException_
 
 ```text
 POST /mvc-extended-problem-detail/web-exchange-bind-exception
-Content-Type: application/json；Body: {"name":"abc","password":"123"}
+Content-Type: application/json；Body: {"name":"abc","password":"123","address":{"street":"","geo":{"location":{"code":"LOC-100"}}}}
 ```
 
 **Response**
@@ -986,24 +991,29 @@ Content-Type: application/problem+json
   "detail" : "Invalid request content.",
   "errors" : [
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "name",
       "message" : "Name length must be between 6-10"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "age",
       "message" : "Age cannot be null"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "password",
       "message" : "Password and confirm password do not match"
     },
     {
-      "type" : "PARAMETER",
+      "type" : "MODEL_ATTRIBUTE",
       "target" : "confirmPassword",
       "message" : "Password and confirm password do not match"
+    },
+    {
+      "type" : "MODEL_ATTRIBUTE",
+      "target" : "address.street",
+      "message" : "Street cannot be blank"
     }
   ],
   "instance" : "/mvc-extended-problem-detail/web-exchange-bind-exception",
